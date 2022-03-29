@@ -10,7 +10,7 @@ import java.net.Socket;
  * Interface responsável por fornecer as assinaturas de método para um objeto de
  * conexão.
  *
- * @author Everton Bruno Silva dos Santos - 1911746
+ * @author Everton Bruno Silva dos Santos.
  * @version 1.0
  * @param <I> Refere-se ao objeto tipo de entrada.
  * @param <O> Refere-se ao objeto tipo de saída.
@@ -20,15 +20,12 @@ public interface Connection<I, O> {
     /**
      * Método responsável por construir fluxos de entrada e saída de dados.
      *
-     * @param inputStream Refere-se ao dito fluxo de entrada de dados.
-     * @param outputStream Refere-se ao dito fluxo de saída de dados.
+     * @param multiStream Refere-se ao dito fluxo de entrada e saída de dados.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public void streamBiulder(
-            final Stream<? super I> inputStream,
-            final Stream<? super O> outputStream
-    ) throws IOException;
+    public void streamBuilder(
+            final MultiStream<? super I, ? super O> multiStream) throws IOException;
 
     /**
      * Método responsável por construir fluxos de entrada de dados.
@@ -37,7 +34,7 @@ public interface Connection<I, O> {
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public void inputStreamBiulder(final Stream<? super I> stream) throws IOException;
+    public void inputStreamBuilder(final Stream<? super I> stream) throws IOException;
 
     /**
      * Método responsável por construir fluxos de saída de dados.
@@ -46,7 +43,7 @@ public interface Connection<I, O> {
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public void outputStreamBiulder(final Stream<? super O> stream) throws IOException;
+    public void outputStreamBuilder(final Stream<? super O> stream) throws IOException;
 
     /**
      * Método responsável por construir a instância de uma conexão voltada para
@@ -56,7 +53,7 @@ public interface Connection<I, O> {
      * @param port Refere-se a porta de acesso da conexão.
      * @return Retorna um objeto de conexão para clientes.
      */
-    public static Connection<DataInputStream, DataOutputStream> biulder(final String ip, final int port) {
+    public static Connection<DataInputStream, DataOutputStream> builder(final String ip, final int port) {
         return new Connection<DataInputStream, DataOutputStream>() {
 
             /**
@@ -69,7 +66,7 @@ public interface Connection<I, O> {
              * entrada/saída.
              */
             @Override
-            public void inputStreamBiulder(Stream<? super DataInputStream> stream) throws IOException {
+            public void inputStreamBuilder(final Stream<? super DataInputStream> stream) throws IOException {
                 try (final Socket socket = new Socket(ip, port)) {
                     try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
                         stream.accept(input);
@@ -87,7 +84,7 @@ public interface Connection<I, O> {
              * entrada/saída.
              */
             @Override
-            public void outputStreamBiulder(Stream<? super DataOutputStream> stream) throws IOException {
+            public void outputStreamBuilder(final Stream<? super DataOutputStream> stream) throws IOException {
                 try (final Socket socket = new Socket(ip, port)) {
                     try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
                         stream.accept(output);
@@ -99,23 +96,19 @@ public interface Connection<I, O> {
              * Implementação de método responsável por construir fluxos de
              * entrada e saída de dados para clientes.
              *
-             * @param inputStream Refere-se ao dito fluxo de entrada de dados
-             * para clientes.
-             * @param outputStream Refere-se ao dito fluxo de saída de dados
-             * para clientes.
+             * @param multiStream Refere-se ao dito fluxo de entrada e saída de
+             * dados.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
             @Override
-            public void streamBiulder(
-                    Stream<? super DataInputStream> inputStream,
-                    Stream<? super DataOutputStream> outputStream
+            public void streamBuilder(
+                    final MultiStream<? super DataInputStream, ? super DataOutputStream> multiStream
             ) throws IOException {
                 try (final Socket socket = new Socket(ip, port)) {
                     try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
                         try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
-                            inputStream.accept(input);
-                            outputStream.accept(output);
+                            multiStream.accept(input, output);
                         }
                     }
                 }
@@ -130,7 +123,7 @@ public interface Connection<I, O> {
      * @param port Refere-se a porta de acesso da conexão.
      * @return Retorna um objeto de conexão para servidores.
      */
-    public static Connection<DataInputStream, DataOutputStream> biulder(final int port) {
+    public static Connection<DataInputStream, DataOutputStream> builder(final int port) {
         return new Connection<DataInputStream, DataOutputStream>() {
 
             /**
@@ -143,7 +136,7 @@ public interface Connection<I, O> {
              * entrada/saída.
              */
             @Override
-            public void inputStreamBiulder(Stream<? super DataInputStream> stream) throws IOException {
+            public void inputStreamBuilder(final Stream<? super DataInputStream> stream) throws IOException {
                 try (final ServerSocket serverSocket = new ServerSocket(port)) {
                     try (final Socket socket = serverSocket.accept()) {
                         try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
@@ -163,7 +156,7 @@ public interface Connection<I, O> {
              * entrada/saída.
              */
             @Override
-            public void outputStreamBiulder(Stream<? super DataOutputStream> stream) throws IOException {
+            public void outputStreamBuilder(final Stream<? super DataOutputStream> stream) throws IOException {
                 try (final ServerSocket serverSocket = new ServerSocket(port)) {
                     try (final Socket socket = serverSocket.accept()) {
                         try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
@@ -177,24 +170,20 @@ public interface Connection<I, O> {
              * Implementação de método responsável por construir fluxos de
              * entrada e saída de dados para servidores.
              *
-             * @param inputStream Refere-se ao dito fluxo de entrada de dados
-             * para servidores.
-             * @param outputStream Refere-se ao dito fluxo de saída de dados
-             * para servidores.
+             * @param multiStream Refere-se ao dito fluxo de entrada e saída de
+             * dados.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
             @Override
-            public void streamBiulder(
-                    Stream<? super DataInputStream> inputStream,
-                    Stream<? super DataOutputStream> outputStream
+            public void streamBuilder(
+                    final MultiStream<? super DataInputStream, ? super DataOutputStream> multiStream
             ) throws IOException {
                 try (final ServerSocket serverSocket = new ServerSocket(port)) {
                     try (final Socket socket = serverSocket.accept()) {
                         try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
                             try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
-                                inputStream.accept(input);
-                                outputStream.accept(output);
+                                multiStream.accept(input, output);
                             }
                         }
                     }
@@ -207,7 +196,7 @@ public interface Connection<I, O> {
      * Interface funcional responsável por possibilitar o acesso aos fluxos de
      * entrada e saída de forma dinâmica.
      *
-     * @author Everton Bruno Silva dos Santos - 19111746
+     * @author Everton Bruno Silva dos Santos.
      * @version 1.0
      * @param <T> Refere-se ao tipo de fluxo.
      */
@@ -222,5 +211,27 @@ public interface Connection<I, O> {
          * entrada/saída.
          */
         public void accept(final T t) throws IOException;
+    }
+
+    /**
+     * Interface funcional responsável por possibilitar o acesso aos fluxos de
+     * entrada e saída de forma simultânea.
+     *
+     * @param <I> Refere-se ao tipo de fluxo de entrada.
+     * @param <O> Refere-se ao tipo de fluxo de saída.
+     */
+    @FunctionalInterface
+    public interface MultiStream<I, O> {
+
+        /**
+         * Método responsável por receber fluxos de entrada e saída de forma
+         * simultânea.
+         *
+         * @param i Refere-se ai tipo de fluxo de entrada.
+         * @param o Refere-se ai tipo de fluxo de saída.
+         * @throws IOException Exceção lançada no caso de haver falha de
+         * entrada/saída.
+         */
+        public void accept(final I i, final O o) throws IOException;
     }
 }

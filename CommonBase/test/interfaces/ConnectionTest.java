@@ -37,8 +37,8 @@ public class ConnectionTest {
     @Before
     public void setUp() {
         final int port = 1997;
-        connectionClient = Connection.biulder("127.0.0.1", port);
-        connectionServer = Connection.biulder(port);
+        connectionClient = Connection.builder("127.0.0.1", port);
+        connectionServer = Connection.builder(port);
     }
 
     @After
@@ -46,10 +46,10 @@ public class ConnectionTest {
     }
 
     @Test
-    public void testInputStreamBiulderClient() throws IOException, InterruptedException {
+    public void testInputClientOutputServer() throws IOException, InterruptedException {
         Factory.Thread.makeFree(() -> {
             try {
-                connectionServer.outputStreamBiulder(stream -> {
+                connectionServer.outputStreamBuilder(stream -> {
                     stream.flush();
                     stream.writeUTF("Olá, mundo!");
                 });
@@ -58,13 +58,47 @@ public class ConnectionTest {
             }
         }).start();
         sleep(1000);
-        connectionClient.inputStreamBiulder(stream -> {
+        connectionClient.inputStreamBuilder(stream -> {
             assertEquals("Olá, mundo!", stream.readUTF());
+        });
+    }
+
+    @Test
+    public void testInputServerOutputClient() throws IOException, InterruptedException {
+        Factory.Thread.makeFree(() -> {
+            try {
+                connectionServer.inputStreamBuilder(stream -> {
+                    assertEquals("Olá, Brasil!", stream.readUTF());
+                });
+            } catch (final IOException ex) {
+                fail("Falha de entrada/saída");
+            }
+        }).start();
+        sleep(1000);
+        connectionClient.outputStreamBuilder(stream -> {
+            stream.flush();
+            stream.writeUTF("Olá, Brasil!");
         });
     }
     
     @Test
-    public void testInputStreamBiulderServer() throws IOException, InterruptedException {
-        
+    public void testGetAndPoust() throws IOException, InterruptedException {
+        Factory.Thread.makeFree(() -> {
+            try {
+                connectionServer.streamBuilder((inputStream, outputStream) -> {
+                    final String msg = inputStream.readUTF();
+                    outputStream.flush();
+                    outputStream.writeUTF(msg.concat(" Bruno"));
+                });
+            } catch (final IOException ex) {
+                fail("Falha de entrada/saída");
+            }
+        }).start();
+        sleep(1000);
+        connectionClient.streamBuilder((inputStream, outputStream) -> {
+            outputStream.flush();
+            outputStream.writeUTF("Everton");
+            assertEquals("Everton Bruno", inputStream.readUTF());
+        });
     }
 }

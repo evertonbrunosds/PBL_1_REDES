@@ -8,7 +8,6 @@ import java.util.concurrent.Semaphore;
  *
  * @author Everton Bruno Silva dos Santos.
  * @version 1.0
- * @since 1.0
  */
 public interface Factory {
 
