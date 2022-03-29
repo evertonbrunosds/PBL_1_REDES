@@ -18,6 +18,13 @@ import java.net.Socket;
 public interface Connection<I, O> {
 
     /**
+     * Método responsável por testar a conexão.
+     *
+     * @throws IOException Exceção lançada no caso de haver falha de
+     */
+    public void test() throws IOException;
+
+    /**
      * Método responsável por construir fluxos de entrada e saída de dados.
      *
      * @param multiStream Refere-se ao dito fluxo de entrada e saída de dados.
@@ -113,6 +120,18 @@ public interface Connection<I, O> {
                     }
                 }
             }
+
+            /**
+             * Implementação de Método responsável por testar a conexão.
+             *
+             * @throws IOException Exceção lançada no caso de haver falha de
+             * entrada/saída.
+             */
+            @Override
+            public void test() throws IOException {
+                final Socket socket = new Socket(ip, port);
+                socket.close();
+            }
         };
     }
 
@@ -188,6 +207,18 @@ public interface Connection<I, O> {
                         }
                     }
                 }
+            }
+
+            /**
+             * Implementação de Método responsável por testar a conexão.
+             *
+             * @throws IOException Exceção lançada no caso de haver falha de
+             * entrada/saída.
+             */
+            @Override
+            public void test() throws IOException {
+                final ServerSocket serverSocket = new ServerSocket(port);
+                serverSocket.close();
             }
         };
     }
