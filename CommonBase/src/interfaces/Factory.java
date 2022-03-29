@@ -1,6 +1,5 @@
-package classes;
+package interfaces;
 
-import interfaces.Worker;
 import java.util.concurrent.Semaphore;
 
 /**

@@ -1,6 +1,5 @@
 package interfaces;
 
-import classes.Factory;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,8 +36,8 @@ public class ConnectionTest {
     @Before
     public void setUp() {
         final int port = 1997;
-        connectionClient = Connection.builder("127.0.0.1", port);
-        connectionServer = Connection.builder(port);
+        connectionClient = ClientConnection.builder("127.0.0.1", port);
+        connectionServer = ServerConnection.builder(port);
     }
 
     @After
