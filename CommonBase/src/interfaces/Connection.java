@@ -66,6 +66,7 @@ public interface Connection<I, O> {
          * entrada/saída.
          */
         public void accept(final T t) throws IOException;
+
     }
 
     /**

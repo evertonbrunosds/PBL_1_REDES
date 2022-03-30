@@ -5,6 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import static interfaces.Factory.serverSocket;
+import static interfaces.Factory.socket;
+import static interfaces.Factory.dataInputStream;
+import static interfaces.Factory.dataOutputStream;
+import static interfaces.Factory.dataDualStream;
 
 /**
  * Interface responsável por fornecer as assinaturas de método para um objeto de
@@ -29,40 +34,36 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
              * Implementação de método responsável por construir fluxos de
              * entrada de dados para servidores.
              *
-             * @param stream Refere-se ao dito fluxo de entrada de dados para
-             * servidores.
+             * @param singleStream Refere-se ao dito fluxo de entrada de dados
+             * para servidores.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
             @Override
             public void inputStreamBuilder(final SingleStream<? super DataInputStream> singleStream) throws IOException {
-                try (final ServerSocket serverSocket = new ServerSocket(port)) {
-                    try (final Socket socket = serverSocket.accept()) {
-                        try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
-                            singleStream.accept(input);
-                        }
-                    }
-                }
+                serverSocket(port, serverSocketInstance -> {
+                    socket(serverSocketInstance, socketInstance -> {
+                        dataInputStream(socketInstance, singleStream::accept);
+                    });
+                });
             }
 
             /**
              * Implementação de método responsável por construir fluxos de saída
              * de dados para servidores.
              *
-             * @param stream Refere-se ao dito fluxo de saída de dados para
-             * servidores.
+             * @param singleStream Refere-se ao dito fluxo de saída de dados
+             * para servidores.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
             @Override
             public void outputStreamBuilder(final SingleStream<? super DataOutputStream> singleStream) throws IOException {
-                try (final ServerSocket serverSocket = new ServerSocket(port)) {
-                    try (final Socket socket = serverSocket.accept()) {
-                        try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
-                            singleStream.accept(output);
-                        }
-                    }
-                }
+                serverSocket(port, serverSocketInstance -> {
+                    socket(serverSocketInstance, socketInstance -> {
+                        dataOutputStream(socketInstance, singleStream::accept);
+                    });
+                });
             }
 
             /**
@@ -78,15 +79,11 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
             public void streamBuilder(
                     final DualStream<? super DataInputStream, ? super DataOutputStream> dualStream
             ) throws IOException {
-                try (final ServerSocket serverSocket = new ServerSocket(port)) {
-                    try (final Socket socket = serverSocket.accept()) {
-                        try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
-                            try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
-                                dualStream.accept(input, output);
-                            }
-                        }
-                    }
-                }
+                serverSocket(port, serverSocketInstance -> {
+                    socket(serverSocketInstance, socketInstance -> {
+                        dataDualStream(socketInstance, dualStream::accept);
+                    });
+                });
             }
 
             /**

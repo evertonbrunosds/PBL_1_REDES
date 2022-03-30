@@ -1,15 +1,13 @@
 package controller;
 
-import interfaces.Connection;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import interfaces.ClientConnection;
 import java.io.IOException;
 import model.RecycleBin;
 
 public class RecycleBinController extends RecycleBin {
 
     private static RecycleBinController instance;
-    private Connection<DataInputStream, DataOutputStream> connection;
+    private ClientConnection connection;
 
     private RecycleBinController() {
     }
@@ -22,7 +20,7 @@ public class RecycleBinController extends RecycleBin {
     }
     
     public void connect(final String ip, final int port) throws IOException {
-        connection = Connection.builder(ip, port);
+        connection = ClientConnection.builder(ip, port);
         connection.test();
     }
 
