@@ -3,7 +3,6 @@ package interfaces;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import static interfaces.Factory.socket;
 import static interfaces.Factory.dataInputStream;
 import static interfaces.Factory.dataOutputStream;
@@ -33,8 +32,8 @@ public interface ClientConnection extends Connection<DataInputStream, DataOutput
              * Implementação de método responsável por construir fluxos de
              * entrada de dados para clientes.
              *
-             * @param singleStream Refere-se ao dito fluxo de entrada de dados para
-             * clientes.
+             * @param singleStream Refere-se ao dito fluxo de entrada de dados
+             * para clientes.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
@@ -47,8 +46,8 @@ public interface ClientConnection extends Connection<DataInputStream, DataOutput
              * Implementação de método responsável por construir fluxos de saída
              * de dados para clientes.
              *
-             * @param singleStream Refere-se ao dito fluxo de saída de dados para
-             * clientes.
+             * @param singleStream Refere-se ao dito fluxo de saída de dados
+             * para clientes.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
@@ -71,17 +70,6 @@ public interface ClientConnection extends Connection<DataInputStream, DataOutput
                 socket(ip, port, socketInstance -> dataDualStream(socketInstance, dualStream::accept));
             }
 
-            /**
-             * Implementação de Método responsável por testar a conexão.
-             *
-             * @throws IOException Exceção lançada no caso de haver falha de
-             * entrada/saída.
-             */
-            @Override
-            public void test() throws IOException {
-                final Socket socket = new Socket(ip, port);
-                socket.close();
-            }
         };
     }
 

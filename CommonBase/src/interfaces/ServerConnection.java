@@ -1,11 +1,10 @@
 package interfaces;
 
+import interfaces.Factory.SingleTransmissor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import static interfaces.Factory.serverSocket;
 import static interfaces.Factory.socket;
 import static interfaces.Factory.dataInputStream;
 import static interfaces.Factory.dataOutputStream;
@@ -29,6 +28,22 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
      */
     public static ServerConnection builder(final int port) {
         return new ServerConnection() {
+            private ServerSocket serverSocket = null;
+
+            /**
+             * Método responsável por gerar instância de ServerSocket com porta
+             * fornecida.
+             *
+             * @param transmissor Refere-se ao transmissor do ServerSocket.
+             * @throws IOException Exceção lançada no caso de haver falha de
+             * entrada/saída.
+             */
+            public void serverSocket(final SingleTransmissor<ServerSocket> transmissor) throws IOException {
+                if (serverSocket == null) {
+                    serverSocket = new ServerSocket(port);
+                }
+                transmissor.accept(serverSocket);
+            }
 
             /**
              * Implementação de método responsável por construir fluxos de
@@ -41,7 +56,7 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void inputStreamBuilder(final SingleStream<? super DataInputStream> singleStream) throws IOException {
-                serverSocket(port, serverSocketInstance -> {
+                serverSocket(serverSocketInstance -> {
                     socket(serverSocketInstance, socketInstance -> {
                         dataInputStream(socketInstance, singleStream::accept);
                     });
@@ -59,7 +74,7 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void outputStreamBuilder(final SingleStream<? super DataOutputStream> singleStream) throws IOException {
-                serverSocket(port, serverSocketInstance -> {
+                serverSocket(serverSocketInstance -> {
                     socket(serverSocketInstance, socketInstance -> {
                         dataOutputStream(socketInstance, singleStream::accept);
                     });
@@ -79,25 +94,14 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
             public void streamBuilder(
                     final DualStream<? super DataInputStream, ? super DataOutputStream> dualStream
             ) throws IOException {
-                serverSocket(port, serverSocketInstance -> {
+                serverSocket(serverSocketInstance -> {
                     socket(serverSocketInstance, socketInstance -> {
                         dataDualStream(socketInstance, dualStream::accept);
                     });
                 });
             }
-
-            /**
-             * Implementação de Método responsável por testar a conexão.
-             *
-             * @throws IOException Exceção lançada no caso de haver falha de
-             * entrada/saída.
-             */
-            @Override
-            public void test() throws IOException {
-                final ServerSocket serverSocket = new ServerSocket(port);
-                serverSocket.close();
-            }
         };
+
     }
 
 }

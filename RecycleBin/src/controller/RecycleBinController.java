@@ -21,7 +21,6 @@ public class RecycleBinController extends RecycleBin {
     
     public void connect(final String ip, final int port) throws IOException {
         connection = ClientConnection.builder(ip, port);
-        connection.test();
     }
 
 }

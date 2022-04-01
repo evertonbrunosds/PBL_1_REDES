@@ -16,21 +16,6 @@ import java.util.concurrent.Semaphore;
 public interface Factory {
 
     /**
-     * Método responsável por gerar instância de ServerSocket com porta
-     * fornecida.
-     *
-     * @param port Refere-se a porta de conexão fornecida.
-     * @param transmissor Refere-se ao transmissor do ServerSocket.
-     * @throws IOException Exceção lançada no caso de haver falha de
-     * entrada/saída.
-     */
-    public static void serverSocket(final int port, final SingleTransmissor<ServerSocket> transmissor) throws IOException {
-        try (final ServerSocket serverSocket = new ServerSocket(port)) {
-            transmissor.accept(serverSocket);
-        }
-    }
-
-    /**
      * Método responsável por gerar instância de Socket com ServerSocket
      * fornecido.
      *

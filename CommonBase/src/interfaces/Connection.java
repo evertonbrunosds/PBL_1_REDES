@@ -14,13 +14,6 @@ import java.io.IOException;
 public interface Connection<I, O> {
 
     /**
-     * Método responsável por testar a conexão.
-     *
-     * @throws IOException Exceção lançada no caso de haver falha de
-     */
-    public void test() throws IOException;
-
-    /**
      * Método responsável por construir fluxos de entrada e saída de dados.
      *
      * @param dualStream Refere-se ao dito fluxo de entrada e saída de dados.
