@@ -1,7 +1,5 @@
 package interfaces;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import org.junit.After;
@@ -19,8 +17,8 @@ import static org.junit.Assert.*;
  */
 public class ConnectionTest {
 
-    private Connection<DataInputStream, DataOutputStream> connectionClient;
-    private Connection<DataInputStream, DataOutputStream> connectionServer;
+    private ClientConnection connectionClient;
+    private ServerConnection connectionServer;
 
     public ConnectionTest() {
     }
@@ -41,12 +39,13 @@ public class ConnectionTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
+        connectionServer.close();
     }
 
     @Test
     public void testInputClientOutputServer() throws IOException, InterruptedException {
-        Factory.Thread.makeFree(() -> {
+        Factory.thread(() -> {
             try {
                 connectionServer.outputStreamBuilder(stream -> {
                     stream.flush();
@@ -64,7 +63,7 @@ public class ConnectionTest {
 
     @Test
     public void testInputServerOutputClient() throws IOException, InterruptedException {
-        Factory.Thread.makeFree(() -> {
+        Factory.thread(() -> {
             try {
                 connectionServer.inputStreamBuilder(stream -> {
                     assertEquals("Olá, Brasil!", stream.readUTF());
@@ -79,10 +78,10 @@ public class ConnectionTest {
             stream.writeUTF("Olá, Brasil!");
         });
     }
-    
+
     @Test
     public void testGetAndPoust() throws IOException, InterruptedException {
-        Factory.Thread.makeFree(() -> {
+        Factory.thread(() -> {
             try {
                 connectionServer.streamBuilder((inputStream, outputStream) -> {
                     final String msg = inputStream.readUTF();
@@ -100,4 +99,68 @@ public class ConnectionTest {
             assertEquals("Everton Bruno", inputStream.readUTF());
         });
     }
+
+    @Test
+    public void testInputFutureServerOutputClient() throws InterruptedException, IOException {
+        Factory.thread(() -> {
+            try {
+                connectionServer.inputStreamFuture(iOException -> {
+                    fail(iOException.getMessage());
+                }).then(stream -> {
+                    assertEquals("Olá, Brasil!", stream.readUTF());
+                });
+            } catch (IOException ex) {
+                fail("Falha de entrada/saída");
+            }
+        }).start();
+        sleep(1000);
+        connectionClient.outputStreamBuilder(stream -> {
+            stream.flush();
+            stream.writeUTF("Olá, Brasil!");
+        });
+    }
+
+    @Test
+    public void testInputClientOutputFutureServer() throws IOException, InterruptedException {
+        Factory.thread(() -> {
+            try {
+                connectionServer.outputStreamFuture(iOException -> {
+                    fail(iOException.getMessage());
+                }).then(stream -> {
+                    stream.flush();
+                    stream.writeUTF("Olá, mundo!");
+                });
+            } catch (IOException ex) {
+                fail("Falha de entrada/saída");
+            }
+        }).start();
+        sleep(1000);
+        connectionClient.inputStreamBuilder(stream -> {
+            assertEquals("Olá, mundo!", stream.readUTF());
+        });
+    }
+
+    @Test
+    public void testGetFutureAndPoustFuture() throws IOException, InterruptedException {
+        Factory.thread(() -> {
+            try {
+                connectionServer.streamFuture(iOException -> {
+                    fail(iOException.getMessage());
+                }).then((inputStream, outputStream) -> {
+                    final String msg = inputStream.readUTF();
+                    outputStream.flush();
+                    outputStream.writeUTF(msg.concat(" Bruno"));
+                });
+            } catch (IOException ex) {
+                fail("Falha de entrada/saída");
+            }
+        }).start();
+        sleep(1000);
+        connectionClient.streamBuilder((inputStream, outputStream) -> {
+            outputStream.flush();
+            outputStream.writeUTF("Everton");
+            assertEquals("Everton Bruno", inputStream.readUTF());
+        });
+    }
+    
 }

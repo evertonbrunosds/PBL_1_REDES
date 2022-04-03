@@ -24,7 +24,7 @@ public interface Factory {
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void socket(final ServerSocket serverSocket, final SingleStream<Socket> singleStream) throws IOException {
+    public static void socketBuilder(final ServerSocket serverSocket, final SingleStream<Socket> singleStream) throws IOException {
         try (final Socket socket = serverSocket.accept()) {
             singleStream.accept(socket);
         }
@@ -40,7 +40,7 @@ public interface Factory {
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void socket(final String ip, final int port, final SingleStream<Socket> singleStream) throws IOException {
+    public static void socketBuilder(final String ip, final int port, final SingleStream<Socket> singleStream) throws IOException {
         try (final Socket socket = new Socket(ip, port)) {
             singleStream.accept(socket);
         }
@@ -55,7 +55,7 @@ public interface Factory {
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void dataInputStream(final Socket socket, final SingleStream<DataInputStream> singleStream) throws IOException {
+    public static void dataInputStreamBuilder(final Socket socket, final SingleStream<DataInputStream> singleStream) throws IOException {
         try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
             singleStream.accept(input);
         }
@@ -70,7 +70,7 @@ public interface Factory {
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void dataOutputStream(final Socket socket, final SingleStream<DataOutputStream> singleStream) throws IOException {
+    public static void dataOutputStreamBuilder(final Socket socket, final SingleStream<DataOutputStream> singleStream) throws IOException {
         try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
             singleStream.accept(output);
         }
@@ -81,133 +81,62 @@ public interface Factory {
      * DataOutputStream com Socket fornecido.
      *
      * @param socket Refere-se ao Socket fornecido.
-     * @param singleStream Refere-se ao transmissor do DataInputStream e
+     * @param dualStream Refere-se ao transmissor do DataInputStream e
      * DataOutputStream.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void dataDualStream(final Socket socket, final DualStream<DataInputStream, DataOutputStream> singleStream) throws IOException {
+    public static void dataDualStreamBuilder(final Socket socket, final DualStream<DataInputStream, DataOutputStream> dualStream) throws IOException {
         try (
                 final DataInputStream input = new DataInputStream(socket.getInputStream());
                 final DataOutputStream output = new DataOutputStream(socket.getOutputStream());) {
-            singleStream.accept(input, output);
+            dualStream.accept(input, output);
         }
     }
 
     /**
-     * Classe responsável por fornecer métodos de instanciamento de Threads.
+     * Método responsável por gerar instância de thread sem uso de semáforos.
      *
-     * @author Everton Bruno Silva dos Santos.
-     * @version 1.0
-     * @since 1.0
+     * @param worker Refere-se ao trabalhador que desempenhará dado trabalho.
+     * @return Retorna instância de thread sem uso de semáforos.
      */
-    public static final class Thread {
+    public static Thread thread(final Worker worker) {
+        return new java.lang.Thread() {
+            @Override
+            public void run() {
+                worker.work();
+            }
+        };
+    }
 
-        /**
-         * Refere-se a instância singular de semáforo de thread.
-         */
-        public static final Semaphore SEMAPHORE = new Semaphore(1);
-
-        /**
-         * Método responsável por gerar instância de thread sem uso de
-         * semáforos.
-         *
-         * @param worker Refere-se ao trabalhador que desempenhará dado
-         * trabalho.
-         * @return Retorna instância de thread sem uso de semáforos.
-         */
-        public static java.lang.Thread makeFree(final Worker worker) {
-            return new java.lang.Thread() {
-                @Override
-                public void run() {
+    /**
+     * Método responsável por gerar instância de thread com uso de múltiplos
+     * semáforos.
+     *
+     * @param worker Refere-se ao trabalhador que desempenhará dado trabalho.
+     * @param semaphores Refere-se aos múltiplos semáforos.
+     * @param treatable Refere-se ao modo como devem ser tratadas as
+     * interrupções.
+     * @return Retorna instância de thread com uso de múltiplos semáforos.
+     */
+    public static Thread thread(final Worker worker, final Semaphore[] semaphores, final Treatable<InterruptedException> treatable) {
+        return new java.lang.Thread() {
+            @Override
+            public void run() {
+                try {
+                    for (final Semaphore semaphore : semaphores) {
+                        semaphore.acquire();
+                    }
                     worker.work();
-                }
-            };
-        }
-
-        /**
-         * Método responsável por gerar instância de thread com uso de semáforo
-         * singular compartilhado por todas as demais threads geradas por esse
-         * método.
-         *
-         * @param worker Refere-se ao trabalhador que desempenhará dado
-         * trabalho.
-         * @return Retorna instância de thread com uso de semáforo singular
-         * compartilhado por todas as demais threads geradas por esse método.
-         */
-        public static java.lang.Thread makeSafe(final Worker worker) {
-            return new java.lang.Thread() {
-                @Override
-                public void run() {
-                    try {
-                        SEMAPHORE.acquire();
-                        worker.work();
-                    } catch (final InterruptedException ex) {
-                        makeSafe(worker).start();
-                    } finally {
-                        SEMAPHORE.release();
+                } catch (final InterruptedException ex) {
+                    treatable.toTreate(ex);
+                } finally {
+                    for (final Semaphore semaphore : semaphores) {
+                        semaphore.release();
                     }
                 }
-            };
-        }
-
-        /**
-         * Método responsável por gerar instância de thread com uso de múltiplos
-         * semáforos.
-         *
-         * @param worker Refere-se ao trabalhador que desempenhará dado
-         * trabalho.
-         * @param semaphores Refere-se aos múltiplos semáforos.
-         * @return Retorna instância de thread com uso de múltiplos semáforos.
-         */
-        public static java.lang.Thread makeSafe(final Worker worker, final Iterable<Semaphore> semaphores) {
-            return new java.lang.Thread() {
-                @Override
-                public void run() {
-                    try {
-                        for (final Semaphore semaphore : semaphores) {
-                            semaphore.acquire();
-                        }
-                        worker.work();
-                    } catch (final InterruptedException ex) {
-                        makeSafe(worker).start();
-                    } finally {
-                        for (final Semaphore semaphore : semaphores) {
-                            semaphore.release();
-                        }
-                    }
-                }
-            };
-        }
-
-        /**
-         * Método responsável por gerar instância de thread com uso de múltiplos
-         * semáforos.
-         *
-         * @param worker Refere-se ao trabalhador que desempenhará dado
-         * trabalho.
-         * @param semaphores Refere-se aos múltiplos semáforos.
-         * @return Retorna instância de thread com uso de múltiplos semáforos.
-         */
-        public static java.lang.Thread makeSafeThread(final Worker worker, final Semaphore[] semaphores) {
-            return new java.lang.Thread() {
-                @Override
-                public void run() {
-                    try {
-                        for (final Semaphore semaphore : semaphores) {
-                            semaphore.acquire();
-                        }
-                        worker.work();
-                    } catch (final InterruptedException ex) {
-                        makeSafe(worker).start();
-                    } finally {
-                        for (final Semaphore semaphore : semaphores) {
-                            semaphore.release();
-                        }
-                    }
-                }
-            };
-        }
+            }
+        };
     }
 
 }

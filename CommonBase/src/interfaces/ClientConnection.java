@@ -3,10 +3,10 @@ package interfaces;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import static interfaces.Factory.socket;
-import static interfaces.Factory.dataInputStream;
-import static interfaces.Factory.dataOutputStream;
-import static interfaces.Factory.dataDualStream;
+import static interfaces.Factory.dataDualStreamBuilder;
+import static interfaces.Factory.dataInputStreamBuilder;
+import static interfaces.Factory.dataOutputStreamBuilder;
+import static interfaces.Factory.socketBuilder;
 
 /**
  * Interface responsável por fornecer as assinaturas de método para um objeto de
@@ -39,7 +39,7 @@ public interface ClientConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void inputStreamBuilder(final SingleStream<? super DataInputStream> singleStream) throws IOException {
-                socket(ip, port, socketInstance -> dataInputStream(socketInstance, singleStream::accept));
+                socketBuilder(ip, port, socketInstance -> dataInputStreamBuilder(socketInstance, singleStream::accept));
             }
 
             /**
@@ -53,7 +53,7 @@ public interface ClientConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void outputStreamBuilder(final SingleStream<? super DataOutputStream> singleStream) throws IOException {
-                socket(ip, port, socketInstance -> dataOutputStream(socketInstance, singleStream::accept));
+                socketBuilder(ip, port, socketInstance -> dataOutputStreamBuilder(socketInstance, singleStream::accept));
             }
 
             /**
@@ -67,7 +67,7 @@ public interface ClientConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void streamBuilder(final DualStream<? super DataInputStream, ? super DataOutputStream> dualStream) throws IOException {
-                socket(ip, port, socketInstance -> dataDualStream(socketInstance, dualStream::accept));
+                socketBuilder(ip, port, socketInstance -> dataDualStreamBuilder(socketInstance, dualStream::accept));
             }
 
         };
