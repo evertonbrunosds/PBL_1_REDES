@@ -20,13 +20,13 @@ public interface Factory {
      * fornecido.
      *
      * @param serverSocket Refere-se ao ServerSocket fornecido.
-     * @param transmissor Refere-se ao transmissor do Socket.
+     * @param singleStream Refere-se ao transmissor do Socket.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void socket(final ServerSocket serverSocket, final SingleTransmissor<Socket> transmissor) throws IOException {
+    public static void socket(final ServerSocket serverSocket, final SingleStream<Socket> singleStream) throws IOException {
         try (final Socket socket = serverSocket.accept()) {
-            transmissor.accept(socket);
+            singleStream.accept(socket);
         }
     }
 
@@ -36,13 +36,13 @@ public interface Factory {
      *
      * @param ip Refere-se ao IP fornecido.
      * @param port Refere-se a porta fornecida.
-     * @param transmissor Refere-se ao transmissor do Socket.
+     * @param singleStream Refere-se ao transmissor do Socket.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void socket(final String ip, final int port, final SingleTransmissor<Socket> transmissor) throws IOException {
+    public static void socket(final String ip, final int port, final SingleStream<Socket> singleStream) throws IOException {
         try (final Socket socket = new Socket(ip, port)) {
-            transmissor.accept(socket);
+            singleStream.accept(socket);
         }
     }
 
@@ -51,13 +51,13 @@ public interface Factory {
      * fornecido.
      *
      * @param socket Refere-se ao Socket fornecido.
-     * @param transmissor Refere-se ao transmissor do DataInputStream.
+     * @param singleStream Refere-se ao transmissor do DataInputStream.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void dataInputStream(final Socket socket, final SingleTransmissor<DataInputStream> transmissor) throws IOException {
+    public static void dataInputStream(final Socket socket, final SingleStream<DataInputStream> singleStream) throws IOException {
         try (final DataInputStream input = new DataInputStream(socket.getInputStream())) {
-            transmissor.accept(input);
+            singleStream.accept(input);
         }
     }
 
@@ -66,13 +66,13 @@ public interface Factory {
      * fornecido.
      *
      * @param socket Refere-se ao Socket fornecido.
-     * @param transmissor Refere-se ao transmissor do DataOutputStream.
+     * @param singleStream Refere-se ao transmissor do DataOutputStream.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void dataOutputStream(final Socket socket, final SingleTransmissor<DataOutputStream> transmissor) throws IOException {
+    public static void dataOutputStream(final Socket socket, final SingleStream<DataOutputStream> singleStream) throws IOException {
         try (final DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
-            transmissor.accept(output);
+            singleStream.accept(output);
         }
     }
 
@@ -81,16 +81,16 @@ public interface Factory {
      * DataOutputStream com Socket fornecido.
      *
      * @param socket Refere-se ao Socket fornecido.
-     * @param transmissor Refere-se ao transmissor do DataInputStream e
+     * @param singleStream Refere-se ao transmissor do DataInputStream e
      * DataOutputStream.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
-    public static void dataDualStream(final Socket socket, final DualTransmissor<DataInputStream, DataOutputStream> transmissor) throws IOException {
+    public static void dataDualStream(final Socket socket, final DualStream<DataInputStream, DataOutputStream> singleStream) throws IOException {
         try (
                 final DataInputStream input = new DataInputStream(socket.getInputStream());
                 final DataOutputStream output = new DataOutputStream(socket.getOutputStream());) {
-            transmissor.accept(input, output);
+            singleStream.accept(input, output);
         }
     }
 
@@ -208,52 +208,6 @@ public interface Factory {
                 }
             };
         }
-    }
-
-    /**
-     * Interface funcional responsável por possibilitar o acesso a dados
-     * transmitidos.
-     *
-     * @author Everton Bruno Silva dos Santos.
-     * @version 1.0
-     * @param <T> Refere-se ao tipo de fluxo.
-     */
-    @FunctionalInterface
-    public interface SingleTransmissor<T> {
-
-        /**
-         * Método responsável por receber dados transmitidos.
-         *
-         * @param t Refere-se ao tipo de dado transmitido.
-         * @throws IOException Exceção lançada no caso de haver falha de
-         * entrada/saída.
-         */
-        public void accept(final T t) throws IOException;
-
-    }
-
-    /**
-     * Interface funcional responsável por possibilitar o acesso a dados
-     * transmitidos.
-     *
-     * @author Everton Bruno Silva dos Santos.
-     * @version 1.0
-     * @param <T1> Refere-se ao primeiro tipo de transferência.
-     * @param <T2> Refere-se ao segundo tipo de transferência.
-     */
-    @FunctionalInterface
-    public interface DualTransmissor<T1, T2> {
-
-        /**
-         * Método responsável por receber dados transmitidos.
-         *
-         * @param t1 Refere-se ao primeiro tipo de dados transmitido.
-         * @param t2 Refere-se ao segundo tipo de dados transmitido.
-         * @throws IOException Exceção lançada no caso de haver falha de
-         * entrada/saída.
-         */
-        public void accept(final T1 t1, final T2 t2) throws IOException;
-
     }
 
 }

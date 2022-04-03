@@ -1,6 +1,5 @@
 package interfaces;
 
-import interfaces.Factory.SingleTransmissor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,15 +33,14 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
              * Método responsável por gerar instância de ServerSocket com porta
              * fornecida.
              *
-             * @param transmissor Refere-se ao transmissor do ServerSocket.
              * @throws IOException Exceção lançada no caso de haver falha de
              * entrada/saída.
              */
-            public void serverSocket(final SingleTransmissor<ServerSocket> transmissor) throws IOException {
+            private ServerSocket getServerSocketInstance() throws IOException {
                 if (serverSocket == null) {
                     serverSocket = new ServerSocket(port);
                 }
-                transmissor.accept(serverSocket);
+                return serverSocket;
             }
 
             /**
@@ -56,10 +54,8 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void inputStreamBuilder(final SingleStream<? super DataInputStream> singleStream) throws IOException {
-                serverSocket(serverSocketInstance -> {
-                    socket(serverSocketInstance, socketInstance -> {
-                        dataInputStream(socketInstance, singleStream::accept);
-                    });
+                socket(getServerSocketInstance(), socketInstance -> {
+                    dataInputStream(socketInstance, singleStream::accept);
                 });
             }
 
@@ -74,10 +70,8 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
              */
             @Override
             public void outputStreamBuilder(final SingleStream<? super DataOutputStream> singleStream) throws IOException {
-                serverSocket(serverSocketInstance -> {
-                    socket(serverSocketInstance, socketInstance -> {
-                        dataOutputStream(socketInstance, singleStream::accept);
-                    });
+                socket(getServerSocketInstance(), socketInstance -> {
+                    dataOutputStream(socketInstance, singleStream::accept);
                 });
             }
 
@@ -94,10 +88,8 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
             public void streamBuilder(
                     final DualStream<? super DataInputStream, ? super DataOutputStream> dualStream
             ) throws IOException {
-                serverSocket(serverSocketInstance -> {
-                    socket(serverSocketInstance, socketInstance -> {
-                        dataDualStream(socketInstance, dualStream::accept);
-                    });
+                socket(getServerSocketInstance(), socketInstance -> {
+                    dataDualStream(socketInstance, dualStream::accept);
                 });
             }
         };
