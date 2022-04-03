@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import static interfaces.Factory.socket;
 import static interfaces.Factory.dataInputStream;
 import static interfaces.Factory.dataOutputStream;
+import java.net.Socket;
 import static interfaces.Factory.dataDualStream;
 
 /**
@@ -17,6 +18,8 @@ import static interfaces.Factory.dataDualStream;
  * @version 1.0
  */
 public interface ServerConnection extends Connection<DataInputStream, DataOutputStream> {
+
+    public FutureStream<SingleStream<? super DataInputStream>> inputStreamFuture() throws IOException;
 
     /**
      * Método responsável por construir a instância de uma conexão voltada para
@@ -92,6 +95,25 @@ public interface ServerConnection extends Connection<DataInputStream, DataOutput
                     dataDualStream(socketInstance, dualStream::accept);
                 });
             }
+
+            @Override
+            public FutureStream<SingleStream<? super DataInputStream>> inputStreamFuture() throws IOException {
+                final Socket socket = getServerSocketInstance().accept();
+                return (final SingleStream<? super DataInputStream> singleStream) -> {
+                    Factory.Thread.makeFree(() -> {
+                        try {
+                            try {
+                                dataInputStream(socket, singleStream::accept);
+                            } finally {
+                                socket.close();
+                            }
+                        } catch (final IOException ex) {
+                            System.out.println("Erro");
+                        }
+                    }).start();
+                };
+            }
+
         };
 
     }
