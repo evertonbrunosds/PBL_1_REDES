@@ -1,6 +1,9 @@
 package view;
 
-import controller.RecycleBinController;
+import control.RecycleBinController;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ConnectWindow extends javax.swing.JDialog {
@@ -127,7 +130,11 @@ public class ConnectWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_textIPKeyReleased
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        RecycleBinController.getInstance().connect(textIP.getText(), 1997);
+        try {
+            RecycleBinController.getInstance().connect(textIP.getText(), 1997);
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnConnectActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
