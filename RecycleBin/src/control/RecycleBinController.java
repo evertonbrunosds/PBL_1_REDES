@@ -2,10 +2,9 @@ package control;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.RecycleBin;
 import org.json.JSONObject;
+import uefs.ComumBase.enums.Method;
 import uefs.ComumBase.interfaces.ClientConnection;
 import util.Usage;
 
@@ -26,8 +25,9 @@ public class RecycleBinController extends RecycleBin {
         return instance;
     }
 
-    private JSONObject getCurrentState() {
+    private JSONObject getCurrentState(final Method method) {
         final HashMap<String, String> currentState = new HashMap<>();
+        currentState.put("METHOD", Method.toString(method));
         currentState.put("DEVICE", "RECYCLE_BIN");
         currentState.put("ID", id);
         currentState.put("IS_BLOCKED", Boolean.toString(isBlocked()).toUpperCase());
@@ -45,7 +45,7 @@ public class RecycleBinController extends RecycleBin {
             final JSONObject inputJSON = toJSONObject(inputStream.readUTF());
             id = inputJSON.get("ID").toString();
             outputStream.flush();
-            outputStream.writeUTF(getCurrentState().toString());
+            outputStream.writeUTF(getCurrentState(Method.post).toString());
         });
     }
 
