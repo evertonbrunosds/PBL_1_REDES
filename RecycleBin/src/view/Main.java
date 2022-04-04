@@ -1,9 +1,8 @@
 package view;
 
-public class Main extends javax.swing.JDialog {
+public class Main extends javax.swing.JFrame {
 
-    public Main(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public Main() {
         initComponents();
     }
 
@@ -16,6 +15,8 @@ public class Main extends javax.swing.JDialog {
         labelDescriptionState = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Lixeira");
+        setResizable(false);
 
         sliderDescriptionUsage.setMaximum(4);
         sliderDescriptionUsage.setValue(0);
@@ -23,6 +24,11 @@ public class Main extends javax.swing.JDialog {
         labelDescriptionUsage.setText("Descrição de Uso: Nenhum");
 
         btnConnectToServer.setText("Conectar");
+        btnConnectToServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectToServerActionPerformed(evt);
+            }
+        });
 
         labelDescriptionState.setText("Descrição de Estado: Livre");
 
@@ -50,12 +56,16 @@ public class Main extends javax.swing.JDialog {
                 .addComponent(labelDescriptionState)
                 .addGap(20, 20, 20)
                 .addComponent(btnConnectToServer)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectToServerActionPerformed
+        ConnectWindow.showModal(this);
+    }//GEN-LAST:event_btnConnectToServerActionPerformed
 
     public static void main(String args[]) {
         try {
@@ -69,14 +79,7 @@ public class Main extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         java.awt.EventQueue.invokeLater(() -> {
-            Main dialog = new Main(new javax.swing.JFrame(), false);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setVisible(true);
+            new Main().setVisible(true);
         });
     }
 

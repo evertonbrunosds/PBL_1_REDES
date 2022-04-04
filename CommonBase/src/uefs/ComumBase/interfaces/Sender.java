@@ -1,4 +1,4 @@
-package interfaces;
+package uefs.ComumBase.interfaces;
 
 /**
  * Interface responsável por fornecer a assinatura de método de um remetente.

@@ -1,8 +1,10 @@
 package controller;
 
-import interfaces.ClientConnection;
 import java.io.IOException;
+import java.util.HashMap;
 import model.RecycleBin;
+import org.json.simple.JSONObject;
+import uefs.ComumBase.interfaces.ClientConnection;
 
 public class RecycleBinController extends RecycleBin {
 
@@ -20,7 +22,14 @@ public class RecycleBinController extends RecycleBin {
     }
     
     public void connect(final String ip, final int port) throws IOException {
-        connection = ClientConnection.builder(ip, port);
+        final ClientConnection newConnection = ClientConnection.builder(ip, port);
+        newConnection.streamBuilder((inputStream, outputStream) -> {
+            final HashMap<String,String> hashMap = new HashMap<>();
+            hashMap.put("DEVICE", "RECYCLE_BIN");
+            hashMap.put("IS_BLOCKED", Boolean.toString(isBlocked()).toUpperCase());
+            
+            JSONObject recycleBin = new JSONObject();
+        });
     }
 
 }

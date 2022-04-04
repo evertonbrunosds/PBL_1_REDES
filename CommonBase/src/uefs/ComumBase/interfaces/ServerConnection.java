@@ -1,14 +1,14 @@
-package interfaces;
+package uefs.ComumBase.interfaces;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import static interfaces.Factory.dataDualStreamBuilder;
-import static interfaces.Factory.dataInputStreamBuilder;
-import static interfaces.Factory.dataOutputStreamBuilder;
-import static interfaces.Factory.socketBuilder;
+import static uefs.ComumBase.interfaces.Factory.dataDualStreamBuilder;
+import static uefs.ComumBase.interfaces.Factory.dataInputStreamBuilder;
+import static uefs.ComumBase.interfaces.Factory.dataOutputStreamBuilder;
+import static uefs.ComumBase.interfaces.Factory.socketBuilder;
 
 /**
  * Interface responsável por fornecer as assinaturas de método para um objeto de

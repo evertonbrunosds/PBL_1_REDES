@@ -1,5 +1,8 @@
 package interfaces;
 
+import uefs.ComumBase.interfaces.Factory;
+import uefs.ComumBase.interfaces.ServerConnection;
+import uefs.ComumBase.interfaces.ClientConnection;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import org.junit.After;

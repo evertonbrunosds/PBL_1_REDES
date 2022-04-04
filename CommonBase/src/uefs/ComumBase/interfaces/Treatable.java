@@ -1,4 +1,4 @@
-package interfaces;
+package uefs.ComumBase.interfaces;
 
 /**
  * Interface funcional responsável por possibilitar o tratamento de exceções

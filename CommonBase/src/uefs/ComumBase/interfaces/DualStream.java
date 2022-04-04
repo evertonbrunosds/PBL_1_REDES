@@ -1,4 +1,4 @@
-package interfaces;
+package uefs.ComumBase.interfaces;
 
 import java.io.IOException;
 
