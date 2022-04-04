@@ -25,11 +25,12 @@ public class RecycleBinController extends RecycleBin {
         return instance;
     }
 
-    private JSONObject getCurrentState(final Method method) {
+    private JSONObject getCurrentState(final Method method, final boolean success) {
         final HashMap<String, String> currentState = new HashMap<>();
         currentState.put("METHOD", Method.toString(method));
+        currentState.put("SUCCESS", Boolean.toString(success).toUpperCase());
         currentState.put("DEVICE", "RECYCLE_BIN");
-        currentState.put("ID", id);
+        currentState.put("ID", (id == null) ? "UNDETERMINED" : id);
         currentState.put("IS_BLOCKED", Boolean.toString(isBlocked()).toUpperCase());
         currentState.put("USAGE", Usage.toString(getUsage()));
         return new JSONObject(currentState);
@@ -42,10 +43,6 @@ public class RecycleBinController extends RecycleBin {
     public void connect(final String ip, final int port) throws IOException {
         final ClientConnection newConnection = ClientConnection.builder(ip, port);
         newConnection.streamBuilder((inputStream, outputStream) -> {
-            final JSONObject inputJSON = toJSONObject(inputStream.readUTF());
-            id = inputJSON.get("ID").toString();
-            outputStream.flush();
-            outputStream.writeUTF(getCurrentState(Method.post).toString());
         });
     }
 

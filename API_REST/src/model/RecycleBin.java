@@ -45,6 +45,7 @@ public class RecycleBin implements Consumer {
         } else {
             final JSONObject newUser = new JSONObject();
             newUser.put("METHOD", Method.toString(Method.get));
+            newUser.put("SUCCESS", "FALSE");
             newUser.put("DEVICE", "RECYCLE_BIN");
             newUser.put("ID", id);
         }
