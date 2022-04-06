@@ -40,7 +40,7 @@ public class RecycleBinServerConsumer implements ServerConsumer<ClientConnection
      * @throws IOException Refere-se a exceção de entrada/saída.
      */
     @Override
-    public JSONObject poust(final ClientConnection connection) throws IOException {
+    public JSONObject post(final ClientConnection connection) throws IOException {
         return runHighMethod(connection, Method.post);
     }
 

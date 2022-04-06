@@ -1,4 +1,4 @@
-package exception;
+package util;
 
 public class AccessDeniedException extends RuntimeException {
     

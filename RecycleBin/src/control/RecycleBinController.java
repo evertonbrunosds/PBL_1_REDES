@@ -13,10 +13,10 @@ public class RecycleBinController extends RecycleBin {
     private static RecycleBinController instance;
     private static final String STATUS = "STATUS";
     private ClientConnection currentConnection;
-    private final ServerConsumer<ClientConnection, JSONObject> serverConsumer;
+    private final ServerConsumer<ClientConnection, JSONObject> request;
 
     private RecycleBinController() {
-        serverConsumer = new RecycleBinServerConsumer(this);
+        request = new RecycleBinServerConsumer(this);
     }
 
     public static RecycleBinController getInstance() {
@@ -25,28 +25,44 @@ public class RecycleBinController extends RecycleBin {
         }
         return instance;
     }
-    
+
     public String getId() {
         return (currentConnection == null) ? "UNDETERMINED" : currentConnection.getId();
     }
 
-
-    public void connect(final String ip, final int port) throws IOException {
+    public void connectToServer(final String ip, final int port) throws IOException {
         final ClientConnection newConnection = new ClientConnection(ip, port);
-        final JSONObject responseGet = serverConsumer.get(newConnection);
-        if (responseGet.getString(STATUS).equals(NOT_FOUND)) {
-            newConnection.setId(responseGet.getString("ID"));
-            final JSONObject responsePost = serverConsumer.poust(newConnection);
-            if (responsePut.getString(STATUS).equals(OK)) {
-                serverConsumer.delete(currentConnection);
+        final JSONObject response = request.put(newConnection);
+        switch (response.getString(STATUS)) {
+            case OK:
+                disconnect();
                 currentConnection = newConnection;
-            } else {
-                id = "UNDETERMINED";
-                throw new IOException();
-            }
-        } else if (responseGet.getString(STATUS).equals(OK)) {
-
+                break;
+            case NOT_FOUND:
+                startLogs(currentConnection);
+                break;
+            case INTERNAL_SERVER_ERROR:
+                throw new IOException("INTERNAL_SERVER_ERROR");
+            default:
+                throw new IOException("UNDETERMINED");
         }
     }
 
+    public void disconnect() {
+
+    }
+
+    public void startLogs(final ClientConnection connection) throws IOException {
+        final JSONObject response = request.post(connection);
+        switch (response.getString(STATUS)) {
+            case OK:
+                disconnect();
+                currentConnection = connection;
+                break;
+            case INTERNAL_SERVER_ERROR:
+                throw new IOException("INTERNAL_SERVER_ERROR");
+            default:
+                throw new IOException("UNDETERMINED");
+        }
+    }
 }

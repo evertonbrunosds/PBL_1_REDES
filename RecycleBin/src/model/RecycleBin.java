@@ -1,6 +1,6 @@
 package model;
 
-import exception.AccessDeniedException;
+import util.AccessDeniedException;
 import util.Usage;
 
 
