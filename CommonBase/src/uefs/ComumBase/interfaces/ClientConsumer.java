@@ -1,14 +1,21 @@
-package model;
+package uefs.ComumBase.interfaces;
 
 import java.io.IOException;
 
 /**
- * Interface responsável por fornecer os métodos de um consumidor.
+ * Interface responsável por fornecer os métodos de um consumidor de cliente.
  *
  * @author Everton Bruno Silva dos Santos.
  * @version 1.0
  */
-public interface Consumer {
+public interface ClientConsumer {
+
+    /**
+     * Método responsável por criar dados do consumidor.
+     *
+     * @throws IOException Refere-se a algum possível erro de entrada/saída.
+     */
+    void poust() throws IOException;
 
     /**
      * Método responsável por buscar dados do consumidor.
@@ -16,13 +23,6 @@ public interface Consumer {
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     void get() throws IOException;
-
-    /**
-     * Método responsável por criar dados do consumidor.
-     *
-     * @throws IOException Refere-se a algum possível erro de entrada/saída.
-     */
-    void post() throws IOException;
 
     /**
      * Método responsável por atualizar dados do consumidor.

@@ -6,30 +6,37 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import org.json.JSONObject;
-import uefs.ComumBase.enums.Method;
 
 public class RecycleBin implements Consumer {
 
     private static final List<Integer> ALL_IDS = new ArrayList<>();
+    private static final Semaphore SEMAPHORE = new Semaphore(1);
     private final DataInputStream inputStream;
     private final DataOutputStream outputStream;
     private final String id;
     private final Map<String, JSONObject> jsonMap;
 
-    public RecycleBin(final DataInputStream inputStream, final DataOutputStream outputStream, final Map<String, JSONObject> jsonMap) {
+    public RecycleBin(final String id, final DataInputStream inputStream, final DataOutputStream outputStream, final Map<String, JSONObject> jsonMap) throws InterruptedException {
         this.inputStream = inputStream;
         this.outputStream = outputStream;
-        ALL_IDS.sort(Integer::compareTo);
-        id = Integer.toString(ALL_IDS.get(ALL_IDS.size() - 1) + 1);
+        this.id = "UNDETERMINED".equals(id) ? gerateNewId() : id;
         this.jsonMap = jsonMap;
     }
 
-    public RecycleBin(final String id, final DataInputStream inputStream, final DataOutputStream outputStream, final Map<String, JSONObject> jsonMap) {
-        this.inputStream = inputStream;
-        this.outputStream = outputStream;
-        this.id = id;
-        this.jsonMap = jsonMap;
+    private static String gerateNewId() throws InterruptedException {
+        try {
+            SEMAPHORE.acquire();
+            ALL_IDS.sort(Integer::compareTo);
+            final int lastUsableIndex = ALL_IDS.size() - 1;
+            final int highestValue = ALL_IDS.get(lastUsableIndex);
+            final int newHighestValue = highestValue + 1;
+            ALL_IDS.add(newHighestValue);
+            return Integer.toString(newHighestValue);
+        } finally {
+            SEMAPHORE.release();
+        }
     }
 
     /**
@@ -44,21 +51,9 @@ public class RecycleBin implements Consumer {
             outputStream.writeUTF(jsonMap.get(id).toString());
         } else {
             final JSONObject newUser = new JSONObject();
-            newUser.put("METHOD", Method.toString(Method.get));
-            newUser.put("SUCCESS", "FALSE");
-            newUser.put("DEVICE", "RECYCLE_BIN");
+            newUser.put("STATUS", "404");
             newUser.put("ID", id);
         }
-    }
-
-    /**
-     * Método responsável por criar dados da lixeira.
-     *
-     * @throws IOException Refere-se a algum possível erro de entrada/saída.
-     */
-    @Override
-    public void post() throws IOException {
-        if (jsonMap.containsKey(id));
     }
 
     /**

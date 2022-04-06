@@ -1,8 +1,7 @@
-package interfaces;
+package uefs.ComumBase.interfaces;
 
-import uefs.ComumBase.interfaces.Factory;
-import uefs.ComumBase.interfaces.ServerConnection;
-import uefs.ComumBase.interfaces.ClientConnection;
+import uefs.ComumBase.classes.ServerConnection;
+import uefs.ComumBase.classes.ClientConnection;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import org.junit.After;
@@ -37,8 +36,8 @@ public class ConnectionTest {
     @Before
     public void setUp() {
         final int port = 1997;
-        connectionClient = ClientConnection.builder("127.0.0.1", port);
-        connectionServer = ServerConnection.builder(port);
+        connectionClient = new ClientConnection("127.0.0.1", port);
+        connectionServer = new ServerConnection(port);
     }
 
     @After
@@ -165,5 +164,5 @@ public class ConnectionTest {
             assertEquals("Everton Bruno", inputStream.readUTF());
         });
     }
-    
+
 }
