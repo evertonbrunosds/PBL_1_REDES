@@ -10,4 +10,5 @@ import java.io.DataOutputStream;
  * @author Everton Bruno Silva dos Santos.
  * @version 1.0
  */
-public interface ClientConnection extends Connection<DataInputStream, DataOutputStream> {}
+public interface ClientConnection extends Connection<DataInputStream, DataOutputStream> {
+}

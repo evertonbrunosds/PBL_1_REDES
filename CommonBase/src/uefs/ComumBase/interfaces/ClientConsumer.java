@@ -15,7 +15,7 @@ public interface ClientConsumer {
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
-    void poust() throws IOException;
+    void post() throws IOException;
 
     /**
      * Método responsável por buscar dados do consumidor.

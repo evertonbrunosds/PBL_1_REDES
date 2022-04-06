@@ -19,7 +19,7 @@ public interface ServerConsumer<I, O> {
      * @return Retorna a resposta da ação.
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
-    O poust(I connection) throws IOException;
+    O post(I connection) throws IOException;
 
     /**
      * Método responsável por buscar dados do consumidor.

@@ -1,11 +1,15 @@
 package uefs.ComumBase.interfaces;
 
+/**
+ * Interface responsável por possibilitar o acesso a StatusCodeHTTP.
+ *
+ * @author Everton Bruno Silva dos Santos.
+ * @version 1.0
+ */
 public interface Status {
-    
+
     /**
-     * O servidor não pode encontrar o recurso solicitado. Este código de
-     * resposta talvez seja o mais famoso devido à frequência com que acontece
-     * na web.
+     * O servidor não pode encontrar o recurso solicitado.
      */
     public static final String NOT_FOUND = "404";
 
@@ -18,5 +22,5 @@ public interface Status {
      * Estas requisição foi bem sucedida.
      */
     public static final String OK = "200";
-    
+
 }
