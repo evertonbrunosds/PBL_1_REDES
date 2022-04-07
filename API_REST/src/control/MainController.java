@@ -1,16 +1,31 @@
 package control;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import uefs.ComumBase.interfaces.ServerConnection;
+import static model.Constants.DELETE;
+import static model.Constants.METHOD;
+import static model.Constants.POST;
+import static model.Constants.PUT;
+import static model.Constants.STATUS;
+import org.json.JSONObject;
+import uefs.ComumBase.classes.ServerConnection;
 import uefs.ComumBase.interfaces.Treatable;
+import model.RecycleBin;
+import uefs.ComumBase.interfaces.ClientConsumer;
+import static uefs.ComumBase.interfaces.Status.INTERNAL_SERVER_ERROR;
 
 public class MainController {
 
     private static MainController instance;
-    final ServerConnection serverConnection;
+    final ServerConnection recycleBinsServer;
+    final ServerConnection administratorsServer;
+    final ServerConnection garbageTruckServer;
 
     private MainController() {
-        serverConnection = ServerConnection.builder(1997);
+        recycleBinsServer = new ServerConnection(1990);
+        administratorsServer = new ServerConnection(1991);
+        garbageTruckServer = new ServerConnection(1992);
     }
 
     public static MainController getInstance() {
@@ -20,10 +35,45 @@ public class MainController {
         return instance;
     }
 
-    public void listenToClients(final Treatable<IOException> internalTratament) throws IOException {
-        serverConnection.streamFuture(internalTratament::toTreate).then((inputStream, outputStream) -> {
-            
-        });
+    public void listenToRecycleBins(final Treatable<IOException> internalTratament) throws IOException {
+        recycleBinsServer.streamFuture(internalTratament::toTreate).then(this::listenToRecycleBins);
+    }
+
+    private void listenToRecycleBins(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
+        final JSONObject request = new JSONObject(inputStream.readUTF());
+        try {
+            runConsumer(new RecycleBin(request, outputStream, FakeDadaBaseController.getInstance()), request);
+        } catch (final InterruptedException ex) {
+            unsuccessfulRequest(outputStream);
+        }
     }
     
+    private static void runConsumer(final ClientConsumer clientConsumer, final JSONObject request) throws IOException {
+        if (request.toMap().containsKey(METHOD)) {
+            switch (request.getString(METHOD)) {
+                case POST:
+                    clientConsumer.post();
+                    break;
+                case PUT:
+                    clientConsumer.put();
+                    break;
+                case DELETE:
+                    clientConsumer.delete();
+                    break;
+                default:
+                    clientConsumer.get();
+                    break;
+            }
+        } else {
+            clientConsumer.get();
+        }
+    }
+
+    private static void unsuccessfulRequest(final DataOutputStream outputStream) throws IOException {
+        final JSONObject msg = new JSONObject();
+        msg.put(STATUS, INTERNAL_SERVER_ERROR);
+        outputStream.flush();
+        outputStream.writeUTF(msg.toString());
+    }
+
 }

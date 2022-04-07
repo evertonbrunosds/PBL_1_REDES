@@ -1,110 +1,231 @@
 package model;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import org.json.JSONObject;
 import uefs.ComumBase.interfaces.ClientConsumer;
 import static uefs.ComumBase.interfaces.Status.*;
+import static model.Constants.*;
 
+/**
+ * Classe responsável por comportar-se como um consumidor de clientes para
+ * lixeiras.
+ *
+ * @author Everton Bruno Silva dos Santos.
+ * @version 1.0
+ */
 public class RecycleBin implements ClientConsumer {
 
-    private static final class Constant {
+    /**
+     * Refere-se ao gerador de ID utilizado para dar ID as lixeiras recém
+     * conectadas.
+     */
+    private static final IdGenerator ID_GENERATOR = new IdGenerator();
 
-        private static final IdGenerator ID_GENERATOR = new IdGenerator();
-        private static final String UNDETERMINED = "UNDETERMINED";
-        private static final String IS_BLOCKED = "IS_BLOCKED";
-        private static final String STATUS = "STATUS";
-        private static final String USAGE = "USAGE";
-        private static final String ID = "ID";
-
-    }
+    /**
+     * Refere-se ao ID da lixeira atualmente conectada.
+     */
     private final String id;
-    private final DataInputStream request;
+    /**
+     * Refere-se a mensagem de requisição efetuada por uma lixeira conectada.
+     */
+    private final JSONObject request;
+    /**
+     * Refere-se ao meio de resposta para toda requisição efetuada por uma
+     * lixeira conectada.
+     */
     private final DataOutputStream response;
-    private final Map<String, JSONObject> jsonMap;
+    /**
+     * Refere-se aos dados mapeados de todas as lixeiras do servidor.
+     */
+    private final Map<String, JSONObject> dataMap;
 
-    public RecycleBin(final String id, final DataInputStream inputStream, final DataOutputStream outputStream, final Map<String, JSONObject> jsonMap) throws InterruptedException {
-        this.id = (Constant.UNDETERMINED.equals(id) || id == null) ? Constant.ID_GENERATOR.getStringId() : id;
-        this.request = inputStream;
-        this.response = outputStream;
-        this.jsonMap = jsonMap;
+    /**
+     * Construtor responsável por instanciar um consumidor de clientes para
+     * lixeiras.
+     *
+     * @param request Refere-se a mensagem de requisição efetuada por uma
+     * lixeira conectada.
+     * @param response Refere-se ao meio de resposta para toda requisição
+     * efetuada por uma lixeira conectada.
+     * @param dataMap Refere-se aos dados mapeados de todas as lixeiras do
+     * servidor.
+     * @throws InterruptedException Exceção lançada para o caso de não ser
+     * possível gerar um ID para a lixeira recém conectada.
+     */
+    public RecycleBin(final JSONObject request, final DataOutputStream response, final Map<String, JSONObject> dataMap) throws InterruptedException {
+        this.request = request;
+        this.response = response;
+        this.id = (UNDETERMINED.equals(request.getString(ID)) || request.getString(ID) == null) ? ID_GENERATOR.getStringId() : request.getString(ID);
+        this.dataMap = dataMap;
     }
 
-    private String getRequest() throws IOException {
-        final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
-        dataUser.put(Constant.STATUS, OK);
-        response.flush();
-        return dataUser.toString();
+    /**
+     * Método responsável por indicar se uma requisição não é básicamente
+     * válida. Isto é: se não possui método e ou ID.
+     *
+     * @return Retorna indicativo de que a requisição é básicamente válida ou
+     * não.
+     */
+    private boolean isNotBasicallyValidRequest() {
+        final Map<String, Object> mapRequest = request.toMap();
+        final boolean containsMethod = mapRequest.containsKey(METHOD);
+        final boolean containsId = mapRequest.containsKey(ID);
+        return !containsMethod || !containsId;
     }
 
-    private String putRequest() throws IOException {
-        final JSONObject newDataUser = new JSONObject(request.readUTF());
-        jsonMap.put(id, newDataUser);
-        return getRequest();
+    /**
+     * Método responsável por indicar se uma requisição não é totalmente válida.
+     * Isto é: se não possui método, ID, campo de bloqueio e ou campo de uso.
+     *
+     * @return Retorna indicativo de que a requisição é totalmente válida ou
+     * não.
+     */
+    private boolean isNotFullyValidRequest() {
+        final Map<String, Object> mapRequest = request.toMap();
+        final boolean containsIsBlocked = mapRequest.containsKey(IS_BLOCKED);
+        final boolean containsIsUsage = mapRequest.containsKey(USAGE);
+        return isNotBasicallyValidRequest() || !containsIsBlocked || !containsIsUsage;
     }
 
-    private String deleteRequest() throws IOException {
-        final String getRequest = getRequest();
-        jsonMap.remove(id);
-        return getRequest;
-    }
-
-    private String postRequest() throws IOException {
-        return putRequest();
-    }
-
+    /**
+     * Método responsável por tratar de requisições mal succedidas.
+     *
+     * @param status Refere-se ao status que representa a falta de sucesso na
+     * requisição.
+     * @return Retorna resposta em JSON indicando o ocorrido.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     private String unsuccessfulRequest(final String status) throws IOException {
         final JSONObject newDataUser = new JSONObject();
-        newDataUser.put(Constant.STATUS, status);
-        newDataUser.put(Constant.ID, id);
+        newDataUser.put(STATUS, status);
+        newDataUser.put(ID, id);
         response.flush();
         return newDataUser.toString();
     }
 
     /**
-     * Método responsável por buscar dados da lideira.
+     * Método responsável por tratar de requisições que visam buscar dados de
+     * uma lixeira.
+     *
+     * @return Retorna resposta em JSON com os dados de uma lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
+    private String getRequest() throws IOException {
+        final JSONObject dataUser = new JSONObject(dataMap.get(id).toMap());
+        dataUser.put(STATUS, OK);
+        response.flush();
+        return dataUser.toString();
+    }
+
+    /**
+     * Método responsável por tratar de requisições que visam criar dados de
+     * uma lixeira.
+     *
+     * @return Retorna resposta em JSON com os dados de uma recém criada lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
+    private String postRequest() throws IOException {
+        request.remove(METHOD);
+        request.remove(ID);
+        dataMap.put(id, request);
+        return getRequest();
+    }
+
+    /**
+     * Método responsável por tratar de requisições que visam atualizar dados de
+     * uma lixeira.
+     *
+     * @return Retorna resposta em JSON com os dados de uma recém atualizada lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
+    private String putRequest() throws IOException {
+        final JSONObject dataUser = dataMap.get(id);
+        dataUser.put(USAGE, request.getString(USAGE));
+        return getRequest();
+    }
+
+    /**
+     * Método responsável por tratar de requisições que visam apagar dados de
+     * uma lixeira.
+     *
+     * @return Retorna resposta em JSON com os dados de uma recém apagada lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
+    private String deleteRequest() throws IOException {
+        final String getRequest = getRequest();
+        dataMap.remove(id);
+        return getRequest;
+    }
+
+    /**
+     * Método responsável por buscar os dados de uma lideira.
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     @Override
     public void get() throws IOException {
-        final boolean userFound = jsonMap.containsKey(id);
-        response.writeUTF(userFound ? getRequest() : unsuccessfulRequest(NOT_FOUND));
+        final boolean userFound = dataMap.containsKey(id);
+        response.writeUTF(isNotBasicallyValidRequest()
+                ? unsuccessfulRequest(BAD_REQUEST)
+                : userFound
+                        ? getRequest()
+                        : unsuccessfulRequest(NOT_FOUND)
+        );
     }
 
     /**
-     * Método responsável por atualizar dados da lixeira.
+     * Método responsável por atualizar os dados de uma lixeira.
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     @Override
     public void put() throws IOException {
-        final boolean userNotFound = !jsonMap.containsKey(id);
-        response.writeUTF(userNotFound ? putRequest() : unsuccessfulRequest(FOUND));
+        final boolean userNotFound = !dataMap.containsKey(id);
+        response.writeUTF(isNotFullyValidRequest()
+                ? unsuccessfulRequest(BAD_REQUEST)
+                : userNotFound
+                        ? putRequest()
+                        : unsuccessfulRequest(FOUND)
+        );
     }
 
     /**
-     * Método responsável por apagar dados da lideira.
+     * Método responsável por apagar os dados de uma lideira.
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     @Override
     public void delete() throws IOException {
-        final boolean userFound = jsonMap.containsKey(id);
-        response.writeUTF(userFound ? deleteRequest() : unsuccessfulRequest(NOT_FOUND));
+        final boolean userFound = dataMap.containsKey(id);
+        response.writeUTF(isNotBasicallyValidRequest()
+                ? unsuccessfulRequest(BAD_REQUEST)
+                : userFound
+                        ? deleteRequest()
+                        : unsuccessfulRequest(NOT_FOUND)
+        );
     }
 
     /**
-     * Método responsável por criar dados da lixeira.
+     * Método responsável por criar os dados de uma lixeira.
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     @Override
     public void post() throws IOException {
-        final boolean userNotFound = !jsonMap.containsKey(id);
-        response.writeUTF(userNotFound ? postRequest() : unsuccessfulRequest(FOUND));
+        final boolean userNotFound = !dataMap.containsKey(id);
+        response.writeUTF(isNotFullyValidRequest()
+                ? unsuccessfulRequest(BAD_REQUEST)
+                : userNotFound
+                        ? postRequest()
+                        : unsuccessfulRequest(FOUND)
+        );
     }
 
 }
