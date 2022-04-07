@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import javax.imageio.IIOException;
 import model.RecycleBin;
 import org.json.JSONObject;
 import model.ClientConnection;
@@ -12,6 +13,7 @@ public class RecycleBinController extends RecycleBin {
 
     private static RecycleBinController instance;
     private static final String STATUS = "STATUS";
+    private static final String UNDETERMINED = "UNDETERMINED";
     private ClientConnection currentConnection;
     private final ServerConsumer<ClientConnection, JSONObject> request;
 
@@ -27,7 +29,7 @@ public class RecycleBinController extends RecycleBin {
     }
 
     public String getId() {
-        return (currentConnection == null) ? "UNDETERMINED" : currentConnection.getId();
+        return (currentConnection == null) ? UNDETERMINED : currentConnection.getId();
     }
 
     public void connectToServer(final String ip, final int port) throws IOException {
@@ -42,14 +44,23 @@ public class RecycleBinController extends RecycleBin {
                 startLogs(currentConnection);
                 break;
             case INTERNAL_SERVER_ERROR:
-                throw new IOException("INTERNAL_SERVER_ERROR");
+                throw new IOException(INTERNAL_SERVER_ERROR);
             default:
-                throw new IOException("UNDETERMINED");
+                throw new IOException(UNDETERMINED);
         }
     }
 
-    public void disconnect() {
-
+    public void disconnect() throws IOException {
+        final JSONObject response = request.delete(currentConnection);
+        if (response.getString(STATUS).equals(INTERNAL_SERVER_ERROR)) {
+            throw new IIOException(INTERNAL_SERVER_ERROR);
+        }
+        if (response.getString(STATUS).equals(NOT_FOUND)) {
+            throw new IIOException(NOT_FOUND);
+        }
+        if (!response.getString(STATUS).equals(OK)) {
+            throw new IIOException(UNDETERMINED);
+        }
     }
 
     public void startLogs(final ClientConnection connection) throws IOException {
@@ -60,9 +71,9 @@ public class RecycleBinController extends RecycleBin {
                 currentConnection = connection;
                 break;
             case INTERNAL_SERVER_ERROR:
-                throw new IOException("INTERNAL_SERVER_ERROR");
+                throw new IOException(INTERNAL_SERVER_ERROR);
             default:
-                throw new IOException("UNDETERMINED");
+                throw new IOException(UNDETERMINED);
         }
     }
 }

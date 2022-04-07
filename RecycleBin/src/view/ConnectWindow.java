@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 
 public class ConnectWindow extends javax.swing.JDialog {
+    private static final int RECYCLE_BIN_PORT = 1990;
 
     private static ConnectWindow instance;
     private final java.awt.Frame parent;
@@ -131,7 +132,7 @@ public class ConnectWindow extends javax.swing.JDialog {
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         try {
-            RecycleBinController.getInstance().connect(textIP.getText(), 1997);
+            RecycleBinController.getInstance().connectToServer(textIP.getText(), RECYCLE_BIN_PORT);
         } catch (IOException ex) {
             Logger.getLogger(ConnectWindow.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -12,6 +12,11 @@ public interface Status {
      * O servidor não pode encontrar o recurso solicitado.
      */
     public static final String NOT_FOUND = "404";
+    
+    /**
+     * O servidor pode encontrar o recurso solicitado.
+     */
+    public static final String FOUND = "302";
 
     /**
      * O servidor encontrou uma situação com a qual não sabe lidar.

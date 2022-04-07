@@ -3,40 +3,48 @@ package model;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 import org.json.JSONObject;
+import uefs.ComumBase.interfaces.ClientConsumer;
+import static uefs.ComumBase.interfaces.Status.*;
 
-public class RecycleBin implements Consumer {
+public class RecycleBin implements ClientConsumer {
 
-    private static final List<Integer> ALL_IDS = new ArrayList<>();
-    private static final Semaphore SEMAPHORE = new Semaphore(1);
-    private final DataInputStream inputStream;
-    private final DataOutputStream outputStream;
+    private static final class Constant {
+
+        private static final IdGenerator ID_GENERATOR = new IdGenerator();
+        private static final String UNDETERMINED = "UNDETERMINED";
+        private static final String IS_BLOCKED = "IS_BLOCKED";
+        private static final String STATUS = "STATUS";
+        private static final String USAGE = "USAGE";
+        private static final String ID = "ID";
+
+    }
     private final String id;
+    private final DataInputStream request;
+    private final DataOutputStream response;
     private final Map<String, JSONObject> jsonMap;
 
     public RecycleBin(final String id, final DataInputStream inputStream, final DataOutputStream outputStream, final Map<String, JSONObject> jsonMap) throws InterruptedException {
-        this.inputStream = inputStream;
-        this.outputStream = outputStream;
-        this.id = "UNDETERMINED".equals(id) ? gerateNewId() : id;
+        this.id = (Constant.UNDETERMINED.equals(id) || id == null) ? Constant.ID_GENERATOR.getStringId() : id;
+        this.request = inputStream;
+        this.response = outputStream;
         this.jsonMap = jsonMap;
     }
 
-    private static String gerateNewId() throws InterruptedException {
-        try {
-            SEMAPHORE.acquire();
-            ALL_IDS.sort(Integer::compareTo);
-            final int lastUsableIndex = ALL_IDS.size() - 1;
-            final int highestValue = ALL_IDS.get(lastUsableIndex);
-            final int newHighestValue = highestValue + 1;
-            ALL_IDS.add(newHighestValue);
-            return Integer.toString(newHighestValue);
-        } finally {
-            SEMAPHORE.release();
-        }
+    private String successfulRequest() throws IOException {
+        final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
+        dataUser.put(Constant.STATUS, OK);
+        response.flush();
+        return dataUser.toString();
+    }
+
+    private String unsuccessfulRequest() throws IOException {
+        final JSONObject newDataUser = new JSONObject();
+        newDataUser.put(Constant.STATUS, NOT_FOUND);
+        newDataUser.put(Constant.ID, id);
+        response.flush();
+        return newDataUser.toString();
     }
 
     /**
@@ -46,14 +54,8 @@ public class RecycleBin implements Consumer {
      */
     @Override
     public void get() throws IOException {
-        if (jsonMap.containsKey(id)) {
-            outputStream.flush();
-            outputStream.writeUTF(jsonMap.get(id).toString());
-        } else {
-            final JSONObject newUser = new JSONObject();
-            newUser.put("STATUS", "404");
-            newUser.put("ID", id);
-        }
+        final boolean userFound = jsonMap.containsKey(id);
+        response.writeUTF(userFound ? successfulRequest() : unsuccessfulRequest());
     }
 
     /**
@@ -63,7 +65,18 @@ public class RecycleBin implements Consumer {
      */
     @Override
     public void put() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final boolean userFound = jsonMap.containsKey(id);
+        if (userFound) {
+            jsonMap.put(id, new JSONObject(request.readUTF()));
+            final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
+            dataUser.put(Constant.STATUS, OK);
+            response.flush();
+            response.writeUTF(dataUser.toString());
+        } else {
+            final JSONObject newDataUser = new JSONObject();
+            newDataUser.put(Constant.STATUS, NOT_FOUND);
+            newDataUser.put(Constant.ID, id);
+        }
     }
 
     /**
@@ -73,7 +86,21 @@ public class RecycleBin implements Consumer {
      */
     @Override
     public void delete() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (jsonMap.containsKey(id)) {
+            final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
+            dataUser.put(Constant.STATUS, OK);
+            response.flush();
+            response.writeUTF(dataUser.toString());
+        } else {
+            final JSONObject newDataUser = new JSONObject();
+            newDataUser.put(Constant.STATUS, NOT_FOUND);
+            newDataUser.put(Constant.ID, id);
+        }
+    }
+
+    @Override
+    public void post() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
