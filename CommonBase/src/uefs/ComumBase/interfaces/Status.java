@@ -9,23 +9,29 @@ package uefs.ComumBase.interfaces;
 public interface Status {
 
     /**
-     * O servidor não pode encontrar o recurso solicitado.
+     * Estas requisição foi bem sucedida.
      */
-    public static final String NOT_FOUND = "404";
-    
+    public static final String OK = "200";
+
     /**
      * O servidor pode encontrar o recurso solicitado.
      */
     public static final String FOUND = "302";
 
     /**
+     * O servidor não pode encontrar o recurso solicitado.
+     */
+    public static final String NOT_FOUND = "404";
+
+    /**
+     * O servidor não pode ou não irá processar a requisição devido a alguma
+     * coisa que foi entendida como um erro do cliente.
+     */
+    public static final String BAD_REQUEST = "400";
+
+    /**
      * O servidor encontrou uma situação com a qual não sabe lidar.
      */
     public static final String INTERNAL_SERVER_ERROR = "500";
-
-    /**
-     * Estas requisição foi bem sucedida.
-     */
-    public static final String OK = "200";
 
 }

@@ -32,16 +32,32 @@ public class RecycleBin implements ClientConsumer {
         this.jsonMap = jsonMap;
     }
 
-    private String successfulRequest() throws IOException {
+    private String getRequest() throws IOException {
         final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
         dataUser.put(Constant.STATUS, OK);
         response.flush();
         return dataUser.toString();
     }
 
-    private String unsuccessfulRequest() throws IOException {
+    private String putRequest() throws IOException {
+        final JSONObject newDataUser = new JSONObject(request.readUTF());
+        jsonMap.put(id, newDataUser);
+        return getRequest();
+    }
+
+    private String deleteRequest() throws IOException {
+        final String getRequest = getRequest();
+        jsonMap.remove(id);
+        return getRequest;
+    }
+
+    private String postRequest() throws IOException {
+        return putRequest();
+    }
+
+    private String unsuccessfulRequest(final String status) throws IOException {
         final JSONObject newDataUser = new JSONObject();
-        newDataUser.put(Constant.STATUS, NOT_FOUND);
+        newDataUser.put(Constant.STATUS, status);
         newDataUser.put(Constant.ID, id);
         response.flush();
         return newDataUser.toString();
@@ -55,7 +71,7 @@ public class RecycleBin implements ClientConsumer {
     @Override
     public void get() throws IOException {
         final boolean userFound = jsonMap.containsKey(id);
-        response.writeUTF(userFound ? successfulRequest() : unsuccessfulRequest());
+        response.writeUTF(userFound ? getRequest() : unsuccessfulRequest(NOT_FOUND));
     }
 
     /**
@@ -65,18 +81,8 @@ public class RecycleBin implements ClientConsumer {
      */
     @Override
     public void put() throws IOException {
-        final boolean userFound = jsonMap.containsKey(id);
-        if (userFound) {
-            jsonMap.put(id, new JSONObject(request.readUTF()));
-            final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
-            dataUser.put(Constant.STATUS, OK);
-            response.flush();
-            response.writeUTF(dataUser.toString());
-        } else {
-            final JSONObject newDataUser = new JSONObject();
-            newDataUser.put(Constant.STATUS, NOT_FOUND);
-            newDataUser.put(Constant.ID, id);
-        }
+        final boolean userNotFound = !jsonMap.containsKey(id);
+        response.writeUTF(userNotFound ? putRequest() : unsuccessfulRequest(FOUND));
     }
 
     /**
@@ -86,21 +92,19 @@ public class RecycleBin implements ClientConsumer {
      */
     @Override
     public void delete() throws IOException {
-        if (jsonMap.containsKey(id)) {
-            final JSONObject dataUser = new JSONObject(jsonMap.get(id).toMap());
-            dataUser.put(Constant.STATUS, OK);
-            response.flush();
-            response.writeUTF(dataUser.toString());
-        } else {
-            final JSONObject newDataUser = new JSONObject();
-            newDataUser.put(Constant.STATUS, NOT_FOUND);
-            newDataUser.put(Constant.ID, id);
-        }
+        final boolean userFound = jsonMap.containsKey(id);
+        response.writeUTF(userFound ? deleteRequest() : unsuccessfulRequest(NOT_FOUND));
     }
 
+    /**
+     * Método responsável por criar dados da lixeira.
+     *
+     * @throws IOException Refere-se a algum possível erro de entrada/saída.
+     */
     @Override
     public void post() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final boolean userNotFound = !jsonMap.containsKey(id);
+        response.writeUTF(userNotFound ? postRequest() : unsuccessfulRequest(FOUND));
     }
 
 }
