@@ -5,28 +5,50 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import uefs.ComumBase.interfaces.Factory;
+import static model.Constants.UNDETERMINED;
 
-
+/**
+ * Classe responsável por comportar-se como janela de conexão.
+ *
+ * @author Everton Bruno Silva dos Santos.
+ * @version 1.0
+ */
 public class ConnectWindow extends javax.swing.JDialog {
-    private static final int RECYCLE_BIN_PORT = 1990;
 
+    /**
+     * Refere-se a instância singular da janela de conexão.
+     */
     private static ConnectWindow instance;
+    /**
+     * Refere-se a porta de conexão utilizada pela lixeira.
+     */
+    private static final int RECYCLE_BIN_PORT = 1990;
+    /**
+     * Refere-se a janela invocadora da janela de conexão.
+     */
     private final java.awt.Frame parent;
 
-    private enum Valid {
-        YES, NO
-    }
-
+    /**
+     * Construtor responsável por manter a integridade de instância singular do
+     * singleton.
+     *
+     * @param parent Refere-se a janela invocadora da janela de conexão.
+     * @param modal Refere-se ao modo como a janela de conexão será instanciada.
+     */
     private ConnectWindow(final java.awt.Frame parent, final boolean modal) {
         super(parent, modal);
         initComponents();
         this.parent = parent;
     }
-    
+
+    /**
+     * Método responsável por efetuar a conexão com o servidor.
+     */
     private void connectToServer() {
         try {
             RecycleBinController.getInstance().connectToServer(textIP.getText(), RECYCLE_BIN_PORT);
-        } catch (IOException ex) {
+            dispose();
+        } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
                     this,
                     "Erro ao conectar-se ao servidor! Código de erro: ".concat(ex.getMessage().concat(".")),
@@ -36,18 +58,26 @@ public class ConnectWindow extends javax.swing.JDialog {
             );
         }
     }
-    
+
+    /**
+     * Método responsável por efetuar o processo de fechar a janela de conexão.
+     */
     @Override
     public void dispose() {
         instance = null;
         final String id = RecycleBinController.getInstance().getId();
         final String name = "Lixeira";
-        final String title = name + " [" + id + "]";
-        parent.setTitle(id.equals("UNDETERMINED") ? name : title);
+        final String title = name + " conectada com o ID: [" + id + "]";
+        parent.setTitle(id.equals(UNDETERMINED) ? name.concat(" desconectada") : title);
         super.dispose();
         parent.setVisible(true);
     }
 
+    /**
+     * Método responsável por exibir a janela de conexão.
+     *
+     * @param parent Refere-se a janela invocadora da janela de conexão.
+     */
     public static void showModal(final java.awt.Frame parent) {
         parent.setVisible(false);
         if (instance == null) {
@@ -57,9 +87,15 @@ public class ConnectWindow extends javax.swing.JDialog {
         instance.setVisible(true);
     }
 
-    private static Valid validator(final String ip) {
+    /**
+     * Método responsável por verificar se um IP é inserido na janela é válido.
+     *
+     * @param ip Refere-se ao IP cuja validade é verificada.
+     * @return Retorna indicativo de que o IP é válido.
+     */
+    private static boolean isValid(final String ip) {
         if (ip == null) {
-            return Valid.NO;
+            return false;
         } else {
             final String ipReplaced = ip.replace('.', ';');
             int count = 0;
@@ -69,11 +105,11 @@ public class ConnectWindow extends javax.swing.JDialog {
                 }
             }
             if (count != 3) {
-                return Valid.NO;
+                return false;
             }
             final String[] piecesIP = ipReplaced.split(";");
             if (piecesIP.length != 4) {
-                return Valid.NO;
+                return false;
             } else {
                 try {
                     final int pieceIP0 = Integer.parseInt(piecesIP[0]);
@@ -81,18 +117,16 @@ public class ConnectWindow extends javax.swing.JDialog {
                     final int pieceIP2 = Integer.parseInt(piecesIP[2]);
                     final int pieceIP3 = Integer.parseInt(piecesIP[3]);
                     if (pieceIP0 > 255 || pieceIP0 < 0) {
-                        return Valid.NO;
+                        return false;
                     } else if (pieceIP1 > 255 || pieceIP1 < 0) {
-                        return Valid.NO;
+                        return false;
                     } else if (pieceIP2 > 255 || pieceIP2 < 0) {
-                        return Valid.NO;
-                    } else if (pieceIP3 > 255 || pieceIP3 < 0) {
-                        return Valid.NO;
+                        return false;
                     } else {
-                        return Valid.YES;
+                        return !(pieceIP3 > 255 || pieceIP3 < 0);
                     }
                 } catch (final NumberFormatException ex) {
-                    return Valid.NO;
+                    return false;
                 }
             }
         }
@@ -164,9 +198,9 @@ public class ConnectWindow extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void textIPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textIPKeyReleased
-        btnConnect.setEnabled(validator(textIP.getText()) == Valid.YES);
+        btnConnect.setEnabled(isValid(textIP.getText()));
         if (btnConnect.isEnabled()) {
-            if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 btnConnectActionPerformed(null);
             }
         }
@@ -182,7 +216,7 @@ public class ConnectWindow extends javax.swing.JDialog {
             btnConnect.setEnabled(true);
             progressBar.setVisible(false);
         }).start();
-        
+
     }//GEN-LAST:event_btnConnectActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

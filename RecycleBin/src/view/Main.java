@@ -6,17 +6,46 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+/**
+ * Classe responsável por comportar-se como UI de lixeira.
+ *
+ * @author Everton Bruno Silva dos Santos.
+ * @version 1.0
+ */
 public class Main extends javax.swing.JFrame {
 
-    public Main() {
+    /**
+     * Construtor responsável por instanciar
+     */
+    private Main() {
         initComponents();
         setToOrange(usageNone);
     }
 
+    /**
+     * Método responsável por alterar a visibilidade da UI de lixeira bem como o
+     * estado de seu botão de conexão.
+     *
+     * @param value Refere-se ao valor boleano de visibilidade.
+     */
     @Override
-    public void dispose() {
+    public void setVisible(final boolean value) {
+        super.setVisible(value);
+        if (RecycleBinController.getInstance().isConnected()) {
+            btnConnectToServer.setText("Desconectar");
+        } else {
+            btnConnectToServer.setText("Conectar");
+        }
+    }
+
+    /**
+     * Método responsável por desconectar a lixeira do servidor.
+     */
+    private void disconnect() {
         try {
             RecycleBinController.getInstance().disconnect();
+            setTitle("Lixeira desconectada");
+            btnConnectToServer.setText("Conectar");
         } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
                     this,
@@ -26,14 +55,31 @@ public class Main extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+    }
+
+    /**
+     * Método responsável por fechar a janela da lixeira.
+     */
+    @Override
+    public void dispose() {
+        disconnect();
         super.dispose();
     }
 
+    /**
+     * Método responsável por alterar para laranja a cor de uma jLabel.
+     *
+     * @param jLabel Refere-se a jLabel que terá sua cor alterada.
+     */
     private static void setToOrange(final JLabel jLabel) {
         final float[] rGBColor = Color.RGBtoHSB(194, 104, 2, null);
         jLabel.setForeground(Color.getHSBColor(rGBColor[0], rGBColor[1], rGBColor[2]));
     }
 
+    /**
+     * Método responsável por alterar para preto as cores de todos os JLabels
+     * para suas cores originais.
+     */
     private void setToBlackAllTextFieldUsage() {
         usageNone.setForeground(Color.BLACK);
         usageLow.setForeground(Color.BLACK);
@@ -67,7 +113,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        labelDescriptionState.setText("Descrição de Estado: Livre");
+        labelDescriptionState.setText("Descrição de Estado: Desbloqueado");
 
         usageNone.setText("nenhum");
         usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -152,11 +198,12 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnConnectToServer)
-                    .addComponent(labelDescriptionState)
-                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelDescriptionState)
+                        .addComponent(btnConnectToServer))
+                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
@@ -178,7 +225,11 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectToServerActionPerformed
-        ConnectWindow.showModal(this);
+        if (!RecycleBinController.getInstance().isConnected()) {
+            ConnectWindow.showModal(this);
+        } else {
+            disconnect();
+        }
     }//GEN-LAST:event_btnConnectToServerActionPerformed
 
     private void usageNoneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usageNoneMouseReleased
@@ -234,6 +285,11 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_progressBarStateChanged
 
+    /**
+     * Método responsável por iniciar a execução do software.
+     *
+     * @param args Refere-se aos argumentos que podem ser usados na execução.
+     */
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

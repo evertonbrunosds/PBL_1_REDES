@@ -26,14 +26,16 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="labelDescriptionState" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
+              <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
+                      <Component id="labelDescriptionState" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="progressBar" alignment="2" min="-2" pref="424" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+              <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -65,7 +67,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="labelDescriptionState">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o de Estado: Livre"/>
+        <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o de Estado: Desbloqueado"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="panelUsage">
