@@ -29,14 +29,18 @@ public class MainController {
     }
 
     public static MainController getInstance() {
-        if (instance != null) {
+        if (instance == null) {
             instance = new MainController();
         }
         return instance;
     }
 
-    public void listenToRecycleBins(final Treatable<IOException> internalTratament) throws IOException {
-        recycleBinsServer.streamFuture(internalTratament::toTreate).then(this::listenToRecycleBins);
+    public ServerConnection getRecycleBinsServer() {
+        return recycleBinsServer;
+    }
+    
+    public void listenToRecycleBins(final Treatable<IOException> internalException) throws IOException {
+        recycleBinsServer.streamFuture(internalException::toTreate).then(this::listenToRecycleBins);
     }
 
     private void listenToRecycleBins(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {

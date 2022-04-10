@@ -25,49 +25,39 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="sliderDescriptionUsage" alignment="2" min="-2" pref="418" max="-2" attributes="0"/>
-                  <Component id="labelDescriptionUsage" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="labelDescriptionState" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelDescriptionState" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
+                  <Component id="progressBar" alignment="2" min="-2" pref="424" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-              <Component id="sliderDescriptionUsage" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-              <Component id="labelDescriptionUsage" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Component id="panelUsage" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Component id="progressBar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="labelDescriptionState" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="btnConnectToServer" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JSlider" name="sliderDescriptionUsage">
-      <Properties>
-        <Property name="maximum" type="int" value="4"/>
-        <Property name="value" type="int" value="0"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelDescriptionUsage">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o de Uso: Nenhum"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="btnConnectToServer">
       <Properties>
         <Property name="text" type="java.lang.String" value="Conectar"/>
+        <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConnectToServerActionPerformed"/>
@@ -77,6 +67,108 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o de Estado: Livre"/>
       </Properties>
+    </Component>
+    <Container class="javax.swing.JPanel" name="panelUsage">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="usageNone" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                  <Component id="usageLow" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
+                  <Component id="usageMedium" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
+                  <Component id="usageHigh" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="usageTotal" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="usageNone" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="usageLow" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="usageMedium" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="usageHigh" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="usageTotal" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="usageNone">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="nenhum"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Cursor em Forma de M&#xe3;o"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageNoneMouseReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="usageLow">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="baixo"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Cursor em Forma de M&#xe3;o"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageLowMouseReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="usageMedium">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="m&#xe9;dio"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Cursor em Forma de M&#xe3;o"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageMediumMouseReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="usageHigh">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="alto"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Cursor em Forma de M&#xe3;o"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageHighMouseReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="usageTotal">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="total"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Cursor em Forma de M&#xe3;o"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageTotalMouseReleased"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JProgressBar" name="progressBar">
+      <Properties>
+        <Property name="maximum" type="int" value="4"/>
+      </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="progressBarStateChanged"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

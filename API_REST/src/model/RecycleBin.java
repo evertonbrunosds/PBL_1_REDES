@@ -70,9 +70,7 @@ public class RecycleBin implements ClientConsumer {
      */
     private boolean isNotBasicallyValidRequest() {
         final Map<String, Object> mapRequest = request.toMap();
-        final boolean containsMethod = mapRequest.containsKey(METHOD);
-        final boolean containsId = mapRequest.containsKey(ID);
-        return !containsMethod || !containsId;
+        return !mapRequest.containsKey(ID);
     }
 
     /**
@@ -116,23 +114,31 @@ public class RecycleBin implements ClientConsumer {
      */
     private String getRequest() throws IOException {
         final JSONObject dataUser = new JSONObject(dataMap.get(id).toMap());
+        if (dataMap.get(id).toMap().containsKey(CLEAR)) {
+            dataMap.get(id).put(CLEAR, "FALSE");
+        }
         dataUser.put(STATUS, OK);
+        dataUser.remove(PRIORITY);
         response.flush();
         return dataUser.toString();
     }
 
     /**
-     * Método responsável por tratar de requisições que visam criar dados de
-     * uma lixeira.
+     * Método responsável por tratar de requisições que visam criar dados de uma
+     * lixeira.
      *
-     * @return Retorna resposta em JSON com os dados de uma recém criada lixeira.
+     * @return Retorna resposta em JSON com os dados de uma recém criada
+     * lixeira.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
     private String postRequest() throws IOException {
-        request.remove(METHOD);
-        request.remove(ID);
-        dataMap.put(id, request);
+        final JSONObject dataUser = new JSONObject();
+        dataMap.put(id, dataUser);
+        dataUser.put(IS_BLOCKED, request.get(IS_BLOCKED));
+        dataUser.put(USAGE, request.get(USAGE));
+        dataUser.put(CLEAR, "FALSE");
+        dataUser.put(PRIORITY, "FALSE");
         return getRequest();
     }
 
@@ -140,7 +146,8 @@ public class RecycleBin implements ClientConsumer {
      * Método responsável por tratar de requisições que visam atualizar dados de
      * uma lixeira.
      *
-     * @return Retorna resposta em JSON com os dados de uma recém atualizada lixeira.
+     * @return Retorna resposta em JSON com os dados de uma recém atualizada
+     * lixeira.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
@@ -154,7 +161,8 @@ public class RecycleBin implements ClientConsumer {
      * Método responsável por tratar de requisições que visam apagar dados de
      * uma lixeira.
      *
-     * @return Retorna resposta em JSON com os dados de uma recém apagada lixeira.
+     * @return Retorna resposta em JSON com os dados de uma recém apagada
+     * lixeira.
      * @throws IOException Exceção lançada no caso de haver falha de
      * entrada/saída.
      */
@@ -187,12 +195,12 @@ public class RecycleBin implements ClientConsumer {
      */
     @Override
     public void put() throws IOException {
-        final boolean userNotFound = !dataMap.containsKey(id);
+        final boolean userFound = dataMap.containsKey(id);
         response.writeUTF(isNotFullyValidRequest()
                 ? unsuccessfulRequest(BAD_REQUEST)
-                : userNotFound
+                : userFound
                         ? putRequest()
-                        : unsuccessfulRequest(FOUND)
+                        : unsuccessfulRequest(NOT_FOUND)
         );
     }
 

@@ -51,20 +51,23 @@ public class RecycleBinController extends RecycleBin {
     }
 
     public void disconnect() throws IOException {
-        final JSONObject response = request.delete(currentConnection);
-        if (response.getString(STATUS).equals(INTERNAL_SERVER_ERROR)) {
-            throw new IIOException(INTERNAL_SERVER_ERROR);
-        }
-        if (response.getString(STATUS).equals(NOT_FOUND)) {
-            throw new IIOException(NOT_FOUND);
-        }
-        if (!response.getString(STATUS).equals(OK)) {
-            throw new IIOException(UNDETERMINED);
+        if (currentConnection != null) {
+            final JSONObject response = request.delete(currentConnection);
+            if (response.getString(STATUS).equals(INTERNAL_SERVER_ERROR)) {
+                throw new IIOException(INTERNAL_SERVER_ERROR);
+            }
+            if (response.getString(STATUS).equals(NOT_FOUND)) {
+                throw new IIOException(NOT_FOUND);
+            }
+            if (!response.getString(STATUS).equals(OK)) {
+                throw new IIOException(UNDETERMINED);
+            }
         }
     }
 
     public void startLogs(final ClientConnection connection) throws IOException {
         final JSONObject response = request.post(connection);
+        System.out.println(request.toString());
         switch (response.getString(STATUS)) {
             case OK:
                 disconnect();

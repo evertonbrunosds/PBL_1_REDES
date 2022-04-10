@@ -1,9 +1,10 @@
 package view;
 
 import control.RecycleBinController;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import uefs.ComumBase.interfaces.Factory;
 
 
 public class ConnectWindow extends javax.swing.JDialog {
@@ -21,10 +22,28 @@ public class ConnectWindow extends javax.swing.JDialog {
         initComponents();
         this.parent = parent;
     }
-
+    
+    private void connectToServer() {
+        try {
+            RecycleBinController.getInstance().connectToServer(textIP.getText(), RECYCLE_BIN_PORT);
+        } catch (IOException ex) {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Erro ao conectar-se ao servidor! Código de erro: ".concat(ex.getMessage().concat(".")),
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+    
     @Override
     public void dispose() {
         instance = null;
+        final String id = RecycleBinController.getInstance().getId();
+        final String name = "Lixeira";
+        final String title = name + " [" + id + "]";
+        parent.setTitle(id.equals("UNDETERMINED") ? name : title);
         super.dispose();
         parent.setVisible(true);
     }
@@ -34,6 +53,7 @@ public class ConnectWindow extends javax.swing.JDialog {
         if (instance == null) {
             instance = new ConnectWindow(parent, true);
         }
+        instance.progressBar.setVisible(false);
         instance.setVisible(true);
     }
 
@@ -42,6 +62,15 @@ public class ConnectWindow extends javax.swing.JDialog {
             return Valid.NO;
         } else {
             final String ipReplaced = ip.replace('.', ';');
+            int count = 0;
+            for (char c : ipReplaced.toCharArray()) {
+                if (c == ';') {
+                    count++;
+                }
+            }
+            if (count != 3) {
+                return Valid.NO;
+            }
             final String[] piecesIP = ipReplaced.split(";");
             if (piecesIP.length != 4) {
                 return Valid.NO;
@@ -75,6 +104,7 @@ public class ConnectWindow extends javax.swing.JDialog {
         textIP = new javax.swing.JTextField();
         textIPDescription = new javax.swing.JLabel();
         btnConnect = new javax.swing.JButton();
+        progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Conectar Lixeira");
@@ -97,6 +127,8 @@ public class ConnectWindow extends javax.swing.JDialog {
             }
         });
 
+        progressBar.setIndeterminate(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,6 +141,10 @@ public class ConnectWindow extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnConnect)
                 .addGap(35, 35, 35))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +155,8 @@ public class ConnectWindow extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConnect))
-                .addGap(15, 15, 15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -128,18 +165,29 @@ public class ConnectWindow extends javax.swing.JDialog {
 
     private void textIPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textIPKeyReleased
         btnConnect.setEnabled(validator(textIP.getText()) == Valid.YES);
+        if (btnConnect.isEnabled()) {
+            if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+                btnConnectActionPerformed(null);
+            }
+        }
     }//GEN-LAST:event_textIPKeyReleased
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        try {
-            RecycleBinController.getInstance().connectToServer(textIP.getText(), RECYCLE_BIN_PORT);
-        } catch (IOException ex) {
-            Logger.getLogger(ConnectWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Factory.thread(() -> {
+            progressBar.setVisible(true);
+            textIP.setEnabled(false);
+            btnConnect.setEnabled(false);
+            connectToServer();
+            textIP.setEnabled(true);
+            btnConnect.setEnabled(true);
+            progressBar.setVisible(false);
+        }).start();
+        
     }//GEN-LAST:event_btnConnectActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConnect;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField textIP;
     private javax.swing.JLabel textIPDescription;
     // End of variables declaration//GEN-END:variables

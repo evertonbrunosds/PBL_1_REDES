@@ -107,7 +107,6 @@ public class RecycleBinServerConsumer implements ServerConsumer<ClientConnection
     private static JSONObject getBasicRequest(final Method method, final ClientConnection clientConnection) {
         final HashMap<String, String> currentState = new HashMap<>();
         currentState.put("METHOD", Method.toString(method));
-        currentState.put("DEVICE", "RECYCLE_BIN");
         currentState.put("ID", clientConnection.getId());
         return new JSONObject(currentState);
     }
