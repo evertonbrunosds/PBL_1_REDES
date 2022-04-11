@@ -33,5 +33,9 @@ public interface Constants {
      * Refere-se a chave de valor que indica todos os IDs.
      */
     public static final String ALL_IDS = "ALL_IDS";
+    /**
+     * Refere-se a chave de valor que indica a priorização de uma lixeira.
+     */
+    public static final String IS_PRIORITY = "IS_PRIORITY";
 
 }

@@ -26,20 +26,33 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="textIPDescription" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="textIP" alignment="0" min="-2" pref="268" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="btnConnect" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-          </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="progressBar" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="textIPDescription" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="textIP" alignment="0" min="-2" pref="268" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="textLat" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="labelLat" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="labelLon" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="textLon" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnConnect" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -53,6 +66,16 @@
                   <Component id="textIP" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="btnConnect" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="labelLat" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelLon" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="textLat" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="textLon" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="progressBar" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -61,6 +84,9 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="textIP">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="127.0.0.1"/>
+      </Properties>
       <Events>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textIPKeyReleased"/>
       </Events>
@@ -82,6 +108,26 @@
     <Component class="javax.swing.JProgressBar" name="progressBar">
       <Properties>
         <Property name="indeterminate" type="boolean" value="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="textLat">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="120"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="textLon">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="140"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelLat">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Latitude"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelLon">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Longitude"/>
       </Properties>
     </Component>
   </SubComponents>

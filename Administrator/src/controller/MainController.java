@@ -17,11 +17,12 @@ public class MainController extends RecycleBin {
     private ClientConnection currentConnection;
     private final ServerConsumer request;
     private final List<Receiver<Boolean>> actionListChangeConnection;
-    //private final List<Receiver<JSONObject>> actionListRecycle;
+    private final List<Receiver<JSONObject>> actionListChangeRecycle;
 
     private MainController() {
         request = new ServerConsumer(this);
         actionListChangeConnection = new LinkedList<>();
+        actionListChangeRecycle = new LinkedList<>();
     }
 
     public static MainController getInstance() {
@@ -33,6 +34,16 @@ public class MainController extends RecycleBin {
     
     public void addActionChangeConnection(final Receiver<Boolean> action) {
         actionListChangeConnection.add(action);
+    }
+    
+    public void addActionChangeRecycle(final Receiver<JSONObject> action) {
+        actionListChangeRecycle.add(action);
+    }
+    
+    @Override
+    public void setData(final JSONObject data) {
+        super.setData(data);
+        actionListChangeRecycle.forEach(action -> action.receive(data));
     }
 
     public boolean isConnected() {
@@ -55,7 +66,6 @@ public class MainController extends RecycleBin {
     
     public void listRecycleBins(final Receiver<String[]> action) throws IOException {
         final JSONObject response = request.get(currentConnection);
-        System.out.println(response.toString());
         if (response.toMap().containsKey(ALL_IDS)) {
             action.receive(response.getString(ALL_IDS).split(";"));
         }
@@ -67,7 +77,23 @@ public class MainController extends RecycleBin {
         if (response.getString(STATUS).equals(FOUND)) {
             setData(response);
         }
-        
+    }
+    
+    public void setIsPriority(final String isPriority) throws IOException {
+        getData().put(IS_PRIORITY, isPriority);
+        final JSONObject response = request.put(currentConnection);
+        System.out.println(response.toString());
+        if (!response.getString(STATUS).equals(FOUND)) {
+            throw new IOException();
+        }
+    }
+    
+    public void setIsBlocked(final String isBlocked) throws IOException {
+        getData().put(IS_BLOCKED, isBlocked);
+        final JSONObject response = request.put(currentConnection);
+        if (!response.getString(STATUS).equals(FOUND)) {
+            throw new IOException();
+        }
     }
 
 }

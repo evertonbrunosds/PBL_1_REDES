@@ -26,16 +26,27 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="comboBoxIDs" alignment="2" min="-2" pref="202" max="-2" attributes="0"/>
                   <Component id="cBoxPriority" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
-                  <Component id="progressBar" alignment="2" min="-2" pref="424" max="-2" attributes="0"/>
                   <Component id="cBoxIsBlocked" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="comboBoxIDs" min="-2" pref="123" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                      <Component id="btnShow" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="panelUsage" alignment="0" max="32767" attributes="0"/>
+                  <Component id="progressBar" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -45,16 +56,19 @@
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="btnConnectToServer" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-              <Component id="comboBoxIDs" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="cBoxPriority" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="cBoxIsBlocked" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="comboBoxIDs" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnShow" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="15" max="32767" attributes="0"/>
               <Component id="panelUsage" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="progressBar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -67,7 +81,7 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="comboBoxIDsItemStateChanged"/>
+        <EventHandler event="popupMenuWillBecomeInvisible" listener="javax.swing.event.PopupMenuListener" parameters="javax.swing.event.PopupMenuEvent" handler="comboBoxIDsPopupMenuWillBecomeInvisible"/>
         <EventHandler event="popupMenuWillBecomeVisible" listener="javax.swing.event.PopupMenuListener" parameters="javax.swing.event.PopupMenuEvent" handler="comboBoxIDsPopupMenuWillBecomeVisible"/>
       </Events>
       <AuxValues>
@@ -78,6 +92,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Priorizar a Coleta de Lixo da Lixeira Atual"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cBoxPriorityMouseReleased"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cBoxIsBlocked">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Bloquear a Inser&#xe7;&#xe3;o e Coleta de Lixo da Lixeira Atual"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cBoxIsBlockedMouseReleased"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnConnectToServer">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Conectar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConnectToServerActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JPanel" name="panelUsage">
 
@@ -85,17 +118,15 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="usageNone" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   <Component id="usageLow" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   <Component id="usageMedium" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
-                  <Component id="usageHigh" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="usageHigh" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   <Component id="usageTotal" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -118,41 +149,41 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="usageNone">
           <Properties>
-            <Property name="text" type="java.lang.String" value="nenhum"/>
+            <Property name="text" type="java.lang.String" value="uso: 0.00m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Padr&#xe3;o"/>
+              <Color id="Cursor em Forma de M&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="usageLow">
           <Properties>
-            <Property name="text" type="java.lang.String" value="baixo"/>
+            <Property name="text" type="java.lang.String" value="uso: 0.25m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Padr&#xe3;o"/>
+              <Color id="Cursor em Forma de M&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="usageMedium">
           <Properties>
-            <Property name="text" type="java.lang.String" value="m&#xe9;dio"/>
+            <Property name="text" type="java.lang.String" value="uso: 0.50m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Padr&#xe3;o"/>
+              <Color id="Cursor em Forma de M&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="usageHigh">
           <Properties>
-            <Property name="text" type="java.lang.String" value="alto"/>
+            <Property name="text" type="java.lang.String" value="uso: 0.75m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Padr&#xe3;o"/>
+              <Color id="Cursor em Forma de M&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="usageTotal">
           <Properties>
-            <Property name="text" type="java.lang.String" value="total"/>
+            <Property name="text" type="java.lang.String" value="uso: 1.00m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Padr&#xe3;o"/>
+              <Color id="Cursor em Forma de M&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
@@ -166,17 +197,12 @@
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="progressBarStateChanged"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="cBoxIsBlocked">
+    <Component class="javax.swing.JButton" name="btnShow">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Bloquear a Inser&#xe7;&#xe3;o e Coleta de Lixo da Lixeira Atual"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnConnectToServer">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Conectar"/>
+        <Property name="text" type="java.lang.String" value="Atualizar Exibi&#xe7;&#xe3;o"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConnectToServerActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShowActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

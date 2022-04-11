@@ -3,10 +3,11 @@ package view;
 import controller.MainController;
 import java.awt.Color;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import uefs.ComumBase.interfaces.Factory;
+import static util.Constants.*;
+import static util.Usage.*;
 
 public class Main extends javax.swing.JFrame {
 
@@ -22,9 +23,34 @@ public class Main extends javax.swing.JFrame {
                 setTitle("Administrador Desconectado");
                 progressBar.setValue(0);
                 comboBoxIDs.removeAll();
+                comboBoxIDs.setSelectedIndex(-1);
                 cBoxIsBlocked.setSelected(false);
                 cBoxPriority.setSelected(false);
             }
+        });
+        MainController.getInstance().addActionChangeRecycle(data -> {
+            switch (data.getString(USAGE)) {
+                case NONE:
+                    progressBar.setValue(0);
+                    break;
+                case LOW:
+                    progressBar.setValue(1);
+                    break;
+                case MEDIUM:
+                    progressBar.setValue(2);
+                    break;
+                case HIGH:
+                    progressBar.setValue(3);
+                    break;
+                case TOTAL:
+                    progressBar.setValue(4);
+                    break;
+                default:
+                    progressBar.setValue(0);
+                    break;
+            }
+            cBoxPriority.setSelected(data.getString(IS_PRIORITY).equals("TRUE"));
+            cBoxIsBlocked.setSelected(data.getString(IS_BLOCKED).equals("TRUE"));
         });
         MainController.getInstance().disconnect();
     }
@@ -47,6 +73,8 @@ public class Main extends javax.swing.JFrame {
 
         comboBoxIDs = new javax.swing.JComboBox<>();
         cBoxPriority = new javax.swing.JCheckBox();
+        cBoxIsBlocked = new javax.swing.JCheckBox();
+        btnConnectToServer = new javax.swing.JButton();
         panelUsage = new javax.swing.JPanel();
         usageNone = new javax.swing.JLabel();
         usageLow = new javax.swing.JLabel();
@@ -54,22 +82,17 @@ public class Main extends javax.swing.JFrame {
         usageHigh = new javax.swing.JLabel();
         usageTotal = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
-        cBoxIsBlocked = new javax.swing.JCheckBox();
-        btnConnectToServer = new javax.swing.JButton();
+        btnShow = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administrador");
         setResizable(false);
 
-        comboBoxIDs.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                comboBoxIDsItemStateChanged(evt);
-            }
-        });
         comboBoxIDs.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                comboBoxIDsPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxIDsPopupMenuWillBecomeVisible(evt);
@@ -77,38 +100,55 @@ public class Main extends javax.swing.JFrame {
         });
 
         cBoxPriority.setText("Priorizar a Coleta de Lixo da Lixeira Atual");
+        cBoxPriority.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                cBoxPriorityMouseReleased(evt);
+            }
+        });
 
-        usageNone.setText("nenhum");
-        usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        cBoxIsBlocked.setText("Bloquear a Inserção e Coleta de Lixo da Lixeira Atual");
+        cBoxIsBlocked.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                cBoxIsBlockedMouseReleased(evt);
+            }
+        });
 
-        usageLow.setText("baixo");
-        usageLow.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnConnectToServer.setText("Conectar");
+        btnConnectToServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnectToServerActionPerformed(evt);
+            }
+        });
 
-        usageMedium.setText("médio");
-        usageMedium.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        usageNone.setText("uso: 0.00m³");
+        usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        usageHigh.setText("alto");
-        usageHigh.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        usageLow.setText("uso: 0.25m³");
+        usageLow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        usageTotal.setText("total");
-        usageTotal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        usageMedium.setText("uso: 0.50m³");
+        usageMedium.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        usageHigh.setText("uso: 0.75m³");
+        usageHigh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        usageTotal.setText("uso: 1.00m³");
+        usageTotal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout panelUsageLayout = new javax.swing.GroupLayout(panelUsage);
         panelUsage.setLayout(panelUsageLayout);
         panelUsageLayout.setHorizontalGroup(
             panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelUsageLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addComponent(usageNone)
-                .addGap(43, 43, 43)
+                .addGap(27, 27, 27)
                 .addComponent(usageLow)
-                .addGap(74, 74, 74)
+                .addGap(40, 40, 40)
                 .addComponent(usageMedium)
-                .addGap(77, 77, 77)
-                .addComponent(usageHigh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(usageTotal)
-                .addContainerGap())
+                .addComponent(usageHigh)
+                .addGap(43, 43, 43)
+                .addComponent(usageTotal))
         );
         panelUsageLayout.setVerticalGroup(
             panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,12 +170,10 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        cBoxIsBlocked.setText("Bloquear a Inserção e Coleta de Lixo da Lixeira Atual");
-
-        btnConnectToServer.setText("Conectar");
-        btnConnectToServer.addActionListener(new java.awt.event.ActionListener() {
+        btnShow.setText("Atualizar Exibição");
+        btnShow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConnectToServerActionPerformed(evt);
+                btnShowActionPerformed(evt);
             }
         });
 
@@ -144,15 +182,23 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(87, 87, 87)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cBoxPriority)
-                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cBoxIsBlocked)
-                    .addComponent(btnConnectToServer))
-                .addGap(40, 40, 40))
+                    .addComponent(btnConnectToServer)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnShow)))
+                .addGap(89, 89, 89))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,16 +206,18 @@ public class Main extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(btnConnectToServer)
                 .addGap(15, 15, 15)
-                .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
                 .addComponent(cBoxPriority)
                 .addGap(15, 15, 15)
                 .addComponent(cBoxIsBlocked)
                 .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(panelUsage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
+                .addContainerGap())
         );
 
         pack();
@@ -227,7 +275,39 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_progressBarStateChanged
 
-    private void comboBoxIDsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxIDsItemStateChanged
+    private void cBoxPriorityMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cBoxPriorityMouseReleased
+        final String isPriority = Boolean.toString(cBoxPriority.isSelected()).toUpperCase();
+        try {
+            MainController.getInstance().setIsPriority(isPriority);
+        } catch (final IOException ex) {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Falha ao se comunicar com o servidor",
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+            cBoxPriority.setSelected(!cBoxPriority.isSelected());
+        }
+    }//GEN-LAST:event_cBoxPriorityMouseReleased
+
+    private void cBoxIsBlockedMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cBoxIsBlockedMouseReleased
+        final String isBlocked = Boolean.toString(cBoxIsBlocked.isSelected()).toUpperCase();
+        try {
+            MainController.getInstance().setIsBlocked(isBlocked);
+        } catch (final IOException ex) {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Falha ao se comunicar com o servidor",
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+            cBoxIsBlocked.setSelected(!cBoxIsBlocked.isSelected());
+        }
+    }//GEN-LAST:event_cBoxIsBlockedMouseReleased
+
+    private void comboBoxIDsPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxIDsPopupMenuWillBecomeInvisible
         if (comboBoxIDs.getSelectedIndex() > -1) {
             try {
                 final String id = comboBoxIDs.getSelectedItem().toString();
@@ -241,8 +321,41 @@ public class Main extends javax.swing.JFrame {
                         JOptionPane.ERROR_MESSAGE
                 );
             }
+        } else {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Selecione alguma lixeira",
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
-    }//GEN-LAST:event_comboBoxIDsItemStateChanged
+    }//GEN-LAST:event_comboBoxIDsPopupMenuWillBecomeInvisible
+
+    private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
+        if (comboBoxIDs.getSelectedIndex() > -1) {
+            try {
+                final String id = comboBoxIDs.getSelectedItem().toString();
+                MainController.getInstance().showRecycleDetails(id);
+            } catch (IOException ex) {
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Conexão perdida! Código de erro: ".concat(ex.getMessage().concat(".")),
+                        "Mensagem de Erro",
+                        JOptionPane.CLOSED_OPTION,
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        } else {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Selecione alguma lixeira",
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnShowActionPerformed
 
     private static void setToOrange(final JLabel jLabel) {
         final float[] rGBColor = Color.RGBtoHSB(194, 104, 2, null);
@@ -275,6 +388,7 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConnectToServer;
+    private javax.swing.JButton btnShow;
     private javax.swing.JCheckBox cBoxIsBlocked;
     private javax.swing.JCheckBox cBoxPriority;
     private javax.swing.JComboBox<String> comboBoxIDs;

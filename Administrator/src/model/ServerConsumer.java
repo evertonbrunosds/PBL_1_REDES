@@ -14,7 +14,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
         this.recycleBin = recycleBin;
     }
     
-    private JSONObject getBasicRequest(final String method, final ClientConnection connection) {
+    private JSONObject getBasicRequest(final String method) {
         final JSONObject currentState = new JSONObject();
         currentState.put(METHOD, method);
         if (recycleBin.hasId()) {
@@ -24,8 +24,21 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
     }
     
     private JSONObject runBasicMethod(final ClientConnection connection, final String method) throws IOException {
-        final JSONObject request = getBasicRequest(method, connection);
+        final JSONObject request = getBasicRequest(method);
         final Container<String, String> response = getContainerString();
+        connection.streamBuilder((inputStream, outputStream) -> {
+            outputStream.flush();
+            outputStream.writeUTF(request.toString());
+            response.setContent(inputStream.readUTF());
+        });
+        return new JSONObject(response.getContent());
+    }
+    
+    private JSONObject runHighMethod(final ClientConnection connection, final String method) throws IOException {
+        final JSONObject request = getBasicRequest(method);
+        final Container<String, String> response = getContainerString();
+        request.put(IS_BLOCKED, recycleBin.getData().getString(IS_BLOCKED));
+        request.put(IS_PRIORITY, recycleBin.getData().getString(IS_PRIORITY));
         connection.streamBuilder((inputStream, outputStream) -> {
             outputStream.flush();
             outputStream.writeUTF(request.toString());
@@ -36,8 +49,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
     
     @Override
     public JSONObject post(final ClientConnection connection) throws IOException {
-        //return runHighMethod(connection, POST);
-        throw new IOException();
+        return runHighMethod(connection, POST);
     }
 
     @Override
@@ -47,8 +59,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
 
     @Override
     public JSONObject put(final ClientConnection connection) throws IOException {
-        //return runHighMethod(connection, PUT);
-        throw new IOException();
+        return runHighMethod(connection, PUT);
     }
 
     @Override
