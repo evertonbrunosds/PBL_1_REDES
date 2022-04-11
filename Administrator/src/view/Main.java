@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import uefs.ComumBase.interfaces.Factory;
 import static util.Constants.*;
 import static util.Usage.*;
 
@@ -57,8 +56,6 @@ public class Main extends javax.swing.JFrame {
 
     private void setEnabledComponents(final boolean enable) {
         comboBoxIDs.setEnabled(enable);
-        cBoxPriority.setEnabled(enable);
-        cBoxIsBlocked.setEnabled(enable);
         usageNone.setEnabled(enable);
         usageLow.setEnabled(enable);
         usageMedium.setEnabled(enable);
@@ -100,6 +97,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         cBoxPriority.setText("Priorizar a Coleta de Lixo da Lixeira Atual");
+        cBoxPriority.setEnabled(false);
         cBoxPriority.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 cBoxPriorityMouseReleased(evt);
@@ -107,6 +105,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         cBoxIsBlocked.setText("Bloquear a Inserção e Coleta de Lixo da Lixeira Atual");
+        cBoxIsBlocked.setEnabled(false);
         cBoxIsBlocked.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 cBoxIsBlockedMouseReleased(evt);
@@ -171,6 +170,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         btnShow.setText("Atualizar Exibição");
+        btnShow.setEnabled(false);
         btnShow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnShowActionPerformed(evt);
@@ -321,14 +321,13 @@ public class Main extends javax.swing.JFrame {
                         JOptionPane.ERROR_MESSAGE
                 );
             }
+            cBoxIsBlocked.setEnabled(true);
+            cBoxPriority.setEnabled(true);
+            btnShow.setEnabled(true);
         } else {
-            JOptionPane.showConfirmDialog(
-                    this,
-                    "Selecione alguma lixeira",
-                    "Mensagem de Erro",
-                    JOptionPane.CLOSED_OPTION,
-                    JOptionPane.ERROR_MESSAGE
-            );
+            cBoxIsBlocked.setEnabled(false);
+            cBoxPriority.setEnabled(false);
+            btnShow.setEnabled(false);
         }
     }//GEN-LAST:event_comboBoxIDsPopupMenuWillBecomeInvisible
 

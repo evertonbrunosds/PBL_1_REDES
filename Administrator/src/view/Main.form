@@ -91,6 +91,7 @@
     <Component class="javax.swing.JCheckBox" name="cBoxPriority">
       <Properties>
         <Property name="text" type="java.lang.String" value="Priorizar a Coleta de Lixo da Lixeira Atual"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cBoxPriorityMouseReleased"/>
@@ -99,6 +100,7 @@
     <Component class="javax.swing.JCheckBox" name="cBoxIsBlocked">
       <Properties>
         <Property name="text" type="java.lang.String" value="Bloquear a Inser&#xe7;&#xe3;o e Coleta de Lixo da Lixeira Atual"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cBoxIsBlockedMouseReleased"/>
@@ -200,6 +202,7 @@
     <Component class="javax.swing.JButton" name="btnShow">
       <Properties>
         <Property name="text" type="java.lang.String" value="Atualizar Exibi&#xe7;&#xe3;o"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShowActionPerformed"/>

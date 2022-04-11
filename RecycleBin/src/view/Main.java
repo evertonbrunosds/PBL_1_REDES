@@ -24,13 +24,6 @@ public final class Main extends javax.swing.JFrame {
         instance = this;
         initComponents();
         setToOrange(usageNone);
-        RecycleBinController.getInstance().addActionChangeBlock(isEnabled -> {
-            usageNone.setEnabled(isEnabled);
-            usageLow.setEnabled(isEnabled);
-            usageMedium.setEnabled(isEnabled);
-            usageHigh.setEnabled(isEnabled);
-            usageTotal.setEnabled(isEnabled);
-        });
         RecycleBinController.getInstance().addActionChangeConnection(isConnected -> {
             if (isConnected) {
                 btnConnectToServer.setText("Desconectar");
@@ -49,6 +42,18 @@ public final class Main extends javax.swing.JFrame {
                     "Mensagem de Erro",
                     JOptionPane.CLOSED_OPTION,
                     JOptionPane.ERROR_MESSAGE
+            );
+        });
+        RecycleBinController.getInstance().addActionChangeBlock(isBlocked -> {
+            usageNone.setEnabled(!isBlocked);
+            usageLow.setEnabled(!isBlocked);
+            usageMedium.setEnabled(!isBlocked);
+            usageHigh.setEnabled(!isBlocked);
+            usageTotal.setEnabled(!isBlocked);
+            final String base = "Descrição de Estado: ";
+            labelDescriptionState.setText(isBlocked
+                    ? base.concat("Bloqueado")
+                    : base.concat("Desbloqueado")
             );
         });
     }

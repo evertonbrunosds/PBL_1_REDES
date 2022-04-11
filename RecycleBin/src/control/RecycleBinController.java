@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.util.LinkedList;
 import java.util.List;
 import javax.imageio.IIOException;
@@ -8,6 +9,7 @@ import model.RecycleBin;
 import org.json.JSONObject;
 import model.ClientConnection;
 import model.ServerConsumer;
+import uefs.ComumBase.interfaces.Factory;
 import static uefs.ComumBase.interfaces.Status.*;
 import static util.Constants.*;
 import uefs.ComumBase.interfaces.Receiver;
@@ -47,6 +49,7 @@ public class RecycleBinController extends RecycleBin {
      * lixeira.
      */
     private final List<Receiver<IOException>> actionListChangeUsage;
+    private Thread currentThread;
 
     /**
      * Construtor responsável por manter a integridade de instância singular do
@@ -170,6 +173,9 @@ public class RecycleBinController extends RecycleBin {
             }
             actionListChangeConnection.forEach(action -> action.receive(isConnected()));
         }
+        if (currentThread != null) {
+            currentThread.interrupt();
+        }
     }
 
     /**
@@ -199,6 +205,20 @@ public class RecycleBinController extends RecycleBin {
             default:
                 throw new IOException(response.getString(STATUS));
         }
+        currentThread = Factory.thread(() -> {
+            while (currentConnection != null) {
+                try {
+                    sleep(500);
+                    final JSONObject responseGET = request.get(currentConnection);
+                    if (responseGET.getString(STATUS).equals(FOUND)) {
+                        setIsBlocked(responseGET.getString(IS_BLOCKED).equals("TRUE"));
+                    }
+                } catch (IOException | InterruptedException ex) {
+                    
+                }
+            }
+        });
+        currentThread.start();
         actionListChangeConnection.forEach(action -> action.receive(isConnected()));
     }
 
