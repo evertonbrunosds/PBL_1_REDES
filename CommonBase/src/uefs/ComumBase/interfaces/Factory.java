@@ -129,7 +129,7 @@ public interface Factory {
                     }
                     worker.work();
                 } catch (final InterruptedException ex) {
-                    treatable.toTreate(ex);
+                    treatable.toTreat(ex);
                 } finally {
                     for (final Semaphore semaphore : semaphores) {
                         semaphore.release();

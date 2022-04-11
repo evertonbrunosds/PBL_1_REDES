@@ -9,11 +9,6 @@ package uefs.ComumBase.interfaces;
 public interface Status {
 
     /**
-     * Estas requisição foi bem sucedida.
-     */
-    public static final String OK = "200";
-
-    /**
      * O servidor pode encontrar o recurso solicitado.
      */
     public static final String FOUND = "302";

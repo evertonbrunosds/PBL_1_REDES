@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import util.Usage;
 
 /**
  * Classe responsável por comportar-se como UI de lixeira.
@@ -12,30 +13,44 @@ import javax.swing.JOptionPane;
  * @author Everton Bruno Silva dos Santos.
  * @version 1.0
  */
-public class Main extends javax.swing.JFrame {
+public final class Main extends javax.swing.JFrame {
+
+    private static Main instance;
 
     /**
      * Construtor responsável por instanciar
      */
     private Main() {
+        instance = this;
         initComponents();
         setToOrange(usageNone);
-    }
-
-    /**
-     * Método responsável por alterar a visibilidade da UI de lixeira bem como o
-     * estado de seu botão de conexão.
-     *
-     * @param value Refere-se ao valor boleano de visibilidade.
-     */
-    @Override
-    public void setVisible(final boolean value) {
-        super.setVisible(value);
-        if (RecycleBinController.getInstance().isConnected()) {
-            btnConnectToServer.setText("Desconectar");
-        } else {
-            btnConnectToServer.setText("Conectar");
-        }
+        RecycleBinController.getInstance().addActionChangeBlock(isEnabled -> {
+            usageNone.setEnabled(isEnabled);
+            usageLow.setEnabled(isEnabled);
+            usageMedium.setEnabled(isEnabled);
+            usageHigh.setEnabled(isEnabled);
+            usageTotal.setEnabled(isEnabled);
+        });
+        RecycleBinController.getInstance().addActionChangeConnection(isConnected -> {
+            if (isConnected) {
+                btnConnectToServer.setText("Desconectar");
+                final String id = RecycleBinController.getInstance().getId();
+                setTitle("Lixeira conectada com o ID: ".concat(id));
+            } else {
+                btnConnectToServer.setText("Conectar");
+                setTitle("Lixeira desconectada");
+            }
+        });
+        RecycleBinController.getInstance().addActionChangeUsage(throwedIOException -> {
+            JOptionPane.showConfirmDialog(
+                    instance,
+                    "Erro ao alertar o servidor quanto ao uso da lixeira! Código de erro: "
+                            .concat(throwedIOException.getMessage().concat(".")),
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+        });
     }
 
     /**
@@ -44,8 +59,6 @@ public class Main extends javax.swing.JFrame {
     private void disconnect() {
         try {
             RecycleBinController.getInstance().disconnect();
-            setTitle("Lixeira desconectada");
-            btnConnectToServer.setText("Conectar");
         } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
                     this,
@@ -264,21 +277,27 @@ public class Main extends javax.swing.JFrame {
 
     private void progressBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarStateChanged
         setToBlackAllTextFieldUsage();
+        final RecycleBinController recycleBinController = RecycleBinController.getInstance();
         switch (progressBar.getValue()) {
             case 0:
                 setToOrange(usageNone);
+                recycleBinController.setUsage(Usage.none);
                 break;
             case 1:
                 setToOrange(usageLow);
+                recycleBinController.setUsage(Usage.low);
                 break;
             case 2:
                 setToOrange(usageMedium);
+                recycleBinController.setUsage(Usage.medium);
                 break;
             case 3:
                 setToOrange(usageHigh);
+                recycleBinController.setUsage(Usage.high);
                 break;
             case 4:
                 setToOrange(usageTotal);
+                recycleBinController.setUsage(Usage.total);
                 break;
             default:
                 break;

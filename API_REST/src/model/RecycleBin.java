@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import uefs.ComumBase.interfaces.ClientConsumer;
 import static uefs.ComumBase.interfaces.Status.*;
 import static model.Constants.*;
+import org.json.JSONException;
 
 /**
  * Classe responsável por comportar-se como um consumidor de clientes para
@@ -57,8 +58,15 @@ public class RecycleBin implements ClientConsumer {
     public RecycleBin(final JSONObject request, final DataOutputStream response, final Map<String, JSONObject> dataMap) throws InterruptedException {
         this.request = request;
         this.response = response;
-        this.id = (UNDETERMINED.equals(request.getString(ID)) || request.getString(ID) == null) ? ID_GENERATOR.getStringId() : request.getString(ID);
         this.dataMap = dataMap;
+        String tmpId = "";
+        try {
+            tmpId = request.getString(ID);
+        } catch (final JSONException ex) {
+            tmpId = ID_GENERATOR.getStringId();
+        } finally {
+            id = tmpId;
+        }
     }
 
     /**
@@ -180,11 +188,9 @@ public class RecycleBin implements ClientConsumer {
     @Override
     public void get() throws IOException {
         final boolean userFound = dataMap.containsKey(id);
-        response.writeUTF(isNotBasicallyValidRequest()
-                ? unsuccessfulRequest(BAD_REQUEST)
-                : userFound
-                        ? getRequest()
-                        : unsuccessfulRequest(NOT_FOUND)
+        response.writeUTF(userFound
+                ? getRequest()
+                : unsuccessfulRequest(NOT_FOUND)
         );
     }
 

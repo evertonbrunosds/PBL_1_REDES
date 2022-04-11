@@ -58,7 +58,9 @@ public class RecycleBinTest {
 
     private static JSONObject getRequest(final String id, final String method) {
         final JSONObject request = getDataUser();
-        request.put(ID, id);
+        if (id != null) {
+            request.put(ID, id);
+        }
         request.put(METHOD, method);
         return request;
     }
@@ -90,7 +92,7 @@ public class RecycleBinTest {
         }).start();
         clientConnection.streamBuilder((input, output) -> {
             output.flush();
-            output.writeUTF(getRequest(UNDETERMINED, GET).toString());
+            output.writeUTF(getRequest(null, GET).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
             assertNotEquals(UNDETERMINED, response.get(ID));
@@ -127,7 +129,7 @@ public class RecycleBinTest {
     }
 
     @Test
-    public void putNotRegister() throws IOException {
+    public void putBadRequestRegister() throws IOException {
         Factory.thread(() -> {
             try {
                 serverConnection.streamFuture(this::failTest).then((input, output) -> {
@@ -145,7 +147,33 @@ public class RecycleBinTest {
         }).start();
         clientConnection.streamBuilder((input, output) -> {
             output.flush();
-            output.writeUTF(getRequest(UNDETERMINED, PUT).toString());
+            output.writeUTF(getRequest(null, PUT).toString());
+            final JSONObject response = new JSONObject(input.readUTF());
+            assertEquals(BAD_REQUEST, response.get(STATUS));
+            assertNotEquals(UNDETERMINED, response.get(ID));
+        });
+    }
+
+    @Test
+    public void putNotFoundRegister() throws IOException {
+        Factory.thread(() -> {
+            try {
+                serverConnection.streamFuture(this::failTest).then((input, output) -> {
+                    try {
+                        final JSONObject request = new JSONObject(input.readUTF());
+                        recycleBin = new RecycleBin(request, output, dataMap);
+                        recycleBin.put();
+                    } catch (final InterruptedException ex) {
+                        failTest(ex);
+                    }
+                });
+            } catch (final IOException ex) {
+                failTest(ex);
+            }
+        }).start();
+        clientConnection.streamBuilder((input, output) -> {
+            output.flush();
+            output.writeUTF(getRequest("144", PUT).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
             assertNotEquals(UNDETERMINED, response.get(ID));
@@ -185,9 +213,9 @@ public class RecycleBinTest {
             assertEquals("FALSE", response.get(CLEAR));
         });
     }
-    
+
     @Test
-    public void deleteNotRegister() throws IOException {
+    public void deleteBadRequestRegister() throws IOException {
         Factory.thread(() -> {
             try {
                 serverConnection.streamFuture(this::failTest).then((input, output) -> {
@@ -205,13 +233,39 @@ public class RecycleBinTest {
         }).start();
         clientConnection.streamBuilder((input, output) -> {
             output.flush();
-            output.writeUTF(getRequest(UNDETERMINED, DELETE).toString());
+            output.writeUTF(getRequest(null, DELETE).toString());
+            final JSONObject response = new JSONObject(input.readUTF());
+            assertEquals(BAD_REQUEST, response.get(STATUS));
+            assertNotEquals(UNDETERMINED, response.get(ID));
+        });
+    }
+
+    @Test
+    public void deleteNotFoundRegister() throws IOException {
+        Factory.thread(() -> {
+            try {
+                serverConnection.streamFuture(this::failTest).then((input, output) -> {
+                    try {
+                        final JSONObject request = new JSONObject(input.readUTF());
+                        recycleBin = new RecycleBin(request, output, dataMap);
+                        recycleBin.delete();
+                    } catch (final InterruptedException ex) {
+                        failTest(ex);
+                    }
+                });
+            } catch (final IOException ex) {
+                failTest(ex);
+            }
+        }).start();
+        clientConnection.streamBuilder((input, output) -> {
+            output.flush();
+            output.writeUTF(getRequest("144", DELETE).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
             assertNotEquals(UNDETERMINED, response.get(ID));
         });
     }
-    
+
     @Test
     public void deleteRegister() throws IOException {
         dataMap.put("3", getDataUser());
@@ -241,6 +295,31 @@ public class RecycleBinTest {
             assertFalse(dataMap.containsKey("3"));
         });
     }
+
+    @Test
+    public void postBasRequestRegister() throws IOException {
+        Factory.thread(() -> {
+            try {
+                serverConnection.streamFuture(this::failTest).then((input, output) -> {
+                    try {
+                        final JSONObject request = new JSONObject(input.readUTF());
+                        recycleBin = new RecycleBin(request, output, dataMap);
+                        recycleBin.post();
+                    } catch (final InterruptedException ex) {
+                        failTest(ex);
+                    }
+                });
+            } catch (final IOException ex) {
+                failTest(ex);
+            }
+        }).start();
+        clientConnection.streamBuilder((input, output) -> {
+            output.flush();
+            output.writeUTF(getRequest(null, POST).toString());
+            final JSONObject response = new JSONObject(input.readUTF());
+            assertEquals(BAD_REQUEST, response.get(STATUS));
+        });
+    }
     
     @Test
     public void postNotRegister() throws IOException {
@@ -261,7 +340,7 @@ public class RecycleBinTest {
         }).start();
         clientConnection.streamBuilder((input, output) -> {
             output.flush();
-            output.writeUTF(getRequest(UNDETERMINED, POST).toString());
+            output.writeUTF(getRequest("1997", POST).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(OK, response.get(STATUS));
             assertEquals("FALSE", response.get(IS_BLOCKED));
@@ -269,8 +348,8 @@ public class RecycleBinTest {
             assertEquals("FALSE", response.get(CLEAR));
         });
     }
-    
-     @Test
+
+    @Test
     public void postRegister() throws IOException {
         dataMap.put("3", getDataUser());
         Factory.thread(() -> {
@@ -293,7 +372,7 @@ public class RecycleBinTest {
             output.writeUTF(getRequest("3", POST).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(FOUND, response.get(STATUS));
-            assertEquals("3", response.get(ID));           
+            assertEquals("3", response.get(ID));
             assertTrue(dataMap.containsKey("3"));
         });
     }

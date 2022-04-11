@@ -61,5 +61,9 @@ public final class Constants {
      * Refere-se a chave de valor que indica a priorização de uma lixeira.
      */
     public static final String PRIORITY = "PRIORITY";
+    /**
+     * Refere-se a chave de valor que indica todos os IDs.
+     */
+    public static final String ALL_IDS = "ALL_IDS";
 
 }

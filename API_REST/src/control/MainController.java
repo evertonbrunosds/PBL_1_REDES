@@ -3,6 +3,7 @@ package control;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import model.Administrator;
 import static model.Constants.DELETE;
 import static model.Constants.METHOD;
 import static model.Constants.POST;
@@ -38,9 +39,13 @@ public class MainController {
     public ServerConnection getRecycleBinsServer() {
         return recycleBinsServer;
     }
-    
+
     public void listenToRecycleBins(final Treatable<IOException> internalException) throws IOException {
         recycleBinsServer.streamFuture(internalException::toTreate).then(this::listenToRecycleBins);
+    }
+
+    public void listenToAdministrators(final Treatable<IOException> internalException) throws IOException {
+        administratorsServer.streamFuture(internalException::toTreate).then(this::listenToAdministrators);
     }
 
     private void listenToRecycleBins(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
@@ -51,7 +56,12 @@ public class MainController {
             unsuccessfulRequest(outputStream);
         }
     }
-    
+
+    private void listenToAdministrators(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
+        final JSONObject request = new JSONObject(inputStream.readUTF());
+        runConsumer(new Administrator(request, outputStream, FakeDadaBaseController.getInstance()), request);
+    }
+
     private static void runConsumer(final ClientConsumer clientConsumer, final JSONObject request) throws IOException {
         if (request.toMap().containsKey(METHOD)) {
             switch (request.getString(METHOD)) {

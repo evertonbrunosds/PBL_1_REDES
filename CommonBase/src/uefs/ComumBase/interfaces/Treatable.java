@@ -16,6 +16,6 @@ public interface Treatable<T> {
      *
      * @param exception Refere-se a exceção tratável
      */
-    public void toTreate(final T exception);
+    public void toTreat(final T exception);
 
 }

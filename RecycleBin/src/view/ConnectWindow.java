@@ -65,10 +65,6 @@ public class ConnectWindow extends javax.swing.JDialog {
     @Override
     public void dispose() {
         instance = null;
-        final String id = RecycleBinController.getInstance().getId();
-        final String name = "Lixeira";
-        final String title = name + " conectada com o ID: [" + id + "]";
-        parent.setTitle(id.equals(UNDETERMINED) ? name.concat(" desconectada") : title);
         super.dispose();
         parent.setVisible(true);
     }

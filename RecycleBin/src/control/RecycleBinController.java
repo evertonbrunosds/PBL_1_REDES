@@ -1,6 +1,8 @@
 package control;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import javax.imageio.IIOException;
 import model.RecycleBin;
 import org.json.JSONObject;
@@ -8,6 +10,8 @@ import model.ClientConnection;
 import model.ServerConsumer;
 import static uefs.ComumBase.interfaces.Status.*;
 import static model.Constants.*;
+import uefs.ComumBase.interfaces.Receiver;
+import util.Usage;
 
 /**
  * Classe responsável por comportar-se como controlador de lixeira.
@@ -29,6 +33,21 @@ public class RecycleBinController extends RecycleBin {
      * Refere-se ao objeto responsável por efetuar requisições ao servidor.
      */
     private final ServerConsumer request;
+    /**
+     * Refere-se a lista de ações tomadas ao se alterar o estado de bloqueio da
+     * lixeira.
+     */
+    private final List<Receiver<Boolean>> actionListChangeBlock;
+    /**
+     * Refere-se a lista de ações tomadas ao se alterar o estado de conexão da
+     * lixeira.
+     */
+    private final List<Receiver<Boolean>> actionListChangeConnection;
+    /**
+     * Refere-se a lista de ações tomadas ao se alterar o estado de uso da
+     * lixeira.
+     */
+    private final List<Receiver<IOException>> actionListChangeUsage;
 
     /**
      * Construtor responsável por manter a integridade de instância singular do
@@ -37,6 +56,9 @@ public class RecycleBinController extends RecycleBin {
     private RecycleBinController() {
         request = new ServerConsumer(this);
         currentConnection = null;
+        actionListChangeBlock = new LinkedList<>();
+        actionListChangeConnection = new LinkedList<>();
+        actionListChangeUsage = new LinkedList<>();
     }
 
     /**
@@ -53,6 +75,68 @@ public class RecycleBinController extends RecycleBin {
     }
 
     /**
+     * Método responsável por adicionar interessados quanto as possíveis
+     * alterações no estado de bloqueio da lixeira.
+     *
+     * @param action Refere-se a ação executada quanto a alteração ocorrer.
+     */
+    public void addActionChangeBlock(final Receiver<Boolean> action) {
+        actionListChangeBlock.add(action);
+    }
+
+    /**
+     * Método responsável por adicionar interessados quanto as possíveis
+     * alterações no estado de conexão da lixeira.
+     *
+     * @param action Refere-se a ação executada quanto a alteração ocorrer.
+     */
+    public void addActionChangeConnection(final Receiver<Boolean> action) {
+        actionListChangeConnection.add(action);
+    }
+
+    /**
+     * Método responsável por adicionar interessados quanto as possíveis
+     * alterações no estado de uso da lixeira.
+     *
+     * @param action Refere-se a ação executada quanto a alteração ocorrer.
+     */
+    public void addActionChangeUsage(final Receiver<IOException> action) {
+        actionListChangeUsage.add(action);
+    }
+
+    /**
+     * Método responsável pela alteração de indicativo de que a lixeira está
+     * bloqueada.
+     *
+     * @param isBlocked Refere-se ao indicativo de que a lixeira está bloqueada.
+     */
+    @Override
+    public void setIsBlocked(final boolean isBlocked) {
+        super.setIsBlocked(isBlocked);
+        actionListChangeBlock.forEach(action -> action.receive(isBlocked));
+    }
+
+    /**
+     * Método responsável pela alteração de indicativo de uso da lixeira.
+     *
+     * @param usage Refere-se ao indicativo de uso da lixeira.
+     */
+    @Override
+    public void setUsage(final Usage usage) {
+        super.setUsage(usage);
+        if (isConnected()) {
+            try {
+                final JSONObject response = request.put(currentConnection);
+                if (!response.getString(STATUS).equals(OK)) {
+                    throw new IOException(response.getString(STATUS));
+                }
+            } catch (final IOException ex) {
+                actionListChangeUsage.forEach(action -> action.receive(ex));
+            }
+        }
+    }
+
+    /**
      * Método responsável por obiter o número de identificação da conexão
      * utilizada pela lixeira no servidor atual.
      *
@@ -62,7 +146,12 @@ public class RecycleBinController extends RecycleBin {
     public String getId() {
         return (currentConnection == null) ? UNDETERMINED : currentConnection.getId();
     }
-    
+
+    /**
+     * Método responsável por obiter indicativo de que a lixeira está conectada.
+     *
+     * @return Retorna indicativo de que a lixeira está conectada.
+     */
     public boolean isConnected() {
         return (currentConnection == null) ? false : !UNDETERMINED.equals(currentConnection.getId());
     }
@@ -80,6 +169,7 @@ public class RecycleBinController extends RecycleBin {
             if (!response.getString(STATUS).equals(OK)) {
                 throw new IIOException(response.getString(STATUS));
             }
+            actionListChangeConnection.forEach(action -> action.receive(isConnected()));
         }
     }
 
@@ -110,6 +200,7 @@ public class RecycleBinController extends RecycleBin {
             default:
                 throw new IOException(response.getString(STATUS));
         }
+        actionListChangeConnection.forEach(action -> action.receive(isConnected()));
     }
 
     /**

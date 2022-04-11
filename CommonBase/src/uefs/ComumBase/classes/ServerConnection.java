@@ -127,7 +127,7 @@ public class ServerConnection implements uefs.ComumBase.interfaces.ServerConnect
                         socket.close();
                     }
                 } catch (final IOException ex) {
-                    iOException.toTreate(ex);
+                    iOException.toTreat(ex);
                 }
             }).start();
         };
@@ -155,7 +155,7 @@ public class ServerConnection implements uefs.ComumBase.interfaces.ServerConnect
                         socket.close();
                     }
                 } catch (final IOException ex) {
-                    iOException.toTreate(ex);
+                    iOException.toTreat(ex);
                 }
             }).start();
         };
@@ -183,7 +183,7 @@ public class ServerConnection implements uefs.ComumBase.interfaces.ServerConnect
                         socket.close();
                     }
                 } catch (final IOException ex) {
-                    iOException.toTreate(ex);
+                    iOException.toTreat(ex);
                 }
             }).start();
         };
