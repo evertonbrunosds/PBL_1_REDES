@@ -153,7 +153,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="uso: 0.00m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
@@ -161,7 +161,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="uso: 0.25m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
@@ -169,7 +169,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="uso: 0.50m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
@@ -177,7 +177,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="uso: 0.75m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
         </Component>
@@ -185,7 +185,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="uso: 1.00m&#xb3;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
         </Component>

@@ -120,19 +120,19 @@ public class Main extends javax.swing.JFrame {
         });
 
         usageNone.setText("uso: 0.00m³");
-        usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         usageLow.setText("uso: 0.25m³");
-        usageLow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        usageLow.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         usageMedium.setText("uso: 0.50m³");
-        usageMedium.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        usageMedium.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         usageHigh.setText("uso: 0.75m³");
-        usageHigh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        usageHigh.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         usageTotal.setText("uso: 1.00m³");
-        usageTotal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        usageTotal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         javax.swing.GroupLayout panelUsageLayout = new javax.swing.GroupLayout(panelUsage);
         panelUsage.setLayout(panelUsageLayout);
@@ -309,25 +309,37 @@ public class Main extends javax.swing.JFrame {
 
     private void comboBoxIDsPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxIDsPopupMenuWillBecomeInvisible
         if (comboBoxIDs.getSelectedIndex() > -1) {
-            try {
-                final String id = comboBoxIDs.getSelectedItem().toString();
-                MainController.getInstance().showRecycleDetails(id);
-            } catch (IOException ex) {
-                JOptionPane.showConfirmDialog(
-                        this,
-                        "Conexão perdida! Código de erro: ".concat(ex.getMessage().concat(".")),
-                        "Mensagem de Erro",
-                        JOptionPane.CLOSED_OPTION,
-                        JOptionPane.ERROR_MESSAGE
-                );
+            if (!"".equals(comboBoxIDs.getItemAt(0))) {
+                try {
+                    final String id = comboBoxIDs.getSelectedItem().toString();
+                    MainController.getInstance().showRecycleDetails(id);
+                } catch (IOException ex) {
+                    JOptionPane.showConfirmDialog(
+                            this,
+                            "Conexão perdida! Código de erro: ".concat(ex.getMessage().concat(".")),
+                            "Mensagem de Erro",
+                            JOptionPane.CLOSED_OPTION,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                cBoxIsBlocked.setEnabled(true);
+                cBoxPriority.setEnabled(true);
+                btnShow.setEnabled(true);
+            } else {
+                cBoxIsBlocked.setEnabled(false);
+                cBoxPriority.setEnabled(false);
+                btnShow.setEnabled(false);
+                cBoxIsBlocked.setSelected(false);
+                cBoxPriority.setSelected(false);
+                progressBar.setValue(0);
             }
-            cBoxIsBlocked.setEnabled(true);
-            cBoxPriority.setEnabled(true);
-            btnShow.setEnabled(true);
         } else {
             cBoxIsBlocked.setEnabled(false);
             cBoxPriority.setEnabled(false);
             btnShow.setEnabled(false);
+            cBoxIsBlocked.setSelected(false);
+            cBoxPriority.setSelected(false);
+            progressBar.setValue(0);
         }
     }//GEN-LAST:event_comboBoxIDsPopupMenuWillBecomeInvisible
 
