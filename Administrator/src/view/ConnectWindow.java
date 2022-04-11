@@ -1,6 +1,6 @@
 package view;
 
-import control.RecycleBinController;
+import controller.MainController;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -21,7 +21,7 @@ public class ConnectWindow extends javax.swing.JDialog {
     /**
      * Refere-se a porta de conexão utilizada pela lixeira.
      */
-    private static final int RECYCLE_BIN_PORT = 1990;
+    private static final int ADMINISTRATOR_PORT = 1991;
     /**
      * Refere-se a janela invocadora da janela de conexão.
      */
@@ -45,7 +45,7 @@ public class ConnectWindow extends javax.swing.JDialog {
      */
     private void connectToServer() {
         try {
-            RecycleBinController.getInstance().connectToServer(textIP.getText(), RECYCLE_BIN_PORT);
+            MainController.getInstance().connectToServer(textIP.getText(), ADMINISTRATOR_PORT);
             dispose();
         } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
@@ -134,17 +134,12 @@ public class ConnectWindow extends javax.swing.JDialog {
         textIPDescription = new javax.swing.JLabel();
         btnConnect = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
-        textLat = new javax.swing.JTextField();
-        textLon = new javax.swing.JTextField();
-        labelLat = new javax.swing.JLabel();
-        labelLon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Conectar Lixeira");
+        setTitle("Conectar Administrador");
         setAlwaysOnTop(true);
         setResizable(false);
 
-        textIP.setText("127.0.0.1");
         textIP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 textIPKeyReleased(evt);
@@ -163,39 +158,22 @@ public class ConnectWindow extends javax.swing.JDialog {
 
         progressBar.setIndeterminate(true);
 
-        textLat.setText("120");
-
-        textLon.setText("140");
-
-        labelLat.setText("Latitude");
-
-        labelLon.setText("Longitude");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(textIPDescription)
-                        .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textLat, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelLat))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelLon)
-                            .addComponent(textLon, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textIPDescription)
+                    .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnConnect)
                 .addGap(35, 35, 35))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,14 +184,6 @@ public class ConnectWindow extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConnect))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(labelLat)
-                    .addComponent(labelLon))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(textLat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textLon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -246,12 +216,8 @@ public class ConnectWindow extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConnect;
-    private javax.swing.JLabel labelLat;
-    private javax.swing.JLabel labelLon;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField textIP;
     private javax.swing.JLabel textIPDescription;
-    private javax.swing.JTextField textLat;
-    private javax.swing.JTextField textLon;
     // End of variables declaration//GEN-END:variables
 }

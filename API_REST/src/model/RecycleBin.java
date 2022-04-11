@@ -59,7 +59,7 @@ public class RecycleBin implements ClientConsumer {
         this.request = request;
         this.response = response;
         this.dataMap = dataMap;
-        String tmpId = "";
+        String tmpId = null;
         try {
             tmpId = request.getString(ID);
         } catch (final JSONException ex) {
@@ -70,29 +70,47 @@ public class RecycleBin implements ClientConsumer {
     }
 
     /**
-     * Método responsável por indicar se uma requisição não é básicamente
-     * válida. Isto é: se não possui método e ou ID.
+     * Método responsável por indicar se uma requisição não possui campo de ID
+     * de lixeira.
      *
-     * @return Retorna indicativo de que a requisição é básicamente válida ou
-     * não.
+     * @return Retorna indicativo de que a requisição não possui campo de ID de
+     * lixeira.
      */
-    private boolean isNotBasicallyValidRequest() {
+    private boolean notContainsID() {
         final Map<String, Object> mapRequest = request.toMap();
         return !mapRequest.containsKey(ID);
     }
 
     /**
-     * Método responsável por indicar se uma requisição não é totalmente válida.
-     * Isto é: se não possui método, ID, campo de bloqueio e ou campo de uso.
+     * Método responsável por indicar se uma requisição não possui campo de
+     * bloqueio de lixeira.
      *
-     * @return Retorna indicativo de que a requisição é totalmente válida ou
-     * não.
+     * @return Retorna indicativo de que a requisição não possui campo de
+     * bloqueio de lixeira.
      */
-    private boolean isNotFullyValidRequest() {
+    private boolean notContainsIsBlocked() {
         final Map<String, Object> mapRequest = request.toMap();
-        final boolean containsIsBlocked = mapRequest.containsKey(IS_BLOCKED);
-        final boolean containsIsUsage = mapRequest.containsKey(USAGE);
-        return isNotBasicallyValidRequest() || !containsIsBlocked || !containsIsUsage;
+        return !mapRequest.containsKey(IS_BLOCKED);
+    }
+
+    /**
+     * Método responsável por indicar se uma requisição não possui campo de
+     * nível de uso a lixeira.
+     *
+     * @return Retorna indicativo de que a requisição não possui campo de nível
+     * de uso a lixeira.
+     */
+    private boolean notContainsUsage() {
+        final Map<String, Object> mapRequest = request.toMap();
+        return !mapRequest.containsKey(USAGE);
+    }
+    
+     /**
+     * Método responsável por indicar se uma lixeira pode ser encontrada na base de dados.
+     * @return Retorna indicativo de que uma lixeira pode se encontrada.
+     */
+    private boolean userFound() {
+        return dataMap.containsKey(id);
     }
 
     /**
@@ -125,8 +143,8 @@ public class RecycleBin implements ClientConsumer {
         if (dataMap.get(id).toMap().containsKey(CLEAR)) {
             dataMap.get(id).put(CLEAR, "FALSE");
         }
-        dataUser.put(STATUS, OK);
-        dataUser.remove(PRIORITY);
+        dataUser.put(STATUS, FOUND);
+        dataUser.remove(IS_PRIORITY);
         response.flush();
         return dataUser.toString();
     }
@@ -146,8 +164,10 @@ public class RecycleBin implements ClientConsumer {
         dataUser.put(IS_BLOCKED, request.get(IS_BLOCKED));
         dataUser.put(USAGE, request.get(USAGE));
         dataUser.put(CLEAR, "FALSE");
-        dataUser.put(PRIORITY, "FALSE");
-        return getRequest();
+        dataUser.put(IS_PRIORITY, "FALSE");
+        final JSONObject msg = new JSONObject(getRequest());
+        msg.put(STATUS, NOT_FOUND);
+        return msg.toString();
     }
 
     /**
@@ -181,14 +201,13 @@ public class RecycleBin implements ClientConsumer {
     }
 
     /**
-     * Método responsável por buscar os dados de uma lideira.
+     * Método responsável por buscar os dados de uma lixeira.
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     @Override
     public void get() throws IOException {
-        final boolean userFound = dataMap.containsKey(id);
-        response.writeUTF(userFound
+        response.writeUTF(userFound()
                 ? getRequest()
                 : unsuccessfulRequest(NOT_FOUND)
         );
@@ -201,26 +220,24 @@ public class RecycleBin implements ClientConsumer {
      */
     @Override
     public void put() throws IOException {
-        final boolean userFound = dataMap.containsKey(id);
-        response.writeUTF(isNotFullyValidRequest()
+        response.writeUTF(notContainsID() || notContainsIsBlocked() || notContainsUsage()
                 ? unsuccessfulRequest(BAD_REQUEST)
-                : userFound
+                : userFound()
                         ? putRequest()
                         : unsuccessfulRequest(NOT_FOUND)
         );
     }
 
     /**
-     * Método responsável por apagar os dados de uma lideira.
+     * Método responsável por apagar os dados de uma lixeira.
      *
      * @throws IOException Refere-se a algum possível erro de entrada/saída.
      */
     @Override
     public void delete() throws IOException {
-        final boolean userFound = dataMap.containsKey(id);
-        response.writeUTF(isNotBasicallyValidRequest()
+        response.writeUTF(notContainsID()
                 ? unsuccessfulRequest(BAD_REQUEST)
-                : userFound
+                : userFound()
                         ? deleteRequest()
                         : unsuccessfulRequest(NOT_FOUND)
         );
@@ -233,10 +250,9 @@ public class RecycleBin implements ClientConsumer {
      */
     @Override
     public void post() throws IOException {
-        final boolean userNotFound = !dataMap.containsKey(id);
-        response.writeUTF(isNotFullyValidRequest()
+        response.writeUTF(notContainsID() || notContainsIsBlocked() || notContainsUsage()
                 ? unsuccessfulRequest(BAD_REQUEST)
-                : userNotFound
+                : !userFound()
                         ? postRequest()
                         : unsuccessfulRequest(FOUND)
         );

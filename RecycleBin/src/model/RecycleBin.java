@@ -1,7 +1,7 @@
 package model;
 
 import util.AccessDeniedException;
-import util.Usage;
+import static util.Usage.*;
 
 /**
  * Classe responsável por comportar-se como lixeira.
@@ -18,14 +18,14 @@ public class RecycleBin {
     /**
      * Refere-se ao indicativo de uso da lixeira.
      */
-    private Usage usage;
+    private String usage;
 
     /**
      * Construtor responsável por instanciar a lixeira.
      */
     public RecycleBin() {
         isBlocked = false;
-        usage = Usage.none;
+        usage = NONE;
     }
 
     /**
@@ -33,7 +33,7 @@ public class RecycleBin {
      *
      * @return Retorna indicativo de uso da lixeira.
      */
-    public Usage getUsage() {
+    public String getUsage() {
         return usage;
     }
 
@@ -42,7 +42,7 @@ public class RecycleBin {
      *
      * @param usage Refere-se ao indicativo de uso da lixeira.
      */
-    public void setUsage(final Usage usage) {
+    public void setUsage(final String usage) {
         open();
         this.usage = usage;
     }

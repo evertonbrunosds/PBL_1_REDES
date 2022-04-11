@@ -1,7 +1,5 @@
 package model;
 
-import static model.Constants.*;
-
 /**
  * Classe responsável por comportar-se como conexão de cliente detentora de
  * número de identificação.
@@ -24,7 +22,7 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      */
     public ClientConnection(final String ip, final int port) {
         super(ip, port);
-        this.id = UNDETERMINED;
+        this.id = null;
     }
 
     /**
@@ -36,7 +34,7 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      */
     public ClientConnection(final String id, final String ip, final int port) {
         super(ip, port);
-        this.id = (id == null) ? UNDETERMINED : id;
+        this.id = id;
     }
 
     /**
@@ -46,7 +44,7 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      * @param id Refere-se ao número de identificação da conexão de cliente.
      */
     public void setId(final String id) {
-        this.id = (id == null) ? UNDETERMINED : id;
+        this.id = id;
     }
 
     /**
@@ -57,6 +55,17 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Método responsável por obiter indicativo de que o número de identificação
+     * da conexão de cliente existe.
+     *
+     * @return Retorna indicativo de que o número de identificação da conexão de
+     * cliente existe.
+     */
+    public boolean hasId() {
+        return id != null;
     }
 
 }

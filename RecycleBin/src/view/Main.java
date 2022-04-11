@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import util.Usage;
+import static util.Usage.*;
 
 /**
  * Classe responsável por comportar-se como UI de lixeira.
@@ -128,7 +128,7 @@ public final class Main extends javax.swing.JFrame {
 
         labelDescriptionState.setText("Descrição de Estado: Desbloqueado");
 
-        usageNone.setText("nenhum");
+        usageNone.setText("uso: 0.00m³");
         usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         usageNone.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -136,7 +136,7 @@ public final class Main extends javax.swing.JFrame {
             }
         });
 
-        usageLow.setText("baixo");
+        usageLow.setText("uso: 0.25m³");
         usageLow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         usageLow.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -144,7 +144,7 @@ public final class Main extends javax.swing.JFrame {
             }
         });
 
-        usageMedium.setText("médio");
+        usageMedium.setText("uso: 0.50m³");
         usageMedium.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         usageMedium.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -152,7 +152,7 @@ public final class Main extends javax.swing.JFrame {
             }
         });
 
-        usageHigh.setText("alto");
+        usageHigh.setText("uso: 0.75m³");
         usageHigh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         usageHigh.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -160,7 +160,7 @@ public final class Main extends javax.swing.JFrame {
             }
         });
 
-        usageTotal.setText("total");
+        usageTotal.setText("uso: 1.00m³");
         usageTotal.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         usageTotal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -173,17 +173,15 @@ public final class Main extends javax.swing.JFrame {
         panelUsageLayout.setHorizontalGroup(
             panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelUsageLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addComponent(usageNone)
-                .addGap(43, 43, 43)
+                .addGap(27, 27, 27)
                 .addComponent(usageLow)
-                .addGap(74, 74, 74)
+                .addGap(40, 40, 40)
                 .addComponent(usageMedium)
-                .addGap(77, 77, 77)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(usageHigh)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(usageTotal)
-                .addContainerGap())
+                .addGap(43, 43, 43)
+                .addComponent(usageTotal))
         );
         panelUsageLayout.setVerticalGroup(
             panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,7 +214,7 @@ public final class Main extends javax.swing.JFrame {
                         .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelDescriptionState)
                         .addComponent(btnConnectToServer))
-                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
@@ -281,23 +279,23 @@ public final class Main extends javax.swing.JFrame {
         switch (progressBar.getValue()) {
             case 0:
                 setToOrange(usageNone);
-                recycleBinController.setUsage(Usage.none);
+                recycleBinController.setUsage(NONE);
                 break;
             case 1:
                 setToOrange(usageLow);
-                recycleBinController.setUsage(Usage.low);
+                recycleBinController.setUsage(LOW);
                 break;
             case 2:
                 setToOrange(usageMedium);
-                recycleBinController.setUsage(Usage.medium);
+                recycleBinController.setUsage(MEDIUM);
                 break;
             case 3:
                 setToOrange(usageHigh);
-                recycleBinController.setUsage(Usage.high);
+                recycleBinController.setUsage(HIGH);
                 break;
             case 4:
                 setToOrange(usageTotal);
-                recycleBinController.setUsage(Usage.total);
+                recycleBinController.setUsage(TOTAL);
                 break;
             default:
                 break;

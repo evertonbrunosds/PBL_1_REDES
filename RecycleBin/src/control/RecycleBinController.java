@@ -9,9 +9,8 @@ import org.json.JSONObject;
 import model.ClientConnection;
 import model.ServerConsumer;
 import static uefs.ComumBase.interfaces.Status.*;
-import static model.Constants.*;
+import static util.Constants.*;
 import uefs.ComumBase.interfaces.Receiver;
-import util.Usage;
 
 /**
  * Classe responsável por comportar-se como controlador de lixeira.
@@ -122,12 +121,12 @@ public class RecycleBinController extends RecycleBin {
      * @param usage Refere-se ao indicativo de uso da lixeira.
      */
     @Override
-    public void setUsage(final Usage usage) {
+    public void setUsage(final String usage) {
         super.setUsage(usage);
         if (isConnected()) {
             try {
                 final JSONObject response = request.put(currentConnection);
-                if (!response.getString(STATUS).equals(OK)) {
+                if (!response.getString(STATUS).equals(FOUND)) {
                     throw new IOException(response.getString(STATUS));
                 }
             } catch (final IOException ex) {
@@ -144,7 +143,7 @@ public class RecycleBinController extends RecycleBin {
      * lixeira no servidor atual.
      */
     public String getId() {
-        return (currentConnection == null) ? UNDETERMINED : currentConnection.getId();
+        return currentConnection.getId();
     }
 
     /**
@@ -153,7 +152,7 @@ public class RecycleBinController extends RecycleBin {
      * @return Retorna indicativo de que a lixeira está conectada.
      */
     public boolean isConnected() {
-        return (currentConnection == null) ? false : !UNDETERMINED.equals(currentConnection.getId());
+        return (currentConnection == null) ? false : currentConnection.hasId();
     }
 
     /**
@@ -166,7 +165,7 @@ public class RecycleBinController extends RecycleBin {
         if (currentConnection != null) {
             final JSONObject response = request.delete(currentConnection);
             currentConnection = null;
-            if (!response.getString(STATUS).equals(OK)) {
+            if (!response.getString(STATUS).equals(FOUND)) {
                 throw new IIOException(response.getString(STATUS));
             }
             actionListChangeConnection.forEach(action -> action.receive(isConnected()));
@@ -185,7 +184,7 @@ public class RecycleBinController extends RecycleBin {
         final ClientConnection newConnection = new ClientConnection(ip, port);
         final JSONObject response = request.put(newConnection);
         switch (response.getString(STATUS)) {
-            case OK:
+            case FOUND:
                 disconnect();
                 currentConnection = newConnection;
                 break;
@@ -193,10 +192,10 @@ public class RecycleBinController extends RecycleBin {
                 newConnection.setId(response.getString(ID));
                 signUp(newConnection);
                 break;
-            case INTERNAL_SERVER_ERROR:
-                throw new IOException(INTERNAL_SERVER_ERROR);
             case BAD_REQUEST:
-                throw new IOException(BAD_REQUEST);
+                newConnection.setId(response.getString(ID));
+                signUp(newConnection);
+                break;
             default:
                 throw new IOException(response.getString(STATUS));
         }
@@ -212,7 +211,7 @@ public class RecycleBinController extends RecycleBin {
      */
     private void signUp(final ClientConnection connection) throws IOException {
         final JSONObject response = request.post(connection);
-        if (response.getString(STATUS).equals(OK)) {
+        if (response.getString(STATUS).equals(NOT_FOUND)) {
             disconnect();
             currentConnection = connection;
         } else {

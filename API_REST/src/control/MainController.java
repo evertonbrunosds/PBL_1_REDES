@@ -41,11 +41,11 @@ public class MainController {
     }
 
     public void listenToRecycleBins(final Treatable<IOException> internalException) throws IOException {
-        recycleBinsServer.streamFuture(internalException::toTreate).then(this::listenToRecycleBins);
+        recycleBinsServer.streamFuture(internalException::toTreat).then(this::listenToRecycleBins);
     }
 
     public void listenToAdministrators(final Treatable<IOException> internalException) throws IOException {
-        administratorsServer.streamFuture(internalException::toTreate).then(this::listenToAdministrators);
+        administratorsServer.streamFuture(internalException::toTreat).then(this::listenToAdministrators);
     }
 
     private void listenToRecycleBins(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {

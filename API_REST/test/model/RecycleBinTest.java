@@ -52,7 +52,7 @@ public class RecycleBinTest {
         dataUser.put(IS_BLOCKED, "FALSE");
         dataUser.put(USAGE, "NONE");
         dataUser.put(CLEAR, "FALSE");
-        dataUser.put(PRIORITY, "FALSE");
+        dataUser.put(IS_PRIORITY, "FALSE");
         return dataUser;
     }
 
@@ -95,7 +95,7 @@ public class RecycleBinTest {
             output.writeUTF(getRequest(null, GET).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
-            assertNotEquals(UNDETERMINED, response.get(ID));
+            assertNotNull(response.get(ID));
         });
     }
 
@@ -121,7 +121,7 @@ public class RecycleBinTest {
             output.flush();
             output.writeUTF(getRequest("3", GET).toString());
             final JSONObject response = new JSONObject(input.readUTF());
-            assertEquals(OK, response.get(STATUS));
+            assertEquals(FOUND, response.get(STATUS));
             assertEquals("FALSE", response.get(IS_BLOCKED));
             assertEquals("NONE", response.get(USAGE));
             assertEquals("FALSE", response.get(CLEAR));
@@ -150,7 +150,7 @@ public class RecycleBinTest {
             output.writeUTF(getRequest(null, PUT).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(BAD_REQUEST, response.get(STATUS));
-            assertNotEquals(UNDETERMINED, response.get(ID));
+            assertNotNull(response.get(ID));
         });
     }
 
@@ -176,7 +176,7 @@ public class RecycleBinTest {
             output.writeUTF(getRequest("144", PUT).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
-            assertNotEquals(UNDETERMINED, response.get(ID));
+            assertNotNull(response.get(ID));
         });
     }
 
@@ -204,10 +204,10 @@ public class RecycleBinTest {
             request.put(IS_BLOCKED, "TRUE"); // NÃO HÁ PERMISSÃO PARA ALTERAR
             request.put(USAGE, "TOTAL"); // HÁ PERMISSÃO PARA ALTERAR
             request.put(CLEAR, "TRUE"); // NÃO HÁ PERMISSÃO PARA ALTERAR
-            request.put(PRIORITY, "TRUE"); // NÃO HÁ PERMISSÃO PARA ALTERAR
+            request.put(IS_PRIORITY, "TRUE"); // NÃO HÁ PERMISSÃO PARA ALTERAR
             output.writeUTF(request.toString());
             final JSONObject response = new JSONObject(input.readUTF());
-            assertEquals(OK, response.get(STATUS));
+            assertEquals(FOUND, response.get(STATUS));
             assertEquals("FALSE", response.get(IS_BLOCKED));
             assertEquals("TOTAL", response.get(USAGE));
             assertEquals("FALSE", response.get(CLEAR));
@@ -236,7 +236,7 @@ public class RecycleBinTest {
             output.writeUTF(getRequest(null, DELETE).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(BAD_REQUEST, response.get(STATUS));
-            assertNotEquals(UNDETERMINED, response.get(ID));
+            assertNotNull(response.get(ID));
         });
     }
 
@@ -262,7 +262,7 @@ public class RecycleBinTest {
             output.writeUTF(getRequest("144", DELETE).toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
-            assertNotEquals(UNDETERMINED, response.get(ID));
+            assertNotNull(response.get(ID));
         });
     }
 
@@ -288,7 +288,7 @@ public class RecycleBinTest {
             output.flush();
             output.writeUTF(getRequest("3", DELETE).toString());
             final JSONObject response = new JSONObject(input.readUTF());
-            assertEquals(OK, response.get(STATUS));
+            assertEquals(FOUND, response.get(STATUS));
             assertEquals("FALSE", response.get(IS_BLOCKED));
             assertEquals("NONE", response.get(USAGE));
             assertEquals("FALSE", response.get(CLEAR));
@@ -297,7 +297,7 @@ public class RecycleBinTest {
     }
 
     @Test
-    public void postBasRequestRegister() throws IOException {
+    public void postBadRequestRegister() throws IOException {
         Factory.thread(() -> {
             try {
                 serverConnection.streamFuture(this::failTest).then((input, output) -> {
@@ -342,7 +342,7 @@ public class RecycleBinTest {
             output.flush();
             output.writeUTF(getRequest("1997", POST).toString());
             final JSONObject response = new JSONObject(input.readUTF());
-            assertEquals(OK, response.get(STATUS));
+            assertEquals(NOT_FOUND, response.get(STATUS));
             assertEquals("FALSE", response.get(IS_BLOCKED));
             assertEquals("NONE", response.get(USAGE));
             assertEquals("FALSE", response.get(CLEAR));

@@ -1,4 +1,4 @@
-package model;
+package util;
 
 /**
  * Classe responsável por fornecer as principais constantes disponíveis no
@@ -9,10 +9,6 @@ package model;
  */
 public interface Constants {
 
-    /**
-     * Refere-se a um valor indeterminado.
-     */
-    public static final String UNDETERMINED = "UNDETERMINED";
     /**
      * Refere-se a chave de valor que indica método.
      */
@@ -33,5 +29,9 @@ public interface Constants {
      * Refere-se a chave de valor que indica status.
      */
     public static final String STATUS = "STATUS";
+    /**
+     * Refere-se a chave de valor que indica todos os IDs.
+     */
+    public static final String ALL_IDS = "ALL_IDS";
 
 }

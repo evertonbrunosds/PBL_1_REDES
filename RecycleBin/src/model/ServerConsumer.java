@@ -2,10 +2,9 @@ package model;
 
 import java.io.IOException;
 import org.json.JSONObject;
-import uefs.ComumBase.enums.Method;
 import uefs.ComumBase.interfaces.Container;
-import util.Usage;
-import static model.Constants.*;
+import static uefs.ComumBase.interfaces.Method.*;
+import static util.Constants.*;
 
 /**
  * Classe responsável por comportar-se como consumidor de servidor.
@@ -36,7 +35,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      */
     @Override
     public JSONObject post(final ClientConnection connection) throws IOException {
-        return runHighMethod(connection, Method.post);
+        return runHighMethod(connection, POST);
     }
 
     /**
@@ -48,7 +47,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      */
     @Override
     public JSONObject get(final ClientConnection connection) throws IOException {
-        return runBasicMethod(connection, Method.get);
+        return runBasicMethod(connection, GET);
     }
 
     /**
@@ -60,7 +59,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      */
     @Override
     public JSONObject put(final ClientConnection connection) throws IOException {
-        return runHighMethod(connection, Method.put);
+        return runHighMethod(connection, PUT);
     }
 
     /**
@@ -72,7 +71,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      */
     @Override
     public JSONObject delete(final ClientConnection connection) throws IOException {
-        return runBasicMethod(connection, Method.delete);
+        return runBasicMethod(connection, DELETE);
     }
 
     /**
@@ -82,7 +81,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      * @return Retorna a resposta dada pelo servidor pela ação executada em JSON.
      * @throws IOException Refere-se a exceção de entrada/saída.
      */
-    private JSONObject runBasicMethod(final ClientConnection connection, final Method method) throws IOException {
+    private JSONObject runBasicMethod(final ClientConnection connection, final String method) throws IOException {
         final JSONObject request = getBasicRequest(method, connection);
         final Container<String, String> response = getContainerString();
         connection.streamBuilder((inputStream, outputStream) -> {
@@ -100,11 +99,11 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      * @return Retorna a resposta dada pelo servidor pela ação executada em JSON.
      * @throws IOException Refere-se a exceção de entrada/saída.
      */
-    private JSONObject runHighMethod(final ClientConnection connection, final Method method) throws IOException {
+    private JSONObject runHighMethod(final ClientConnection connection, final String method) throws IOException {
         final JSONObject request = getBasicRequest(method, connection);
         final Container<String, String> response = getContainerString();
         request.put(IS_BLOCKED, Boolean.toString(recycleBin.isBlocked()).toUpperCase());
-        request.put(USAGE, Usage.toString(recycleBin.getUsage()));
+        request.put(USAGE, recycleBin.getUsage());
         connection.streamBuilder((inputStream, outputStream) -> {
             outputStream.flush();
             outputStream.writeUTF(request.toString());
@@ -119,10 +118,12 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      * @param connection Refere-se a conexão usada no processo. 
      * @return Retorna a requisição básica que será enviada ao servidor.
      */
-    private static JSONObject getBasicRequest(final Method method, final ClientConnection connection) {
+    private static JSONObject getBasicRequest(final String method, final ClientConnection connection) {
         final JSONObject currentState = new JSONObject();
-        currentState.put(METHOD, Method.toString(method));
-        currentState.put(ID, connection.getId());
+        currentState.put(METHOD, method);
+        if (connection.hasId()) {
+            currentState.put(ID, connection.getId());
+        }
         return currentState;
     }
     

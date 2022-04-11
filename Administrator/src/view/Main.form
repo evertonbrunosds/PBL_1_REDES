@@ -3,7 +3,7 @@
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
-    <Property name="title" type="java.lang.String" value="Lixeira"/>
+    <Property name="title" type="java.lang.String" value="Administrador"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -26,48 +26,57 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
-                      <Component id="labelDescriptionState" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="progressBar" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="comboBoxIDs" alignment="2" min="-2" pref="202" max="-2" attributes="0"/>
+                  <Component id="cBoxPriority" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
+                  <Component id="progressBar" alignment="2" min="-2" pref="424" max="-2" attributes="0"/>
+                  <Component id="cBoxIsBlocked" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="btnConnectToServer" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="comboBoxIDs" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="cBoxPriority" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="cBoxIsBlocked" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="panelUsage" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="progressBar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="labelDescriptionState" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-              <Component id="btnConnectToServer" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btnConnectToServer">
+    <Component class="javax.swing.JComboBox" name="comboBoxIDs">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Conectar"/>
-        <Property name="focusable" type="boolean" value="false"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConnectToServerActionPerformed"/>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="comboBoxIDsItemStateChanged"/>
+        <EventHandler event="popupMenuWillBecomeVisible" listener="javax.swing.event.PopupMenuListener" parameters="javax.swing.event.PopupMenuEvent" handler="comboBoxIDsPopupMenuWillBecomeVisible"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelDescriptionState">
+    <Component class="javax.swing.JCheckBox" name="cBoxPriority">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o de Estado: Desbloqueado"/>
+        <Property name="text" type="java.lang.String" value="Priorizar a Coleta de Lixo da Lixeira Atual"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="panelUsage">
@@ -76,15 +85,17 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="usageNone" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                  <Component id="usageLow" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                  <Component id="usageMedium" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="47" max="32767" attributes="0"/>
-                  <Component id="usageHigh" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                  <Component id="usageLow" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
+                  <Component id="usageMedium" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
+                  <Component id="usageHigh" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="usageTotal" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -107,58 +118,43 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="usageNone">
           <Properties>
-            <Property name="text" type="java.lang.String" value="uso: 0.00m&#xb3;"/>
+            <Property name="text" type="java.lang.String" value="nenhum"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageNoneMouseReleased"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="usageLow">
           <Properties>
-            <Property name="text" type="java.lang.String" value="uso: 0.25m&#xb3;"/>
+            <Property name="text" type="java.lang.String" value="baixo"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageLowMouseReleased"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="usageMedium">
           <Properties>
-            <Property name="text" type="java.lang.String" value="uso: 0.50m&#xb3;"/>
+            <Property name="text" type="java.lang.String" value="m&#xe9;dio"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageMediumMouseReleased"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="usageHigh">
           <Properties>
-            <Property name="text" type="java.lang.String" value="uso: 0.75m&#xb3;"/>
+            <Property name="text" type="java.lang.String" value="alto"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageHighMouseReleased"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="usageTotal">
           <Properties>
-            <Property name="text" type="java.lang.String" value="uso: 1.00m&#xb3;"/>
+            <Property name="text" type="java.lang.String" value="total"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor em Forma de M&#xe3;o"/>
+              <Color id="Cursor Padr&#xe3;o"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usageTotalMouseReleased"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -168,6 +164,19 @@
       </Properties>
       <Events>
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="progressBarStateChanged"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cBoxIsBlocked">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Bloquear a Inser&#xe7;&#xe3;o e Coleta de Lixo da Lixeira Atual"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnConnectToServer">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Conectar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConnectToServerActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

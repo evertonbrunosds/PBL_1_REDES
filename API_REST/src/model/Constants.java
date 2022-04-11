@@ -10,10 +10,6 @@ package model;
 public final class Constants {
 
     /**
-     * Refere-se a um valor indeterminado.
-     */
-    public static final String UNDETERMINED = "UNDETERMINED";
-    /**
      * Refere-se a chave de valor que indica bloqueio.
      */
     public static final String IS_BLOCKED = "IS_BLOCKED";
@@ -60,7 +56,7 @@ public final class Constants {
     /**
      * Refere-se a chave de valor que indica a priorização de uma lixeira.
      */
-    public static final String PRIORITY = "PRIORITY";
+    public static final String IS_PRIORITY = "PRIORITY";
     /**
      * Refere-se a chave de valor que indica todos os IDs.
      */
