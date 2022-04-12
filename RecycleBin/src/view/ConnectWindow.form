@@ -40,13 +40,13 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="textLat" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="textLatitude" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                           <Component id="labelLat" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="labelLon" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="textLon" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="textLongitude" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -73,8 +73,8 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="textLat" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="textLon" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="textLatitude" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="textLongitude" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="progressBar" min="-2" max="-2" attributes="0"/>
@@ -84,9 +84,6 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="textIP">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="127.0.0.1"/>
-      </Properties>
       <Events>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textIPKeyReleased"/>
       </Events>
@@ -110,15 +107,15 @@
         <Property name="indeterminate" type="boolean" value="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="textLat">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="120"/>
-      </Properties>
+    <Component class="javax.swing.JTextField" name="textLatitude">
+      <Events>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textLatitudeKeyReleased"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="textLon">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="140"/>
-      </Properties>
+    <Component class="javax.swing.JTextField" name="textLongitude">
+      <Events>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="textLongitudeKeyReleased"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="labelLat">
       <Properties>

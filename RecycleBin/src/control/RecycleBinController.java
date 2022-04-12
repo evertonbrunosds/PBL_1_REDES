@@ -183,11 +183,13 @@ public class RecycleBinController extends RecycleBin {
      *
      * @param ip Refere-se ao número de IP utilizado pelo servidor.
      * @param port Refere-se a porta utilizada pelo servidor.
+     * @param latitude Refere-se a latitude cuja validade é verificada.
+     * @param longitude Refere-se a longitude cuja validade é verificada.
      * @throws IOException Exceção lançada para o caso do controlador não ser
      * capaz de desconectar-se do servidor com êxito.
      */
-    public void connectToServer(final String ip, final int port) throws IOException {
-        final ClientConnection newConnection = new ClientConnection(ip, port);
+    public void connectToServer(final String ip, final int port, final String latitude, final String longitude) throws IOException {
+        final ClientConnection newConnection = new ClientConnection(ip, port, latitude, longitude);
         final JSONObject response = request.put(newConnection);
         switch (response.getString(STATUS)) {
             case FOUND:

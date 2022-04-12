@@ -104,6 +104,7 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
         final Container<String, String> response = getContainerString();
         request.put(IS_BLOCKED, Boolean.toString(recycleBin.isBlocked()).toUpperCase());
         request.put(USAGE, recycleBin.getUsage());
+        request.put(LOCATION, connection.getLocation());
         connection.streamBuilder((inputStream, outputStream) -> {
             outputStream.flush();
             outputStream.writeUTF(request.toString());

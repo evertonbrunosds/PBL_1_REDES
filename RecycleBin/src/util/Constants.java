@@ -29,5 +29,9 @@ public interface Constants {
      * Refere-se a chave de valor que indica status.
      */
     public static final String STATUS = "STATUS";
+    /**
+     * Refere-se a chave de valor que indica localização.
+     */
+    public static final String LOCATION = "LOCATION";
 
 }

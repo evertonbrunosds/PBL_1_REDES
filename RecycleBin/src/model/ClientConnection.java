@@ -13,28 +13,28 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      * Refere-se ao número de identificação da conexão de cliente.
      */
     private String id;
+    /**
+     * Refere-se a latitude da conexão.
+     */
+    final String latitude;
+    /**
+     * Refere-se a longitude da conexão.
+     */
+    final String longitude;
 
     /**
      * Construtor responsável por instanciar uma conexão de cliente.
      *
      * @param ip Refere-se ao número de IP do servidor.
      * @param port Refere-se a porta do servidor.
+     * @param latitude Refere-se a latitude da conexão.
+     * @param longitude Refere-se a longitude da conexão.
      */
-    public ClientConnection(final String ip, final int port) {
+    public ClientConnection(final String ip, final int port, final String latitude, final String longitude) {
         super(ip, port);
         this.id = null;
-    }
-
-    /**
-     * Construtor responsável por instanciar uma conexão de cliente.
-     *
-     * @param id Refere-se ao número de identificação da conexão de cliente.
-     * @param ip Refere-se ao número de IP do servidor.
-     * @param port Refere-se a porta do servidor.
-     */
-    public ClientConnection(final String id, final String ip, final int port) {
-        super(ip, port);
-        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -66,6 +66,33 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      */
     public boolean hasId() {
         return id != null;
+    }
+
+    /**
+     * Método responsável por retornar a latitude da conexão.
+     *
+     * @return Retorna a latitude da conexão.
+     */
+    public String getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * Método responsável por retornar a longitude da conexão.
+     *
+     * @return Retorna a longitude da conexão.
+     */
+    public String getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * Método responsável por retornar a localização da conexão.
+     *
+     * @return Retorna a localização da conexão.
+     */
+    public String getLocation() {
+        return "LAT" + getLatitude() + "LON" + getLongitude();
     }
 
 }
