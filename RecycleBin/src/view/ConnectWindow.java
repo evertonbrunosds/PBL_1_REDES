@@ -248,6 +248,8 @@ public class ConnectWindow extends javax.swing.JDialog {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 btnConnectActionPerformed(null);
             }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            textLatitude.requestFocusInWindow();
         }
     }//GEN-LAST:event_textIPKeyReleased
 
@@ -270,6 +272,8 @@ public class ConnectWindow extends javax.swing.JDialog {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 btnConnectActionPerformed(null);
             }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            textIP.requestFocusInWindow();
         }
     }//GEN-LAST:event_textLongitudeKeyReleased
 
@@ -279,6 +283,8 @@ public class ConnectWindow extends javax.swing.JDialog {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 btnConnectActionPerformed(null);
             }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            textLongitude.requestFocusInWindow();
         }
     }//GEN-LAST:event_textLatitudeKeyReleased
 

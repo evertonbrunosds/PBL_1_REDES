@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.json.JSONObject;
 import uefs.ComumBase.interfaces.ClientConsumer;
-import static model.Constants.*;
+import static util.Constants.*;
 import org.json.JSONException;
 import static uefs.ComumBase.interfaces.Status.*;
 
@@ -96,6 +96,7 @@ public class Administrator implements ClientConsumer {
         msg.put(IS_BLOCKED, dataUser.get(IS_BLOCKED));
         msg.put(USAGE, dataUser.get(USAGE));
         msg.put(IS_PRIORITY, dataUser.get(IS_PRIORITY));
+        msg.put(LOCATION, dataUser.get(LOCATION));
         final String allRecycleBinsId = dataMap.keySet().stream().map((id) -> id.concat(";")).reduce("", String::concat);
         msg.put(ALL_IDS, allRecycleBinsId.replaceFirst(".$", ""));
         response.flush();

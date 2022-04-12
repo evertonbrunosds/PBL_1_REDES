@@ -6,7 +6,7 @@ import java.util.Map;
 import org.json.JSONObject;
 import uefs.ComumBase.interfaces.ClientConsumer;
 import static uefs.ComumBase.interfaces.Status.*;
-import static model.Constants.*;
+import static util.Constants.*;
 import org.json.JSONException;
 
 /**
@@ -165,6 +165,7 @@ public class RecycleBin implements ClientConsumer {
         dataUser.put(USAGE, request.get(USAGE));
         dataUser.put(CLEAR, "FALSE");
         dataUser.put(IS_PRIORITY, "FALSE");
+        dataUser.put(LOCATION, request.get(LOCATION));
         final JSONObject msg = new JSONObject(getRequest());
         msg.put(STATUS, NOT_FOUND);
         return msg.toString();

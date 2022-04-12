@@ -33,5 +33,9 @@ public interface Usage {
      * em uso.
      */
     public static String TOTAL = "0.100";
+    /**
+     * Refere-se a chave de valor que indica localização.
+     */
+    public static final String LOCATION = "LOCATION";
 
 }

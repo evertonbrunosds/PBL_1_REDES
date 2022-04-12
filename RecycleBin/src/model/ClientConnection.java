@@ -92,7 +92,7 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
      * @return Retorna a localização da conexão.
      */
     public String getLocation() {
-        return "LAT" + getLatitude() + "LON" + getLongitude();
+        return getLatitude().concat(";").concat(getLongitude());
     }
 
 }

@@ -3,7 +3,7 @@ package model;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import static model.Constants.*;
+import static util.Constants.*;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;

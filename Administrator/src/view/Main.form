@@ -26,25 +26,29 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="cBoxPriority" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="cBoxIsBlocked" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="comboBoxIDs" min="-2" pref="123" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                      <Component id="btnShow" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelUsage" alignment="0" max="32767" attributes="0"/>
-                  <Component id="progressBar" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="panelUsage" alignment="0" max="32767" attributes="0"/>
+                          <Component id="progressBar" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="cBoxPriority" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="cBoxIsBlocked" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="comboBoxIDs" min="-2" pref="123" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="btnShow" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="labelLocation" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -56,6 +60,8 @@
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="btnConnectToServer" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="labelLocation" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="cBoxPriority" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="cBoxIsBlocked" min="-2" max="-2" attributes="0"/>
@@ -64,7 +70,7 @@
                   <Component id="comboBoxIDs" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnShow" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               <Component id="panelUsage" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="progressBar" min="-2" max="-2" attributes="0"/>
@@ -207,6 +213,11 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShowActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelLocation">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Localiza&#xe7;&#xe3;o: "/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

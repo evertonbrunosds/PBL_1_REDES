@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import uefs.ComumBase.classes.ServerConnection;
 import uefs.ComumBase.interfaces.Factory;
-import static model.Constants.*;
+import static util.Constants.*;
 import uefs.ComumBase.classes.ClientConnection;
 import static uefs.ComumBase.interfaces.Status.*;
 

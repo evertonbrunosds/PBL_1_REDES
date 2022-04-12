@@ -12,6 +12,7 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
+        labelLocation.setVisible(false);
         MainController.getInstance().addActionChangeConnection(isConnected -> {
             setEnabledComponents(isConnected);
             if (isConnected) {
@@ -48,6 +49,11 @@ public class Main extends javax.swing.JFrame {
                     progressBar.setValue(0);
                     break;
             }
+            final String[] location = data.getString(LOCATION).split(";");
+            labelLocation.setText("Localização: "
+                    .concat("latitude: ").concat(location[0])
+                    .concat(", longitude: ").concat(location[1])
+            );
             cBoxPriority.setSelected(data.getString(IS_PRIORITY).equals("TRUE"));
             cBoxIsBlocked.setSelected(data.getString(IS_BLOCKED).equals("TRUE"));
         });
@@ -80,6 +86,7 @@ public class Main extends javax.swing.JFrame {
         usageTotal = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         btnShow = new javax.swing.JButton();
+        labelLocation = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administrador");
@@ -177,27 +184,30 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        labelLocation.setText("Localização: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(87, 87, 87)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cBoxPriority)
                     .addComponent(cBoxIsBlocked)
                     .addComponent(btnConnectToServer)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
-                        .addComponent(btnShow)))
-                .addGap(89, 89, 89))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnShow)
+                        .addGap(8, 8, 8))
+                    .addComponent(labelLocation))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -206,6 +216,8 @@ public class Main extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(btnConnectToServer)
                 .addGap(15, 15, 15)
+                .addComponent(labelLocation)
+                .addGap(15, 15, 15)
                 .addComponent(cBoxPriority)
                 .addGap(15, 15, 15)
                 .addComponent(cBoxIsBlocked)
@@ -213,7 +225,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
                 .addComponent(panelUsage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -325,6 +337,7 @@ public class Main extends javax.swing.JFrame {
                 cBoxIsBlocked.setEnabled(true);
                 cBoxPriority.setEnabled(true);
                 btnShow.setEnabled(true);
+                labelLocation.setVisible(true);
             } else {
                 cBoxIsBlocked.setEnabled(false);
                 cBoxPriority.setEnabled(false);
@@ -332,6 +345,7 @@ public class Main extends javax.swing.JFrame {
                 cBoxIsBlocked.setSelected(false);
                 cBoxPriority.setSelected(false);
                 progressBar.setValue(0);
+                labelLocation.setVisible(false);
             }
         } else {
             cBoxIsBlocked.setEnabled(false);
@@ -340,6 +354,7 @@ public class Main extends javax.swing.JFrame {
             cBoxIsBlocked.setSelected(false);
             cBoxPriority.setSelected(false);
             progressBar.setValue(0);
+            labelLocation.setVisible(false);
         }
     }//GEN-LAST:event_comboBoxIDsPopupMenuWillBecomeInvisible
 
@@ -403,6 +418,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JCheckBox cBoxIsBlocked;
     private javax.swing.JCheckBox cBoxPriority;
     private javax.swing.JComboBox<String> comboBoxIDs;
+    private javax.swing.JLabel labelLocation;
     private javax.swing.JPanel panelUsage;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel usageHigh;
