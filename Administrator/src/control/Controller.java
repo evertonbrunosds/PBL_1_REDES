@@ -156,6 +156,8 @@ public class Controller extends RecycleBinAdministrator {
         final JSONObject response = request.get(currentConnection);
         if (response.getString(STATUS).equals(FOUND)) {
             setRecycleBinData(response);
+        } else {
+            throw new IOException(response.getString(STATUS));
         }
     }
 

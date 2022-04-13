@@ -23,7 +23,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         labelLocation.setVisible(false);
         Controller.getInstance().addActionChangeConnection(isConnected -> {
-            setEnabledComponents(isConnected);
+            setEnabledPassiveComponents(isConnected);
             if (isConnected) {
                 btnConnectToServer.setText("Desconectar");
                 setTitle("Administrador Conectado");
@@ -68,17 +68,6 @@ public class Main extends javax.swing.JFrame {
         });
         Controller.getInstance().disconnect();
     }
-
-    private void setEnabledComponents(final boolean enable) {
-        comboBoxIDs.setEnabled(enable);
-        usageNone.setEnabled(enable);
-        usageLow.setEnabled(enable);
-        usageMedium.setEnabled(enable);
-        usageHigh.setEnabled(enable);
-        usageTotal.setEnabled(enable);
-        progressBar.setEnabled(enable);
-    }
-
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -334,7 +323,7 @@ public class Main extends javax.swing.JFrame {
                 try {
                     final String id = comboBoxIDs.getSelectedItem().toString();
                     Controller.getInstance().showRecycleDetails(id);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     JOptionPane.showConfirmDialog(
                             this,
                             "Conexão perdida! Código de erro: ".concat(ex.getMessage().concat(".")),
@@ -348,31 +337,39 @@ public class Main extends javax.swing.JFrame {
                 btnShow.setEnabled(true);
                 labelLocation.setVisible(true);
             } else {
-                cBoxIsBlocked.setEnabled(false);
-                cBoxPriority.setEnabled(false);
-                btnShow.setEnabled(false);
-                cBoxIsBlocked.setSelected(false);
-                cBoxPriority.setSelected(false);
-                progressBar.setValue(0);
-                labelLocation.setVisible(false);
+                setEnabledActiveComponents(false, 0);
             }
         } else {
-            cBoxIsBlocked.setEnabled(false);
-            cBoxPriority.setEnabled(false);
-            btnShow.setEnabled(false);
-            cBoxIsBlocked.setSelected(false);
-            cBoxPriority.setSelected(false);
-            progressBar.setValue(0);
-            labelLocation.setVisible(false);
+            setEnabledActiveComponents(false, 0);
         }
     }//GEN-LAST:event_comboBoxIDsPopupMenuWillBecomeInvisible
+
+    private void setEnabledActiveComponents(final boolean state, final int position) {
+        cBoxIsBlocked.setEnabled(state);
+        cBoxPriority.setEnabled(state);
+        btnShow.setEnabled(state);
+        cBoxIsBlocked.setSelected(state);
+        cBoxPriority.setSelected(state);
+        progressBar.setValue(position);
+        labelLocation.setVisible(state);
+    }
+
+    private void setEnabledPassiveComponents(final boolean enable) {
+        comboBoxIDs.setEnabled(enable);
+        usageNone.setEnabled(enable);
+        usageLow.setEnabled(enable);
+        usageMedium.setEnabled(enable);
+        usageHigh.setEnabled(enable);
+        usageTotal.setEnabled(enable);
+        progressBar.setEnabled(enable);
+    }
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
         if (comboBoxIDs.getSelectedIndex() > -1) {
             try {
                 final String id = comboBoxIDs.getSelectedItem().toString();
                 Controller.getInstance().showRecycleDetails(id);
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 JOptionPane.showConfirmDialog(
                         this,
                         "Conexão perdida! Código de erro: ".concat(ex.getMessage().concat(".")),
@@ -380,6 +377,8 @@ public class Main extends javax.swing.JFrame {
                         JOptionPane.CLOSED_OPTION,
                         JOptionPane.ERROR_MESSAGE
                 );
+                comboBoxIDs.removeAllItems();
+                comboBoxIDsPopupMenuWillBecomeInvisible(null);
             }
         } else {
             JOptionPane.showConfirmDialog(
