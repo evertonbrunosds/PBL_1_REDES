@@ -8,11 +8,9 @@ public class FakeDadaBaseController {
 
     private static FakeDadaBaseController instance;
     private final Map<String, JSONObject> recycleBinData;
-    private final Map<String, JSONObject> garbageTruckData;
 
     private FakeDadaBaseController() {
         recycleBinData = new HashMap<>();
-        garbageTruckData = new HashMap<>();
     }
 
     public static FakeDadaBaseController getInstance() {
@@ -24,10 +22,6 @@ public class FakeDadaBaseController {
 
     public Map<String, JSONObject> getRecycleBinData() {
         return recycleBinData;
-    }
-
-    public Map<String, JSONObject> getGarbageTruckData() {
-        return garbageTruckData;
     }
 
 }
