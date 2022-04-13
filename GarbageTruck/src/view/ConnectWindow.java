@@ -1,6 +1,6 @@
 package view;
 
-import control.Controller;
+import control.RecycleBinController;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -21,7 +21,7 @@ public class ConnectWindow extends javax.swing.JDialog {
     /**
      * Refere-se a porta de conexão utilizada pela lixeira.
      */
-    private static final int ADMINISTRATOR_PORT = 1991;
+    private static final int GARBAGE_TRUCK_PORT = 1992;
     /**
      * Refere-se a janela invocadora da janela de conexão.
      */
@@ -45,7 +45,12 @@ public class ConnectWindow extends javax.swing.JDialog {
      */
     private void connectToServer() {
         try {
-            Controller.getInstance().connectToServer(textIP.getText(), ADMINISTRATOR_PORT);
+            RecycleBinController.getInstance().connectToServer(
+                    textIP.getText(),
+                    GARBAGE_TRUCK_PORT,
+                    textLatitude.getText(),
+                    textLongitude.getText()
+            );
             dispose();
         } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
@@ -86,9 +91,17 @@ public class ConnectWindow extends javax.swing.JDialog {
      * Método responsável por verificar se um IP é inserido na janela é válido.
      *
      * @param ip Refere-se ao IP cuja validade é verificada.
+     * @param latitude Refere-se a latitude cuja validade é verificada.
+     * @param longitude Refere-se a longitude cuja validade é verificada.
      * @return Retorna indicativo de que o IP é válido.
      */
-    private static boolean isValid(final String ip) {
+    private static boolean isValid(final String ip, final String latitude, final String longitude) {
+        try {
+            Integer.parseInt(latitude);
+            Integer.parseInt(longitude);
+        } catch (final NumberFormatException ex) {
+            return false;
+        }
         if (ip == null) {
             return false;
         } else {
@@ -134,13 +147,16 @@ public class ConnectWindow extends javax.swing.JDialog {
         textIPDescription = new javax.swing.JLabel();
         btnConnect = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
+        textLatitude = new javax.swing.JTextField();
+        textLongitude = new javax.swing.JTextField();
+        labelLat = new javax.swing.JLabel();
+        labelLon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Conectar Administrador");
+        setTitle("Conectar Lixeira");
         setAlwaysOnTop(true);
         setResizable(false);
 
-        textIP.setText("127.0.0.1");
         textIP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 textIPKeyReleased(evt);
@@ -159,6 +175,22 @@ public class ConnectWindow extends javax.swing.JDialog {
 
         progressBar.setIndeterminate(true);
 
+        textLatitude.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                textLatitudeKeyReleased(evt);
+            }
+        });
+
+        textLongitude.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                textLongitudeKeyReleased(evt);
+            }
+        });
+
+        labelLat.setText("Latitude");
+
+        labelLon.setText("Longitude");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -169,9 +201,18 @@ public class ConnectWindow extends javax.swing.JDialog {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textIPDescription)
-                    .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(textIPDescription)
+                        .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textLatitude, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelLat))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelLon)
+                            .addComponent(textLongitude, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnConnect)
                 .addGap(35, 35, 35))
@@ -185,7 +226,15 @@ public class ConnectWindow extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(textIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConnect))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(labelLat)
+                    .addComponent(labelLon))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(textLatitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textLongitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -194,11 +243,13 @@ public class ConnectWindow extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void textIPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textIPKeyReleased
-        btnConnect.setEnabled(isValid(textIP.getText()));
+        btnConnect.setEnabled(isValid(textIP.getText(), textLatitude.getText(), textLongitude.getText()));
         if (btnConnect.isEnabled()) {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 btnConnectActionPerformed(null);
             }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            textLatitude.requestFocusInWindow();
         }
     }//GEN-LAST:event_textIPKeyReleased
 
@@ -215,10 +266,36 @@ public class ConnectWindow extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnConnectActionPerformed
 
+    private void textLongitudeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textLongitudeKeyReleased
+        btnConnect.setEnabled(isValid(textIP.getText(), textLatitude.getText(), textLongitude.getText()));
+        if (btnConnect.isEnabled()) {
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                btnConnectActionPerformed(null);
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            textIP.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_textLongitudeKeyReleased
+
+    private void textLatitudeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textLatitudeKeyReleased
+        btnConnect.setEnabled(isValid(textIP.getText(), textLatitude.getText(), textLongitude.getText()));
+        if (btnConnect.isEnabled()) {
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                btnConnectActionPerformed(null);
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            textLongitude.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_textLatitudeKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConnect;
+    private javax.swing.JLabel labelLat;
+    private javax.swing.JLabel labelLon;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField textIP;
     private javax.swing.JLabel textIPDescription;
+    private javax.swing.JTextField textLatitude;
+    private javax.swing.JTextField textLongitude;
     // End of variables declaration//GEN-END:variables
 }

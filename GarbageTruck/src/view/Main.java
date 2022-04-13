@@ -1,6 +1,6 @@
 package view;
 
-import control.Controller;
+import control.RecycleBinAdministratorController;
 import java.awt.Color;
 import java.io.IOException;
 import javax.swing.JLabel;
@@ -22,7 +22,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         labelLocation.setVisible(false);
-        Controller.getInstance().addActionChangeConnection(isConnected -> {
+        RecycleBinAdministratorController.getInstance().addActionChangeConnection(isConnected -> {
             setEnabledComponents(isConnected);
             if (isConnected) {
                 btnConnectToServer.setText("Desconectar");
@@ -37,7 +37,7 @@ public class Main extends javax.swing.JFrame {
                 cBoxPriority.setSelected(false);
             }
         });
-        Controller.getInstance().addActionChangeRecycle(data -> {
+        RecycleBinAdministratorController.getInstance().addActionChangeRecycle(data -> {
             switch (data.getString(USAGE)) {
                 case NONE:
                     progressBar.setValue(0);
@@ -66,7 +66,7 @@ public class Main extends javax.swing.JFrame {
             cBoxPriority.setSelected(data.getString(IS_PRIORITY).equals("TRUE"));
             cBoxIsBlocked.setSelected(data.getString(IS_BLOCKED).equals("TRUE"));
         });
-        Controller.getInstance().disconnect();
+        RecycleBinAdministratorController.getInstance().disconnect();
     }
 
     private void setEnabledComponents(final boolean enable) {
@@ -247,7 +247,7 @@ public class Main extends javax.swing.JFrame {
 
     private void comboBoxIDsPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxIDsPopupMenuWillBecomeVisible
         try {
-            Controller.getInstance().listRecycleBins(allIds -> {
+            RecycleBinAdministratorController.getInstance().listRecycleBins(allIds -> {
                 comboBoxIDs.removeAllItems();
                 for (final String id : allIds) {
                     comboBoxIDs.addItem(id);
@@ -266,10 +266,10 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxIDsPopupMenuWillBecomeVisible
 
     private void btnConnectToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectToServerActionPerformed
-        if (!Controller.getInstance().isConnected()) {
+        if (!RecycleBinAdministratorController.getInstance().isConnected()) {
             ConnectWindow.showModal(this);
         } else {
-            Controller.getInstance().disconnect();
+            RecycleBinAdministratorController.getInstance().disconnect();
         }
     }//GEN-LAST:event_btnConnectToServerActionPerformed
 
@@ -299,7 +299,7 @@ public class Main extends javax.swing.JFrame {
     private void cBoxPriorityMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cBoxPriorityMouseReleased
         final String isPriority = Boolean.toString(cBoxPriority.isSelected()).toUpperCase();
         try {
-            Controller.getInstance().setIsPriority(isPriority);
+            RecycleBinAdministratorController.getInstance().setIsPriority(isPriority);
         } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
                     this,
@@ -315,7 +315,7 @@ public class Main extends javax.swing.JFrame {
     private void cBoxIsBlockedMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cBoxIsBlockedMouseReleased
         final String isBlocked = Boolean.toString(cBoxIsBlocked.isSelected()).toUpperCase();
         try {
-            Controller.getInstance().setIsBlocked(isBlocked);
+            RecycleBinAdministratorController.getInstance().setIsBlocked(isBlocked);
         } catch (final IOException ex) {
             JOptionPane.showConfirmDialog(
                     this,
@@ -333,7 +333,7 @@ public class Main extends javax.swing.JFrame {
             if (!"".equals(comboBoxIDs.getItemAt(0))) {
                 try {
                     final String id = comboBoxIDs.getSelectedItem().toString();
-                    Controller.getInstance().showRecycleDetails(id);
+                    RecycleBinAdministratorController.getInstance().showRecycleDetails(id);
                 } catch (IOException ex) {
                     JOptionPane.showConfirmDialog(
                             this,
@@ -371,7 +371,7 @@ public class Main extends javax.swing.JFrame {
         if (comboBoxIDs.getSelectedIndex() > -1) {
             try {
                 final String id = comboBoxIDs.getSelectedItem().toString();
-                Controller.getInstance().showRecycleDetails(id);
+                RecycleBinAdministratorController.getInstance().showRecycleDetails(id);
             } catch (IOException ex) {
                 JOptionPane.showConfirmDialog(
                         this,

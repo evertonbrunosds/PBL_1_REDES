@@ -51,7 +51,7 @@ public class MainController {
     private void listenToRecycleBins(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
         final JSONObject request = new JSONObject(inputStream.readUTF());
         try {
-            runConsumer(new RecycleBin(request, outputStream, FakeDadaBaseController.getInstance()), request);
+            runConsumer(new RecycleBin(request, outputStream, FakeDadaBaseController.getInstance().getRecycleBinData()), request);
         } catch (final InterruptedException ex) {
             unsuccessfulRequest(outputStream);
         }
@@ -59,7 +59,7 @@ public class MainController {
 
     private void listenToAdministrators(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
         final JSONObject request = new JSONObject(inputStream.readUTF());
-        runConsumer(new Administrator(request, outputStream, FakeDadaBaseController.getInstance()), request);
+        runConsumer(new Administrator(request, outputStream, FakeDadaBaseController.getInstance().getRecycleBinData()), request);
     }
 
     private static void runConsumer(final ClientConsumer clientConsumer, final JSONObject request) throws IOException {
