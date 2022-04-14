@@ -65,5 +65,9 @@ public interface Constants {
      * Refere-se a chave de valor que indica localização.
      */
     public static final String LOCATION = "LOCATION";
+    /**
+     * Refere-se a chave de valor que indica o dispositivo.
+     */
+    public static final String DEVICE = "DEVICE";
 
 }
