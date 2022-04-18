@@ -3,8 +3,8 @@ package control;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import model.ClientConnection;
 import model.ServerConsumer;
-import uefs.ComumBase.classes.ClientConnection;
 import model.RecycleBinAdministrator;
 import org.json.JSONObject;
 import static util.Constants.*;
@@ -118,13 +118,15 @@ public class Controller extends RecycleBinAdministrator {
      *
      * @param ip Refere-se ao IP utilizado na conexão.
      * @param port Refere-se a porta utilizada na conexão.
+     * @param latitude Refere-se a latitude da conexão do caminhão.
+     * @param longitude Refere-se a longitude da conexão do cainhão.
      * @throws IOException exceção lançada no caso de haver um problema de
      * entrada/saída.
      */
-    public void connectToServer(final String ip, final int port) throws IOException {
-        final ClientConnection newConnection = new ClientConnection(ip, port);
+    public void connectToServer(final String ip, final int port, final String latitude, final String longitude) throws IOException {
+        final ClientConnection newConnection = new ClientConnection(ip, port, latitude, longitude);
         final JSONObject response = request.get(newConnection);
-        System.out.println(response.toString());
+        
         if (response.toMap().containsKey(STATUS)) {
             currentConnection = newConnection;
         }

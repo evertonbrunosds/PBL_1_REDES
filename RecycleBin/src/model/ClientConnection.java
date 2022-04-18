@@ -16,11 +16,11 @@ public class ClientConnection extends uefs.ComumBase.classes.ClientConnection {
     /**
      * Refere-se a latitude da conexão.
      */
-    final String latitude;
+    public final String latitude;
     /**
      * Refere-se a longitude da conexão.
      */
-    final String longitude;
+    public final String longitude;
 
     /**
      * Construtor responsável por instanciar uma conexão de cliente.

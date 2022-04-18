@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import model.Administrator;
+import model.GarbageTruck;
 import static util.Constants.DELETE;
 import static util.Constants.METHOD;
 import static util.Constants.POST;
@@ -44,12 +45,17 @@ public class MainController {
         recycleBinsServer.streamFuture(internalException::toTreat).then(this::listenToRecycleBins);
     }
 
+    public void listenToGarbageTruck(final Treatable<IOException> internalException) throws IOException {
+        garbageTruckServer.streamFuture(internalException::toTreat).then(this::listenToGarbageTruck);
+    }
+
     public void listenToAdministrators(final Treatable<IOException> internalException) throws IOException {
         administratorsServer.streamFuture(internalException::toTreat).then(this::listenToAdministrators);
     }
 
     private void listenToRecycleBins(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
         final JSONObject request = new JSONObject(inputStream.readUTF());
+        System.out.println("RECYCLE_BIN: ".concat(request.toString()));
         try {
             runConsumer(new RecycleBin(request, outputStream, FakeDadaBaseController.getInstance().getRecycleBinData()), request);
         } catch (final InterruptedException ex) {
@@ -57,8 +63,20 @@ public class MainController {
         }
     }
 
+    private void listenToGarbageTruck(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
+        final JSONObject request = new JSONObject(inputStream.readUTF());
+        System.out.println("GARBAGE_TRUCK: ".concat(request.toString()));
+        runConsumer(new GarbageTruck(
+                request,
+                outputStream,
+                FakeDadaBaseController.getInstance().getRecycleBinData(),
+                FakeDadaBaseController.getInstance().getGarbageTruckData()
+        ), request);
+    }
+
     private void listenToAdministrators(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
         final JSONObject request = new JSONObject(inputStream.readUTF());
+        System.out.println("ADMINISTRATOR: ".concat(request.toString()));
         runConsumer(new Administrator(request, outputStream, FakeDadaBaseController.getInstance().getRecycleBinData()), request);
     }
 

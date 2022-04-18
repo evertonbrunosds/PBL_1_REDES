@@ -89,6 +89,7 @@ public class GarbageTruck implements ClientConsumer {
         msg.put(STATUS, FOUND);
         msg.put(USAGE, dataUser.get(USAGE));
         msg.put(IS_PRIORITY, dataUser.get(IS_PRIORITY));
+        msg.put(LOCATION, dataUser.get(LOCATION));
         msg.put(ALL_IDS, getAllIds());
         return msg.toString();
     }
