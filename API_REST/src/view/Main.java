@@ -1,21 +1,18 @@
 package view;
 
-import java.io.IOException;
-
-import control.MainController;
-import java.util.PriorityQueue;
-import model.MyPriorityQueue;
-import uefs.ComumBase.interfaces.Factory;
+import uefs.ComumBase.classes.AVLTree;
 
 public class Main {
 
     public static void main(String[] args) {
-        final MyPriorityQueue<Integer> x = new MyPriorityQueue<>((aDouble, anotherDouble) -> anotherDouble.compareTo(aDouble));
+        final AVLTree<Integer,String> x = new AVLTree<>((aDouble, anotherDouble) -> anotherDouble.compareTo(aDouble));
         for(int i = 0; i < 100; i++) {
-            x.add(i);
+            x.put(i,"");
         }
         System.out.println("foi");
-        x.forEach(System.out::println);
+        x.forEach(entry -> {
+            System.out.println(entry.getKey());
+        });
         
         /*
         Factory.thread(() -> {

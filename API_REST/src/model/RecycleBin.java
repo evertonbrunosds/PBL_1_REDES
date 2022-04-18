@@ -1,5 +1,6 @@
 package model;
 
+import util.IdGenerator;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;

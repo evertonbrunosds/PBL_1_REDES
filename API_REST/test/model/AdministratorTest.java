@@ -18,10 +18,10 @@ import static uefs.ComumBase.interfaces.Status.*;
 
 public class AdministratorTest {
 
-    ServerConnection serverConnection;
-    ClientConnection clientConnection;
-    final Map<String, JSONObject> dataMap;
-    Administrator administrator;
+    private ServerConnection serverConnection;
+    private final ClientConnection clientConnection;
+    private final Map<String, JSONObject> dataMap;
+    private Administrator administrator;
 
     public AdministratorTest() {
         dataMap = new HashMap<>();

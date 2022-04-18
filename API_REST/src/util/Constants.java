@@ -69,5 +69,17 @@ public interface Constants {
      * Refere-se a chave de valor que indica o dispositivo.
      */
     public static final String DEVICE = "DEVICE";
+    /**
+     * Refere-se a um valor resultante de comparação que indica superioridade.
+     */
+    public static final int BIGGER = 1;
+    /**
+     * Refere-se a um valor resultante de comparação que indica inferioridade.
+     */
+    public static final int SMALLER = -1;
+    /**
+     * Refere-se a um valor resultante de comparação que indica igualdade.
+     */
+    public static final int EQUAL = 0;
 
 }
