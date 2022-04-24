@@ -58,6 +58,7 @@ public class RecycleBinTest {
 
     private static JSONObject getRequest(final String id, final String method) {
         final JSONObject request = getDataUser();
+        request.put(LOCATION, "123;321");
         if (id != null) {
             request.put(ID, id);
         }

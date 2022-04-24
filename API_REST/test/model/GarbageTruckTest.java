@@ -107,9 +107,9 @@ public class GarbageTruckTest {
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(BAD_REQUEST, response.get(STATUS));
             assertEquals("11", response.getString(ALL_IDS).split(";")[0]);
-            assertEquals("7", response.getString(ALL_IDS).split(";")[1]);
-            assertEquals("5", response.getString(ALL_IDS).split(";")[2]);
-            assertEquals("3", response.getString(ALL_IDS).split(";")[3]);
+            assertEquals("5", response.getString(ALL_IDS).split(";")[1]);
+            assertEquals("3", response.getString(ALL_IDS).split(";")[2]);
+            assertEquals("7", response.getString(ALL_IDS).split(";")[3]);
             assertEquals("13", response.getString(ALL_IDS).split(";")[4]);
         });
     }
@@ -133,9 +133,9 @@ public class GarbageTruckTest {
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(NOT_FOUND, response.get(STATUS));
             assertEquals("11", response.getString(ALL_IDS).split(";")[0]);
-            assertEquals("7", response.getString(ALL_IDS).split(";")[1]);
-            assertEquals("5", response.getString(ALL_IDS).split(";")[2]);
-            assertEquals("3", response.getString(ALL_IDS).split(";")[3]);
+            assertEquals("5", response.getString(ALL_IDS).split(";")[1]);
+            assertEquals("3", response.getString(ALL_IDS).split(";")[2]);
+            assertEquals("7", response.getString(ALL_IDS).split(";")[3]);
             assertEquals("13", response.getString(ALL_IDS).split(";")[4]);
         });
     }
@@ -182,6 +182,7 @@ public class GarbageTruckTest {
             output.flush();
             final JSONObject request = getRequest("5", PUT, "123;321");
             request.put(DEVICE, "RECYCLE_BIN");
+            request.put(CLEAR, "TRUE");
             output.writeUTF(request.toString());
             final JSONObject response = new JSONObject(input.readUTF());
             assertEquals(FOUND, response.get(STATUS));
@@ -209,7 +210,7 @@ public class GarbageTruckTest {
             request.put(USAGE, "75.22");
             output.writeUTF(request.toString());
             final JSONObject response = new JSONObject(input.readUTF());
-            assertEquals(this.garbageTruckDataSJON.getString(USAGE), "75.22");
+            assertEquals("5.0", this.garbageTruckDataSJON.getString(USAGE));
         });
     }
 

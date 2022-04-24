@@ -80,21 +80,21 @@ public class RecycleBinComparatorTest {
     public void idSmallerUsageSmallerIsPriorityFalseIdSmallerUsageSmallerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageSmaller, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageSmaller, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idSmallerUsageSmallerIsPriorityFalseIdSmallerUsageBiggerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageSmaller, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageBigger, isPriorityFalse);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idSmallerUsageSmallerIsPriorityFalseIdSmallerUsageBiggerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageSmaller, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageBigger, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class RecycleBinComparatorTest {
     public void idSmallerUsageSmallerIsPriorityTrueIdSmallerUsageSmallerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageSmaller, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageSmaller, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -143,14 +143,14 @@ public class RecycleBinComparatorTest {
     public void idSmallerUsageSmallerIsPriorityTrueIdSmallerUsageBiggerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageSmaller, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageBigger, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idSmallerUsageSmallerIsPriorityTrueIdSmallerUsageBiggerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageSmaller, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageBigger, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -185,14 +185,14 @@ public class RecycleBinComparatorTest {
     public void idSmallerUsageBiggerIsPriorityFalseIdSmallerUsageSmallerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageBigger, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageSmaller, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idSmallerUsageBiggerIsPriorityFalseIdSmallerUsageSmallerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageBigger, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageSmaller, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class RecycleBinComparatorTest {
     public void idSmallerUsageBiggerIsPriorityFalseIdSmallerUsageBiggerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageBigger, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageBigger, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -241,21 +241,21 @@ public class RecycleBinComparatorTest {
     public void idSmallerUsageBiggerIsPriorityTrueIdSmallerUsageSmallerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageBigger, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageSmaller, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idSmallerUsageBiggerIsPriorityTrueIdSmallerUsageSmallerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageBigger, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageSmaller, isPriorityTrue);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idSmallerUsageBiggerIsPriorityTrueIdSmallerUsageBiggerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idSmaller, usageBigger, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idSmaller, usageBigger, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -332,21 +332,21 @@ public class RecycleBinComparatorTest {
     public void idBiggerUsageSmallerIsPriorityFalseIdBiggerUsageSmallerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageSmaller, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageSmaller, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idBiggerUsageSmallerIsPriorityFalseIdBiggerUsageBiggerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageSmaller, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageBigger, isPriorityFalse);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idBiggerUsageSmallerIsPriorityFalseIdBiggerUsageBiggerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageSmaller, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageBigger, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -381,7 +381,7 @@ public class RecycleBinComparatorTest {
     public void idBiggerUsageSmallerIsPriorityTrueIdBiggerUsageSmallerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageSmaller, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageSmaller, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -395,14 +395,14 @@ public class RecycleBinComparatorTest {
     public void idBiggerUsageSmallerIsPriorityTrueIdBiggerUsageBiggerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageSmaller, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageBigger, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idBiggerUsageSmallerIsPriorityTrueIdBiggerUsageBiggerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageSmaller, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageBigger, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -437,14 +437,14 @@ public class RecycleBinComparatorTest {
     public void idBiggerUsageBiggerIsPriorityFalseIdBiggerUsageSmallerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageBigger, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageSmaller, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idBiggerUsageBiggerIsPriorityFalseIdBiggerUsageSmallerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageBigger, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageSmaller, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -458,7 +458,7 @@ public class RecycleBinComparatorTest {
     public void idBiggerUsageBiggerIsPriorityFalseIdBiggerUsageBiggerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageBigger, isPriorityFalse);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageBigger, isPriorityTrue);
-        assertEquals(SMALLER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
@@ -493,21 +493,21 @@ public class RecycleBinComparatorTest {
     public void idBiggerUsageBiggerIsPriorityTrueIdBiggerUsageSmallerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageBigger, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageSmaller, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idBiggerUsageBiggerIsPriorityTrueIdBiggerUsageSmallerIsPriorityTrue() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageBigger, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageSmaller, isPriorityTrue);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
     public void idBiggerUsageBiggerIsPriorityTrueIdBiggerUsageBiggerIsPriorityFalse() {
         final Entry<String, JSONObject> e1 = gerateRecycle(idBigger, usageBigger, isPriorityTrue);
         final Entry<String, JSONObject> e2 = gerateRecycle(idBigger, usageBigger, isPriorityFalse);
-        assertEquals(BIGGER, comparator.compare(e1, e2));
+        assertEquals(EQUAL, comparator.compare(e1, e2));
     }
 
     @Test
