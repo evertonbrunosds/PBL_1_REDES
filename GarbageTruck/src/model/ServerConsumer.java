@@ -82,8 +82,9 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
     private JSONObject runHighMethod(final ClientConnection connection, final String method) throws IOException {
         final JSONObject request = getBasicRequest(method);
         final Container<String, String> response = getContainerString();
-        request.put(IS_BLOCKED, recycleBinAdministrator.getRecycleBinData().getString(IS_BLOCKED));
-        request.put(IS_PRIORITY, recycleBinAdministrator.getRecycleBinData().getString(IS_PRIORITY));
+        request.put(CLEAR, recycleBinAdministrator.getRecycleBinData().getString(CLEAR));
+        request.put(LOCATION, recycleBinAdministrator.getRecycleBinData().getString(LOCATION));
+        request.put(DEVICE, "RECYCLE_BIN");
         connection.streamBuilder((inputStream, outputStream) -> {
             outputStream.flush();
             outputStream.writeUTF(request.toString());

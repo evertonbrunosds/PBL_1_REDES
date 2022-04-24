@@ -30,7 +30,7 @@ public class FakeDadaBaseController {
     public JSONObject getGarbageTruckData() {
         return garbageTruckData;
     }
-    
+
     @Deprecated
     public void insertFakeRecycle() {
         recycleBinData.put("1", createRecycleDataUser(
@@ -69,7 +69,7 @@ public class FakeDadaBaseController {
                 "123;321")
         );
     }
-    
+
     @Deprecated
     private static JSONObject createRecycleDataUser(
             final String isBlocked,
@@ -77,7 +77,7 @@ public class FakeDadaBaseController {
             final String usage,
             final String clear,
             final String location
-            ) {
+    ) {
         final JSONObject recycleDataUser = new JSONObject();
         recycleDataUser.put(IS_BLOCKED, isBlocked);
         recycleDataUser.put(IS_PRIORITY, isPriority);

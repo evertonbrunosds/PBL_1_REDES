@@ -33,5 +33,9 @@ public interface Constants {
      * Refere-se a chave de valor que indica localização.
      */
     public static final String LOCATION = "LOCATION";
+    /**
+     * Refere-se a chave de valor que indica a limpeza de uma lixeira.
+     */
+    public static final String CLEAR = "CLEAR";
 
 }

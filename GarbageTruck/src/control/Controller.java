@@ -126,7 +126,7 @@ public class Controller extends RecycleBinAdministrator {
     public void connectToServer(final String ip, final int port, final String latitude, final String longitude) throws IOException {
         final ClientConnection newConnection = new ClientConnection(ip, port, latitude, longitude);
         final JSONObject response = request.get(newConnection);
-        
+
         if (response.toMap().containsKey(STATUS)) {
             currentConnection = newConnection;
         }
@@ -157,7 +157,30 @@ public class Controller extends RecycleBinAdministrator {
     public void showRecycleDetails(final String id) throws IOException {
         setRecycleBinId(id);
         final JSONObject response = request.get(currentConnection);
+        System.out.println(response.toString());
         if (response.getString(STATUS).equals(FOUND)) {
+            setRecycleBinData(response);
+        } else {
+            throw new IOException(response.getString(STATUS));
+        }
+    }
+
+    private boolean isBlocked(final String id) throws IOException {
+        setRecycleBinId(id);
+        final JSONObject response = request.get(currentConnection);
+        return response.getString(STATUS).equals(FOUND)
+                ? response.getString(IS_BLOCKED).equals("TRUE")
+                : false;
+    }
+
+    public void clearRecycle(final String id) throws IOException {
+        if (isBlocked(id)) {
+            throw new IOException("Lixeira Bloqueada!");
+        }
+        this.getRecycleBinData().put(CLEAR, "TRUE");
+        final JSONObject response = request.post(currentConnection);
+        if (response.getString(STATUS).equals(FOUND)) {
+            response.put(USAGE, "0.00");
             setRecycleBinData(response);
         } else {
             throw new IOException(response.getString(STATUS));

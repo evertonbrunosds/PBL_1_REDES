@@ -49,6 +49,7 @@ public class RecycleBinController extends RecycleBin {
      * lixeira.
      */
     private final List<Receiver<IOException>> actionListChangeUsage;
+    private Receiver<Integer> progress;
     private Thread currentThread;
 
     /**
@@ -63,6 +64,10 @@ public class RecycleBinController extends RecycleBin {
         actionListChangeUsage = new LinkedList<>();
     }
 
+    public void setProgress(final Receiver<Integer> progress) {
+        this.progress = progress;
+    }
+    
     /**
      * Método responsável por obiter a instância singular do controlador de
      * lixeira.
@@ -214,6 +219,9 @@ public class RecycleBinController extends RecycleBin {
                     final JSONObject responseGET = request.get(currentConnection);
                     if (responseGET.getString(STATUS).equals(FOUND)) {
                         setIsBlocked(responseGET.getString(IS_BLOCKED).equals("TRUE"));
+                        if (!this.isBlocked() && responseGET.getString(CLEAR).equals("TRUE")) {
+                            progress.receive(0);
+                        }
                     }
                 } catch (IOException | InterruptedException ex) {
                     

@@ -24,6 +24,7 @@ public final class Main extends javax.swing.JFrame {
         instance = this;
         initComponents();
         setToOrange(usageNone);
+        RecycleBinController.getInstance().setProgress(progressBar::setValue);
         RecycleBinController.getInstance().addActionChangeConnection(isConnected -> {
             if (isConnected) {
                 btnConnectToServer.setText("Desconectar");

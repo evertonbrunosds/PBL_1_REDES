@@ -41,5 +41,13 @@ public interface Constants {
      * Refere-se a chave de valor que indica localização.
      */
     public static final String LOCATION = "LOCATION";
+    /**
+     * Refere-se a chave de valor que indica limpeza de lixeira.
+     */
+    public static final String CLEAR = "CLEAR";
+    /**
+     * Refere-se a chave de valor que indica o dispositivo.
+     */
+    public static final String DEVICE = "DEVICE";
 
 }

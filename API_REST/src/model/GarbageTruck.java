@@ -90,6 +90,7 @@ public class GarbageTruck implements ClientConsumer {
         msg.put(USAGE, dataUser.get(USAGE));
         msg.put(IS_PRIORITY, dataUser.get(IS_PRIORITY));
         msg.put(LOCATION, dataUser.get(LOCATION));
+        msg.put(IS_BLOCKED, dataUser.get(IS_BLOCKED));
         msg.put(ALL_IDS, getAllIds());
         return msg.toString();
     }
@@ -98,7 +99,7 @@ public class GarbageTruck implements ClientConsumer {
         switch (request.getString(DEVICE)) {
             case "RECYCLE_BIN":
                 final JSONObject dataUser = recycleBinDataMap.get(recycleBinId);
-                dataUser.put(CLEAR, "TRUE");
+                dataUser.put(CLEAR, request.getString(CLEAR));
                 return getRequest();
             case "GARBAGE_TRUCK":
                 garbageTruckDataJSON.put(USAGE, request.getString(USAGE));
@@ -132,11 +133,7 @@ public class GarbageTruck implements ClientConsumer {
 
     @Override
     public void post() throws IOException {
-        response.writeUTF(
-                notContainsLocation() || notContainsDevice() || notContainsUsage()
-                        ? unsuccessfulRequest(BAD_REQUEST)
-                        : putRequest()
-        );
+        put();
     }
 
     @Override

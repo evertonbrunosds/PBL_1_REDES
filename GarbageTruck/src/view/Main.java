@@ -173,6 +173,11 @@ public class Main extends javax.swing.JFrame {
 
         btnClearTrash.setText("Esvaziar Lixeira");
         btnClearTrash.setEnabled(false);
+        btnClearTrash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearTrashActionPerformed(evt);
+            }
+        });
 
         labelPriority.setText("Prioridade:");
 
@@ -346,6 +351,33 @@ public class Main extends javax.swing.JFrame {
             );
         }
     }//GEN-LAST:event_btnShowActionPerformed
+
+    private void btnClearTrashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTrashActionPerformed
+        if (comboBoxIDs.getSelectedIndex() > -1) {
+            try {
+                final String id = comboBoxIDs.getSelectedItem().toString();
+                Controller.getInstance().clearRecycle(id);
+            } catch (final IOException ex) {
+                JOptionPane.showConfirmDialog(
+                        this,
+                        "Conexão perdida! Razão de erro: ".concat(ex.getMessage().concat(".")),
+                        "Mensagem de Erro",
+                        JOptionPane.CLOSED_OPTION,
+                        JOptionPane.ERROR_MESSAGE
+                );
+                comboBoxIDs.removeAllItems();
+                comboBoxIDsPopupMenuWillBecomeInvisible(null);
+            }
+        } else {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Selecione alguma lixeira",
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnClearTrashActionPerformed
 
     private static void setToOrange(final JLabel jLabel) {
         final float[] rGBColor = Color.RGBtoHSB(194, 104, 2, null);
