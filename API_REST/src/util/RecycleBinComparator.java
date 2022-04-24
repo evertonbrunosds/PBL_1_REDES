@@ -12,6 +12,24 @@ public class RecycleBinComparator implements Comparator<Entry<String, JSONObject
     public int compare(final Entry<String, JSONObject> entryOne, final Entry<String, JSONObject> entryTwo) {
         final JSONObject recycleBinOne;
         final JSONObject recycleBinTwo;
+        final double recycleBinOneUsage;
+        final double recycleBinTwoUsage;
+        recycleBinOne = entryOne.getValue();
+        recycleBinTwo = entryTwo.getValue();
+        recycleBinOneUsage = Double.parseDouble(recycleBinOne.getString(USAGE));
+        recycleBinTwoUsage = Double.parseDouble(recycleBinTwo.getString(USAGE));
+        return entryOne.getKey().equals(entryTwo.getKey())
+                ? EQUAL
+                : (recycleBinOneUsage > 0 && recycleBinTwoUsage == 0)
+                        ? BIGGER
+                        : (recycleBinOneUsage == 0 && recycleBinTwoUsage > 0)
+                                ? SMALLER
+                                : compareConsideringEverything(entryOne, entryTwo);
+    }
+
+    private int compareConsideringEverything(final Entry<String, JSONObject> entryOne, final Entry<String, JSONObject> entryTwo) {
+        final JSONObject recycleBinOne;
+        final JSONObject recycleBinTwo;
         final boolean recycleBinOneIsPriority;
         final boolean recycleBinTwoIsPriority;
         final double recycleBinOneUsage;
@@ -22,36 +40,24 @@ public class RecycleBinComparator implements Comparator<Entry<String, JSONObject
         recycleBinTwoIsPriority = recycleBinTwo.getString(IS_PRIORITY).equals("TRUE");
         recycleBinOneUsage = Double.parseDouble(recycleBinOne.getString(USAGE));
         recycleBinTwoUsage = Double.parseDouble(recycleBinTwo.getString(USAGE));
-        switch (Double.compare(recycleBinTwoUsage, recycleBinOneUsage)) {
-            case BIGGER: //LIXEIRA 2 É MAIOR QUE LIXEIRA 1
-                return recycleBinTwoIsPriority
-                        ? BIGGER
-                        : isNotZero(recycleBinOneUsage)
-                        ? recycleBinOneIsPriority
-                                ? SMALLER
-                                : BIGGER
-                        : BIGGER;
-            case SMALLER: //LIXEIRA 1 É MAIOR QUE LIXEIRA 2
-                return recycleBinOneIsPriority
+        switch (Double.compare(recycleBinOneUsage, recycleBinTwoUsage)) {
+            case BIGGER: //EM TERMOS DE USO A LIXEIRA 2 É MAIOR QUE LIXEIRA 1
+                return recycleBinTwoIsPriority && !recycleBinOneIsPriority
                         ? SMALLER
-                        : isNotZero(recycleBinTwoUsage)
-                        ? recycleBinTwoIsPriority
-                                ? BIGGER
-                                : SMALLER
+                        : BIGGER;
+            case SMALLER: //EM TERMOS DE USO A LIXEIRA 1 É MAIOR QUE LIXEIRA 2
+                return recycleBinOneIsPriority && !recycleBinTwoIsPriority
+                        ? BIGGER
                         : SMALLER;
-            case EQUAL: //LIXEIRA 1 E 2 SÃO IGUAIS
+            case EQUAL: //EM TERMOS DE USO A LIXEIRA 1 E 2 SÃO IGUAIS
                 return recycleBinOneIsPriority && recycleBinTwoIsPriority || !recycleBinOneIsPriority && !recycleBinTwoIsPriority
-                        ? entryTwo.getKey().compareTo(entryOne.getKey())
+                        ? entryOne.getKey().compareTo(entryTwo.getKey())
                         : recycleBinOneIsPriority
-                                ? SMALLER
-                                : BIGGER;
+                                ? BIGGER
+                                : SMALLER;
             default:
                 throw new RuntimeException();
         }
-    }
-
-    private static boolean isNotZero(final double value) {
-        return value != 0.00;
     }
 
 }

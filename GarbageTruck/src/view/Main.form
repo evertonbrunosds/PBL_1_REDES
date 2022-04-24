@@ -26,30 +26,23 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="panelUsage" alignment="0" max="32767" attributes="0"/>
-                          <Component id="progressBar" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="comboBoxIDs" min="-2" pref="123" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="btnShow" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="labelLocation" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnClearTrash" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelLocation" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelPriority" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnClearTrash" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelUsage" alignment="2" max="32767" attributes="0"/>
+                  <Component id="progressBar" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="comboBoxIDs" min="-2" pref="123" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <Component id="btnShow" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="65" pref="65" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -60,9 +53,11 @@
               <Component id="btnConnectToServer" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="labelLocation" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <Component id="labelPriority" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Component id="btnClearTrash" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="comboBoxIDs" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnShow" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
@@ -196,13 +191,17 @@
     <Component class="javax.swing.JLabel" name="labelLocation">
       <Properties>
         <Property name="text" type="java.lang.String" value="Localiza&#xe7;&#xe3;o: "/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnClearTrash">
       <Properties>
         <Property name="text" type="java.lang.String" value="Esvaziar Lixeira"/>
         <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelPriority">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Prioridade:"/>
       </Properties>
     </Component>
   </SubComponents>

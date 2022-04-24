@@ -3,6 +3,7 @@ package view;
 import control.Controller;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static util.Constants.*;
@@ -34,6 +35,8 @@ public class Main extends javax.swing.JFrame {
                 comboBoxIDs.setSelectedIndex(-1);
             }
         });
+        labelLocation.setVisible(false);
+        labelPriority.setVisible(false);
         Controller.getInstance().addActionChangeRecycle(data -> {
             switch (data.getString(USAGE)) {
                 case NONE:
@@ -60,6 +63,11 @@ public class Main extends javax.swing.JFrame {
                     .concat("latitude: ").concat(location[0])
                     .concat(", longitude: ").concat(location[1])
             );
+            labelPriority.setText("Prioridade: ".concat(
+                    data.getString(IS_PRIORITY).equals("TRUE")
+                    ? "SIM."
+                    : "NÃO."
+            ));
         });
         Controller.getInstance().disconnect();
     }
@@ -79,6 +87,7 @@ public class Main extends javax.swing.JFrame {
         btnShow = new javax.swing.JButton();
         labelLocation = new javax.swing.JLabel();
         btnClearTrash = new javax.swing.JButton();
+        labelPriority = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administrador");
@@ -161,34 +170,32 @@ public class Main extends javax.swing.JFrame {
         });
 
         labelLocation.setText("Localização: ");
-        labelLocation.setEnabled(false);
 
         btnClearTrash.setText("Esvaziar Lixeira");
         btnClearTrash.setEnabled(false);
+
+        labelPriority.setText("Prioridade:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(progressBar, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(btnConnectToServer)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(btnShow)
-                                .addGap(8, 8, 8))
-                            .addComponent(labelLocation)
-                            .addComponent(btnClearTrash))))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnConnectToServer)
+                    .addComponent(labelLocation)
+                    .addComponent(labelPriority)
+                    .addComponent(btnClearTrash)
+                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(btnShow)
+                .addGap(65, 65, 65))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -197,9 +204,11 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(btnConnectToServer)
                 .addGap(15, 15, 15)
                 .addComponent(labelLocation)
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
+                .addComponent(labelPriority)
+                .addGap(15, 15, 15)
                 .addComponent(btnClearTrash)
-                .addGap(43, 43, 43)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -217,6 +226,7 @@ public class Main extends javax.swing.JFrame {
     private void comboBoxIDsPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxIDsPopupMenuWillBecomeVisible
         try {
             Controller.getInstance().listRecycleBins(allIds -> {
+                System.out.println(Arrays.toString(allIds));
                 comboBoxIDs.removeAllItems();
                 for (final String id : allIds) {
                     comboBoxIDs.addItem(id);
@@ -283,6 +293,7 @@ public class Main extends javax.swing.JFrame {
                 btnClearTrash.setEnabled(true);
                 btnShow.setEnabled(true);
                 labelLocation.setVisible(true);
+                labelPriority.setVisible(true);
             } else {
                 setEnabledActiveComponents(false, 0);
             }
@@ -296,6 +307,7 @@ public class Main extends javax.swing.JFrame {
         btnShow.setEnabled(state);
         progressBar.setValue(position);
         labelLocation.setVisible(state);
+        labelPriority.setVisible(state);
     }
 
     private void setEnabledPassiveComponents(final boolean enable) {
@@ -370,6 +382,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnShow;
     private javax.swing.JComboBox<String> comboBoxIDs;
     private javax.swing.JLabel labelLocation;
+    private javax.swing.JLabel labelPriority;
     private javax.swing.JPanel panelUsage;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel usageHigh;

@@ -113,15 +113,7 @@ public class GarbageTruck implements ClientConsumer {
 
     private String getAllIds() {
         final MyPriorityQueue<Entry<String, JSONObject>> entryQueue;
-        entryQueue = new MyPriorityQueue<>(new RecycleBinComparator() {
-            @Override
-            public int compare(
-                    final Entry<String, JSONObject> entryOne,
-                    final Entry<String, JSONObject> entryTwo
-            ) {
-                return super.compare(entryTwo, entryOne);
-            }
-        });
+        entryQueue = new MyPriorityQueue<>(new RecycleBinComparator());
         recycleBinDataMap.entrySet().forEach(entry -> {
             if (entry.getValue().getString(LOCATION).equals(request.getString(LOCATION))) {
                 if (entry.getValue().getString(IS_BLOCKED).equals("FALSE")) {

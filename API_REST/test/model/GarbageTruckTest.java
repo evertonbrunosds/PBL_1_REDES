@@ -44,12 +44,12 @@ public class GarbageTruckTest {
         garbageTruckDataSJON.put(USAGE, "5.0");
         garbageTruckDataSJON.put(LOCATION, "123;321");
         recycleBinDataMap.put("2", gerateRecycleBin("TRUE", "0.25", "TRUE", "123;321")); //->NÃO É EXIBIDO POR ESTAR BLOQUEADO
-        recycleBinDataMap.put("3", gerateRecycleBin("FALSE", "0.25", "TRUE", "123;321"));
         recycleBinDataMap.put("4", gerateRecycleBin("FALSE", "0.00", "TRUE", "123;321")); //->NÃO É EXIBIDO POR NÃO TER USO
-        recycleBinDataMap.put("5", gerateRecycleBin("FALSE", "0.25", "TRUE", "123;321"));
         recycleBinDataMap.put("6", gerateRecycleBin("FALSE", "0.25", "TRUE", "567;765")); //->NÃO É EXIBIDO POR NÃO ESTAR NA LOCALIZAÇÃO CORRETA
-        recycleBinDataMap.put("7", gerateRecycleBin("FALSE", "1.0", "FALSE", "123;321"));
         recycleBinDataMap.put("11", gerateRecycleBin("FALSE", "0.50", "TRUE", "123;321"));
+        recycleBinDataMap.put("3", gerateRecycleBin("FALSE", "0.25", "TRUE", "123;321"));
+        recycleBinDataMap.put("5", gerateRecycleBin("FALSE", "0.25", "TRUE", "123;321"));
+        recycleBinDataMap.put("7", gerateRecycleBin("FALSE", "1.0", "FALSE", "123;321"));
         recycleBinDataMap.put("13", gerateRecycleBin("FALSE", "0.75", "FALSE", "123;321"));
     }
 
