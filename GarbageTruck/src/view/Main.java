@@ -3,7 +3,6 @@ package view;
 import control.Controller;
 import java.awt.Color;
 import java.io.IOException;
-import java.util.Arrays;
 import javax.swing.JOptionPane;
 import uefs.ComumBase.classes.AVLTree;
 import static util.Constants.*;
@@ -20,47 +19,47 @@ public class Main extends javax.swing.JFrame {
     private final AVLTree<Integer, String> garbageTruckUsageTree;
 
     private static void gerateDataUsageGarbageTruck(final AVLTree<Integer, String> aVLTree) {
-        aVLTree.put(0, "0.00m³");
-        aVLTree.put(1, "0.25m³");
-        aVLTree.put(2, "0.50m³");
-        aVLTree.put(3, "0.75m³");
-        aVLTree.put(4, "1.00m³");
-        aVLTree.put(5, "1.25m³");
-        aVLTree.put(6, "1.50m³");
-        aVLTree.put(7, "1.75m³");
-        aVLTree.put(8, "2.00m³");
-        aVLTree.put(9, "2.25m³");
-        aVLTree.put(10, "2.50m³");
-        aVLTree.put(11, "2.75m³");
-        aVLTree.put(12, "3.00m³");
-        aVLTree.put(13, "3.25m³");
-        aVLTree.put(14, "3.50m³");
-        aVLTree.put(15, "3.75m³");
-        aVLTree.put(16, "4.00m³");
-        aVLTree.put(17, "4.25m³");
-        aVLTree.put(18, "4.50m³");
-        aVLTree.put(19, "4.75m³");
-        aVLTree.put(20, "5.00m³");
-        aVLTree.put(21, "5.25m³");
-        aVLTree.put(22, "5.50m³");
-        aVLTree.put(23, "5.75m³");
-        aVLTree.put(24, "6.00m³");
-        aVLTree.put(25, "6.25m³");
-        aVLTree.put(26, "6.50m³");
-        aVLTree.put(27, "6.75m³");
-        aVLTree.put(28, "7.00m³");
-        aVLTree.put(29, "7.25m³");
-        aVLTree.put(30, "7.50m³");
-        aVLTree.put(31, "7.75m³");
-        aVLTree.put(32, "8.00m³");
-        aVLTree.put(33, "8.25m³");
-        aVLTree.put(34, "8.50m³");
-        aVLTree.put(35, "8.75m³");
-        aVLTree.put(36, "9.00m³");
-        aVLTree.put(37, "9.25m³");
-        aVLTree.put(38, "9.50m³");
-        aVLTree.put(39, "9.75m³");
-        aVLTree.put(40, "10.00m³");
+        aVLTree.put(0, "0.00");
+        aVLTree.put(1, "0.25");
+        aVLTree.put(2, "0.50");
+        aVLTree.put(3, "0.75");
+        aVLTree.put(4, "1.00");
+        aVLTree.put(5, "1.25");
+        aVLTree.put(6, "1.50");
+        aVLTree.put(7, "1.75");
+        aVLTree.put(8, "2.00");
+        aVLTree.put(9, "2.25");
+        aVLTree.put(10, "2.50");
+        aVLTree.put(11, "2.75");
+        aVLTree.put(12, "3.00");
+        aVLTree.put(13, "3.25");
+        aVLTree.put(14, "3.50");
+        aVLTree.put(15, "3.75");
+        aVLTree.put(16, "4.00");
+        aVLTree.put(17, "4.25");
+        aVLTree.put(18, "4.50");
+        aVLTree.put(19, "4.75");
+        aVLTree.put(20, "5.00");
+        aVLTree.put(21, "5.25");
+        aVLTree.put(22, "5.50");
+        aVLTree.put(23, "5.75");
+        aVLTree.put(24, "6.00");
+        aVLTree.put(25, "6.25");
+        aVLTree.put(26, "6.50");
+        aVLTree.put(27, "6.75");
+        aVLTree.put(28, "7.00");
+        aVLTree.put(29, "7.25");
+        aVLTree.put(30, "7.50");
+        aVLTree.put(31, "7.75");
+        aVLTree.put(32, "8.00");
+        aVLTree.put(33, "8.25");
+        aVLTree.put(34, "8.50");
+        aVLTree.put(35, "8.75");
+        aVLTree.put(36, "9.00");
+        aVLTree.put(37, "9.25");
+        aVLTree.put(38, "9.50");
+        aVLTree.put(39, "9.75");
+        aVLTree.put(40, "10.00");
     }
 
     /**
@@ -118,6 +117,11 @@ public class Main extends javax.swing.JFrame {
             ));
         });
         Controller.getInstance().disconnect();
+        Controller.getInstance().garbageTruckAdministrator.setSender(
+                garbageTruckUsageTree.find(
+                        progressBarGarbageTruck.getValue()
+                )::getValue
+        );
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -494,9 +498,20 @@ public class Main extends javax.swing.JFrame {
                 : getRGBColor(0, 0, 0)
         );
         lebelGarbageTruckUsage.setText(progressBarGarbageTruck.getValue() > 0
-                ? "Uso do Caminhão: ".concat(usage)
+                ? "Uso do Caminhão: ".concat(usage).concat("m³")
                 : "Uso do Caminhão: 0.00m³"
         );
+        try {
+            Controller.getInstance().updateUsage();
+        } catch (final IOException ex) {
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Conexão perdida! Razão de erro: ".concat(ex.getMessage().concat(".")),
+                    "Mensagem de Erro",
+                    JOptionPane.CLOSED_OPTION,
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }//GEN-LAST:event_progressBarGarbageTruckStateChanged
 
     private static Color getRGBColor(final int r, final int g, final int b) {

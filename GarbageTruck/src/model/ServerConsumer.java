@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.json.JSONObject;
 import uefs.ComumBase.interfaces.Container;
 import static uefs.ComumBase.interfaces.Method.*;
+import uefs.ComumBase.interfaces.Receiver;
 import static util.Constants.*;
 
 /**
@@ -19,15 +20,23 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      * servidor.
      */
     private final RecycleBinAdministrator recycleBinAdministrator;
+    /**
+     * Refere-se ao administrador de caminhão de lixo com o qual será trabalhado
+     * no servidor.
+     */
+    final GarbageTruckAdministrator garbageTruckAdministrator;
 
     /**
      * Construtor responsável por instanciar um consumidor de servidor.
      *
      * @param recycleBinAdministrator Refere-se ao administrador de lixeira com
      * o qual será trabalhado no servidor.
+     * @param garbageTruckAdministrator Refere-se ao administrador de caminhão
+     * de lixo com o qual será trabalhado no servidor.
      */
-    public ServerConsumer(final RecycleBinAdministrator recycleBinAdministrator) {
+    public ServerConsumer(final RecycleBinAdministrator recycleBinAdministrator, final GarbageTruckAdministrator garbageTruckAdministrator) {
         this.recycleBinAdministrator = recycleBinAdministrator;
+        this.garbageTruckAdministrator = garbageTruckAdministrator;
     }
 
     /**
@@ -79,12 +88,10 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      * @throws IOException exceção lançada no caso de haver um problema de
      * entrada/saída.
      */
-    private JSONObject runHighMethod(final ClientConnection connection, final String method) throws IOException {
+    private JSONObject runHighMethod(final ClientConnection connection, final String method, final Receiver<JSONObject> action) throws IOException {
         final JSONObject request = getBasicRequest(method);
         final Container<String, String> response = getContainerString();
-        request.put(CLEAR, recycleBinAdministrator.getRecycleBinData().getString(CLEAR));
-        request.put(LOCATION, recycleBinAdministrator.getRecycleBinData().getString(LOCATION));
-        request.put(DEVICE, "RECYCLE_BIN");
+        action.receive(request);
         connection.streamBuilder((inputStream, outputStream) -> {
             outputStream.flush();
             outputStream.writeUTF(request.toString());
@@ -102,7 +109,11 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      */
     @Override
     public JSONObject post(final ClientConnection connection) throws IOException {
-        return runHighMethod(connection, POST);
+        return runHighMethod(connection, POST, request -> {
+            request.put(CLEAR, recycleBinAdministrator.getRecycleBinData().getString(CLEAR));
+            request.put(LOCATION, recycleBinAdministrator.getRecycleBinData().getString(LOCATION));
+            request.put(DEVICE, "RECYCLE_BIN");
+        });
     }
 
     /**
@@ -126,7 +137,12 @@ public class ServerConsumer implements uefs.ComumBase.interfaces.ServerConsumer<
      */
     @Override
     public JSONObject put(final ClientConnection connection) throws IOException {
-        return runHighMethod(connection, PUT);
+        return runHighMethod(connection, PUT, request -> {
+            request.remove(ID);
+            request.put(USAGE, garbageTruckAdministrator.getUsage());
+            request.put(LOCATION, recycleBinAdministrator.getRecycleBinData().getString(LOCATION));
+            request.put(DEVICE, "GARBAGE_TRUCK");
+        });
     }
 
     /**

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import model.ClientConnection;
+import model.GarbageTruckAdministrator;
 import model.ServerConsumer;
 import model.RecycleBinAdministrator;
 import org.json.JSONObject;
@@ -40,16 +41,20 @@ public class Controller {
      */
     private final List<Receiver<JSONObject>> actionListChangeRecycle;
     private final RecycleBinAdministrator recycleBinAdministrator;
+    public final GarbageTruckAdministrator garbageTruckAdministrator;
 
     /**
      * Construtor responsável por instanciar um controlador de lixeira.
      */
     private Controller() {
         recycleBinAdministrator = new RecycleBinAdministrator();
-        request = new ServerConsumer(recycleBinAdministrator);
+        garbageTruckAdministrator = new GarbageTruckAdministrator();
+        request = new ServerConsumer(recycleBinAdministrator, garbageTruckAdministrator);
         actionListChangeConnection = new LinkedList<>();
         actionListChangeRecycle = new LinkedList<>();
     }
+    
+    
 
     /**
      * Método responsável por retornar instância singular do controlador de
@@ -198,5 +203,16 @@ public class Controller {
             throw new IOException(response.getString(STATUS));
         }
     }
+    
+    public void updateUsage() throws IOException {
+        final JSONObject response = request.put(currentConnection);
+        if (!response.getString(STATUS).equals(FOUND)) {
+            throw new IOException(response.getString(STATUS));
+        }
+    }
+    
+    
+    
+    
 
 }

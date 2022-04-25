@@ -96,6 +96,7 @@ public class GarbageTruck implements ClientConsumer {
     }
 
     private String putRequest() throws IOException {
+        System.out.println("GARBAGE_TRUCK: ".concat(request.toString()));
         switch (request.getString(DEVICE)) {
             case "RECYCLE_BIN":
                 final JSONObject dataUser = recycleBinDataMap.get(recycleBinId);
@@ -133,7 +134,13 @@ public class GarbageTruck implements ClientConsumer {
 
     @Override
     public void post() throws IOException {
-        put();
+        response.writeUTF(
+                notContainsID() || notContainsLocation() || notContainsDevice()
+                        ? unsuccessfulRequest(BAD_REQUEST)
+                        : notContainsCorrespondingLocation()
+                                ? unsuccessfulRequest(NOT_FOUND)
+                                : putRequest()
+        );
     }
 
     @Override
@@ -149,11 +156,9 @@ public class GarbageTruck implements ClientConsumer {
     @Override
     public void put() throws IOException {
         response.writeUTF(
-                notContainsID() || notContainsLocation() || notContainsDevice()
+                notContainsLocation() || notContainsDevice() || notContainsUsage()
                         ? unsuccessfulRequest(BAD_REQUEST)
-                        : notContainsCorrespondingLocation()
-                                ? unsuccessfulRequest(NOT_FOUND)
-                                : putRequest()
+                        : putRequest()
         );
     }
 

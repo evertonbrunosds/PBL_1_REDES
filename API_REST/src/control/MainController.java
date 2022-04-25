@@ -64,7 +64,6 @@ public class MainController {
 
     private void listenToGarbageTruck(final DataInputStream inputStream, final DataOutputStream outputStream) throws IOException {
         final JSONObject request = new JSONObject(inputStream.readUTF());
-        System.out.println("GARBAGE_TRUCK: ".concat(request.toString()));
         runConsumer(new GarbageTruck(
                 request,
                 outputStream,
