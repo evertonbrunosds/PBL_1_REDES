@@ -4,8 +4,8 @@ import control.Controller;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.Arrays;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import uefs.ComumBase.classes.AVLTree;
 import static util.Constants.*;
 import static util.Usage.*;
 
@@ -17,20 +17,68 @@ import static util.Usage.*;
  */
 public class Main extends javax.swing.JFrame {
 
+    private final AVLTree<Integer, String> garbageTruckUsageTree;
+
+    private static void gerateDataUsageGarbageTruck(final AVLTree<Integer, String> aVLTree) {
+        aVLTree.put(0, "0.00m³");
+        aVLTree.put(1, "0.25m³");
+        aVLTree.put(2, "0.50m³");
+        aVLTree.put(3, "0.75m³");
+        aVLTree.put(4, "1.00m³");
+        aVLTree.put(5, "1.25m³");
+        aVLTree.put(6, "1.50m³");
+        aVLTree.put(7, "1.75m³");
+        aVLTree.put(8, "2.00m³");
+        aVLTree.put(9, "2.25m³");
+        aVLTree.put(10, "2.50m³");
+        aVLTree.put(11, "2.75m³");
+        aVLTree.put(12, "3.00m³");
+        aVLTree.put(13, "3.25m³");
+        aVLTree.put(14, "3.50m³");
+        aVLTree.put(15, "3.75m³");
+        aVLTree.put(16, "4.00m³");
+        aVLTree.put(17, "4.25m³");
+        aVLTree.put(18, "4.50m³");
+        aVLTree.put(19, "4.75m³");
+        aVLTree.put(20, "5.00m³");
+        aVLTree.put(21, "5.25m³");
+        aVLTree.put(22, "5.50m³");
+        aVLTree.put(23, "5.75m³");
+        aVLTree.put(24, "6.00m³");
+        aVLTree.put(25, "6.25m³");
+        aVLTree.put(26, "6.50m³");
+        aVLTree.put(27, "6.75m³");
+        aVLTree.put(28, "7.00m³");
+        aVLTree.put(29, "7.25m³");
+        aVLTree.put(30, "7.50m³");
+        aVLTree.put(31, "7.75m³");
+        aVLTree.put(32, "8.00m³");
+        aVLTree.put(33, "8.25m³");
+        aVLTree.put(34, "8.50m³");
+        aVLTree.put(35, "8.75m³");
+        aVLTree.put(36, "9.00m³");
+        aVLTree.put(37, "9.25m³");
+        aVLTree.put(38, "9.50m³");
+        aVLTree.put(39, "9.75m³");
+        aVLTree.put(40, "10.00m³");
+    }
+
     /**
      * Construtor responsável por instanciar a janela principal.
      */
     public Main() {
+        garbageTruckUsageTree = new AVLTree<>(Integer::compareTo);
+        gerateDataUsageGarbageTruck(garbageTruckUsageTree);
         initComponents();
         Controller.getInstance().addActionChangeConnection(isConnected -> {
-            setEnabledPassiveComponents(isConnected);
+            comboBoxIDs.setEnabled(isConnected);
             if (isConnected) {
                 btnConnectToServer.setText("Desconectar");
                 setTitle("Caminhão de Lixo Conectado");
             } else {
                 btnConnectToServer.setText("Conectar");
                 setTitle("Caminhão de Lixo Desconectado");
-                progressBar.setValue(0);
+                progressBarRecycleBin.setValue(0);
                 comboBoxIDs.removeAll();
                 comboBoxIDs.setSelectedIndex(-1);
             }
@@ -40,22 +88,22 @@ public class Main extends javax.swing.JFrame {
         Controller.getInstance().addActionChangeRecycle(data -> {
             switch (data.getString(USAGE)) {
                 case NONE:
-                    progressBar.setValue(0);
+                    progressBarRecycleBin.setValue(0);
                     break;
                 case LOW:
-                    progressBar.setValue(1);
+                    progressBarRecycleBin.setValue(1);
                     break;
                 case MEDIUM:
-                    progressBar.setValue(2);
+                    progressBarRecycleBin.setValue(2);
                     break;
                 case HIGH:
-                    progressBar.setValue(3);
+                    progressBarRecycleBin.setValue(3);
                     break;
                 case TOTAL:
-                    progressBar.setValue(4);
+                    progressBarRecycleBin.setValue(4);
                     break;
                 default:
-                    progressBar.setValue(0);
+                    progressBarRecycleBin.setValue(0);
                     break;
             }
             final String[] location = data.getString(LOCATION).split(";");
@@ -77,17 +125,19 @@ public class Main extends javax.swing.JFrame {
 
         comboBoxIDs = new javax.swing.JComboBox<>();
         btnConnectToServer = new javax.swing.JButton();
-        panelUsage = new javax.swing.JPanel();
-        usageNone = new javax.swing.JLabel();
-        usageLow = new javax.swing.JLabel();
-        usageMedium = new javax.swing.JLabel();
-        usageHigh = new javax.swing.JLabel();
-        usageTotal = new javax.swing.JLabel();
-        progressBar = new javax.swing.JProgressBar();
         btnShow = new javax.swing.JButton();
         labelLocation = new javax.swing.JLabel();
         btnClearTrash = new javax.swing.JButton();
         labelPriority = new javax.swing.JLabel();
+        panelRecycleBin = new javax.swing.JPanel();
+        panelRecycleBinUsage = new javax.swing.JPanel();
+        lebelRecycleBinUsage = new javax.swing.JLabel();
+        progressBarRecycleBin = new javax.swing.JProgressBar();
+        panelUsageGarbageTruck = new javax.swing.JPanel();
+        panelGarbageTruckUsage = new javax.swing.JPanel();
+        lebelGarbageTruckUsage = new javax.swing.JLabel();
+        progressBarGarbageTruck = new javax.swing.JProgressBar();
+        jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administrador");
@@ -111,56 +161,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        usageNone.setText("uso: 0.00m³");
-        usageNone.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        usageLow.setText("uso: 0.25m³");
-        usageLow.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        usageMedium.setText("uso: 0.50m³");
-        usageMedium.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        usageHigh.setText("uso: 0.75m³");
-        usageHigh.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        usageTotal.setText("uso: 1.00m³");
-        usageTotal.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        javax.swing.GroupLayout panelUsageLayout = new javax.swing.GroupLayout(panelUsage);
-        panelUsage.setLayout(panelUsageLayout);
-        panelUsageLayout.setHorizontalGroup(
-            panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelUsageLayout.createSequentialGroup()
-                .addComponent(usageNone)
-                .addGap(27, 27, 27)
-                .addComponent(usageLow)
-                .addGap(40, 40, 40)
-                .addComponent(usageMedium)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(usageHigh)
-                .addGap(43, 43, 43)
-                .addComponent(usageTotal))
-        );
-        panelUsageLayout.setVerticalGroup(
-            panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelUsageLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(panelUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(usageNone)
-                    .addComponent(usageLow)
-                    .addComponent(usageMedium)
-                    .addComponent(usageHigh)
-                    .addComponent(usageTotal))
-                .addGap(0, 0, 0))
-        );
-
-        progressBar.setMaximum(4);
-        progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                progressBarStateChanged(evt);
-            }
-        });
-
         btnShow.setText("Atualizar Exibição");
         btnShow.setEnabled(false);
         btnShow.addActionListener(new java.awt.event.ActionListener() {
@@ -181,26 +181,119 @@ public class Main extends javax.swing.JFrame {
 
         labelPriority.setText("Prioridade:");
 
+        lebelRecycleBinUsage.setText("Uso da Lixeira: 0.00m³");
+        lebelRecycleBinUsage.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        lebelRecycleBinUsage.setEnabled(false);
+
+        javax.swing.GroupLayout panelRecycleBinUsageLayout = new javax.swing.GroupLayout(panelRecycleBinUsage);
+        panelRecycleBinUsage.setLayout(panelRecycleBinUsageLayout);
+        panelRecycleBinUsageLayout.setHorizontalGroup(
+            panelRecycleBinUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRecycleBinUsageLayout.createSequentialGroup()
+                .addComponent(lebelRecycleBinUsage)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelRecycleBinUsageLayout.setVerticalGroup(
+            panelRecycleBinUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRecycleBinUsageLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(lebelRecycleBinUsage)
+                .addGap(0, 0, 0))
+        );
+
+        progressBarRecycleBin.setMaximum(4);
+        progressBarRecycleBin.setEnabled(false);
+        progressBarRecycleBin.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                progressBarRecycleBinStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelRecycleBinLayout = new javax.swing.GroupLayout(panelRecycleBin);
+        panelRecycleBin.setLayout(panelRecycleBinLayout);
+        panelRecycleBinLayout.setHorizontalGroup(
+            panelRecycleBinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRecycleBinLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelRecycleBinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(panelRecycleBinUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBarRecycleBin, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelRecycleBinLayout.setVerticalGroup(
+            panelRecycleBinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRecycleBinLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(panelRecycleBinUsage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(progressBarRecycleBin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
+        );
+
+        lebelGarbageTruckUsage.setText("Uso do Caminhão: 0.00m³");
+        lebelGarbageTruckUsage.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        javax.swing.GroupLayout panelGarbageTruckUsageLayout = new javax.swing.GroupLayout(panelGarbageTruckUsage);
+        panelGarbageTruckUsage.setLayout(panelGarbageTruckUsageLayout);
+        panelGarbageTruckUsageLayout.setHorizontalGroup(
+            panelGarbageTruckUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelGarbageTruckUsageLayout.createSequentialGroup()
+                .addComponent(lebelGarbageTruckUsage)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelGarbageTruckUsageLayout.setVerticalGroup(
+            panelGarbageTruckUsageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelGarbageTruckUsageLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(lebelGarbageTruckUsage)
+                .addGap(0, 0, 0))
+        );
+
+        progressBarGarbageTruck.setMaximum(40);
+        progressBarGarbageTruck.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                progressBarGarbageTruckStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelUsageGarbageTruckLayout = new javax.swing.GroupLayout(panelUsageGarbageTruck);
+        panelUsageGarbageTruck.setLayout(panelUsageGarbageTruckLayout);
+        panelUsageGarbageTruckLayout.setHorizontalGroup(
+            panelUsageGarbageTruckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelUsageGarbageTruckLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelUsageGarbageTruckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(panelGarbageTruckUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBarGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelUsageGarbageTruckLayout.setVerticalGroup(
+            panelUsageGarbageTruckLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelUsageGarbageTruckLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(panelGarbageTruckUsage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(progressBarGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConnectToServer)
+                    .addComponent(btnShow)
                     .addComponent(labelLocation)
-                    .addComponent(labelPriority)
                     .addComponent(btnClearTrash)
-                    .addComponent(panelUsage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(btnShow)
-                .addGap(65, 65, 65))
+                    .addComponent(labelPriority)
+                    .addComponent(panelRecycleBin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelUsageGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,14 +307,16 @@ public class Main extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(btnClearTrash)
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addComponent(panelUsage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(panelRecycleBin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(panelUsageGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
         );
 
         pack();
@@ -257,28 +352,32 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnConnectToServerActionPerformed
 
-    private void progressBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarStateChanged
-        setToBlackAllTextFieldUsage();
-        switch (progressBar.getValue()) {
+    private void progressBarRecycleBinStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarRecycleBinStateChanged
+        switch (progressBarRecycleBin.getValue()) {
             case 0:
-                setToOrange(usageNone);
+                lebelRecycleBinUsage.setForeground(getRGBColor(0, 0, 0));
+                lebelRecycleBinUsage.setText("Uso da Lixeira: 0.00m³");
                 break;
             case 1:
-                setToOrange(usageLow);
+                lebelRecycleBinUsage.setForeground(getRGBColor(194, 104, 2));
+                lebelRecycleBinUsage.setText("Uso da Lixeira: 0.25m³");
                 break;
             case 2:
-                setToOrange(usageMedium);
+                lebelRecycleBinUsage.setForeground(getRGBColor(194, 104, 2));
+                lebelRecycleBinUsage.setText("Uso da Lixeira: 0.50m³");
                 break;
             case 3:
-                setToOrange(usageHigh);
+                lebelRecycleBinUsage.setForeground(getRGBColor(194, 104, 2));
+                lebelRecycleBinUsage.setText("Uso da Lixeira: 0.75m³");
                 break;
             case 4:
-                setToOrange(usageTotal);
+                lebelRecycleBinUsage.setForeground(getRGBColor(194, 104, 2));
+                lebelRecycleBinUsage.setText("Uso da Lixeira: 1.00m³");
                 break;
             default:
                 break;
         }
-    }//GEN-LAST:event_progressBarStateChanged
+    }//GEN-LAST:event_progressBarRecycleBinStateChanged
 
     private void comboBoxIDsPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxIDsPopupMenuWillBecomeInvisible
         if (comboBoxIDs.getSelectedIndex() > -1) {
@@ -299,6 +398,8 @@ public class Main extends javax.swing.JFrame {
                 btnShow.setEnabled(true);
                 labelLocation.setVisible(true);
                 labelPriority.setVisible(true);
+                progressBarRecycleBin.setEnabled(true);
+                lebelRecycleBinUsage.setEnabled(true);
             } else {
                 setEnabledActiveComponents(false, 0);
             }
@@ -310,19 +411,11 @@ public class Main extends javax.swing.JFrame {
     private void setEnabledActiveComponents(final boolean state, final int position) {
         btnClearTrash.setEnabled(state);
         btnShow.setEnabled(state);
-        progressBar.setValue(position);
+        progressBarRecycleBin.setValue(position);
+        progressBarRecycleBin.setEnabled(state);
+        lebelRecycleBinUsage.setEnabled(state);
         labelLocation.setVisible(state);
         labelPriority.setVisible(state);
-    }
-
-    private void setEnabledPassiveComponents(final boolean enable) {
-        comboBoxIDs.setEnabled(enable);
-        usageNone.setEnabled(enable);
-        usageLow.setEnabled(enable);
-        usageMedium.setEnabled(enable);
-        usageHigh.setEnabled(enable);
-        usageTotal.setEnabled(enable);
-        progressBar.setEnabled(enable);
     }
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
@@ -356,7 +449,11 @@ public class Main extends javax.swing.JFrame {
         if (comboBoxIDs.getSelectedIndex() > -1) {
             try {
                 final String id = comboBoxIDs.getSelectedItem().toString();
+                final int progress = progressBarRecycleBin.getValue() + progressBarGarbageTruck.getValue();
                 Controller.getInstance().clearRecycle(id);
+                progressBarGarbageTruck.setValue(progress);
+                comboBoxIDs.setSelectedIndex(-1);
+                comboBoxIDsPopupMenuWillBecomeInvisible(null);
             } catch (final IOException ex) {
                 JOptionPane.showConfirmDialog(
                         this,
@@ -379,17 +476,24 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnClearTrashActionPerformed
 
-    private static void setToOrange(final JLabel jLabel) {
-        final float[] rGBColor = Color.RGBtoHSB(194, 104, 2, null);
-        jLabel.setForeground(Color.getHSBColor(rGBColor[0], rGBColor[1], rGBColor[2]));
-    }
+    private void progressBarGarbageTruckStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarGarbageTruckStateChanged
+        final String usage = garbageTruckUsageTree.find(
+                progressBarGarbageTruck.getValue()
+        ).getValue();
+        System.out.println(usage);
+        lebelGarbageTruckUsage.setForeground(progressBarGarbageTruck.getValue() > 0
+                ? getRGBColor(194, 104, 2)
+                : getRGBColor(0, 0, 0)
+        );
+        lebelGarbageTruckUsage.setText(progressBarGarbageTruck.getValue() > 0
+                ? "Uso do Caminhão: ".concat(usage)
+                : "Uso do Caminhão: 0.00m³"
+        );
+    }//GEN-LAST:event_progressBarGarbageTruckStateChanged
 
-    private void setToBlackAllTextFieldUsage() {
-        usageNone.setForeground(Color.BLACK);
-        usageLow.setForeground(Color.BLACK);
-        usageMedium.setForeground(Color.BLACK);
-        usageHigh.setForeground(Color.BLACK);
-        usageTotal.setForeground(Color.BLACK);
+    private static Color getRGBColor(final int r, final int g, final int b) {
+        final float[] rGBColor = Color.RGBtoHSB(r, g, b, null);
+        return Color.getHSBColor(rGBColor[0], rGBColor[1], rGBColor[2]);
     }
 
     public static void main(String args[]) {
@@ -413,14 +517,16 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnConnectToServer;
     private javax.swing.JButton btnShow;
     private javax.swing.JComboBox<String> comboBoxIDs;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel labelLocation;
     private javax.swing.JLabel labelPriority;
-    private javax.swing.JPanel panelUsage;
-    private javax.swing.JProgressBar progressBar;
-    private javax.swing.JLabel usageHigh;
-    private javax.swing.JLabel usageLow;
-    private javax.swing.JLabel usageMedium;
-    private javax.swing.JLabel usageNone;
-    private javax.swing.JLabel usageTotal;
+    private javax.swing.JLabel lebelGarbageTruckUsage;
+    private javax.swing.JLabel lebelRecycleBinUsage;
+    private javax.swing.JPanel panelGarbageTruckUsage;
+    private javax.swing.JPanel panelRecycleBin;
+    private javax.swing.JPanel panelRecycleBinUsage;
+    private javax.swing.JPanel panelUsageGarbageTruck;
+    private javax.swing.JProgressBar progressBarGarbageTruck;
+    private javax.swing.JProgressBar progressBarRecycleBin;
     // End of variables declaration//GEN-END:variables
 }

@@ -172,10 +172,22 @@ public class Controller extends RecycleBinAdministrator {
                 ? response.getString(IS_BLOCKED).equals("TRUE")
                 : false;
     }
+    
+    
+    private boolean isNotUsed(final String id) throws IOException {
+        setRecycleBinId(id);
+        final JSONObject response = request.get(currentConnection);
+        return response.getString(STATUS).equals(FOUND)
+                ? Double.parseDouble(response.getString(USAGE)) == 0.00
+                : false;
+    }
 
     public void clearRecycle(final String id) throws IOException {
         if (isBlocked(id)) {
             throw new IOException("Lixeira Bloqueada!");
+        }
+        if (isNotUsed(id)) {
+            throw new IOException("Lixeira Esvaziada Antes da Coleta!");
         }
         this.getRecycleBinData().put(CLEAR, "TRUE");
         final JSONObject response = request.post(currentConnection);
