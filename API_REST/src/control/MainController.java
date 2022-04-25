@@ -33,7 +33,6 @@ public class MainController {
     public static MainController getInstance() {
         if (instance == null) {
             instance = new MainController();
-            FakeDadaBaseController.getInstance().insertFakeRecycle();
         }
         return instance;
     }

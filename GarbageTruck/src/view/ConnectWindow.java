@@ -153,7 +153,7 @@ public class ConnectWindow extends javax.swing.JDialog {
         labelLon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Conectar Lixeira");
+        setTitle("Conectar Caminhão de Lixo");
         setAlwaysOnTop(true);
         setResizable(false);
 
