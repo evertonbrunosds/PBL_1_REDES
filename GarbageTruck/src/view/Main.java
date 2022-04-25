@@ -447,23 +447,33 @@ public class Main extends javax.swing.JFrame {
 
     private void btnClearTrashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTrashActionPerformed
         if (comboBoxIDs.getSelectedIndex() > -1) {
-            try {
-                final String id = comboBoxIDs.getSelectedItem().toString();
-                final int progress = progressBarRecycleBin.getValue() + progressBarGarbageTruck.getValue();
-                Controller.getInstance().clearRecycle(id);
-                progressBarGarbageTruck.setValue(progress);
-                comboBoxIDs.setSelectedIndex(-1);
-                comboBoxIDsPopupMenuWillBecomeInvisible(null);
-            } catch (final IOException ex) {
+            final int progress = progressBarRecycleBin.getValue() + progressBarGarbageTruck.getValue();
+            if (progress <= 40) {
+                try {
+                    final String id = comboBoxIDs.getSelectedItem().toString();
+                    Controller.getInstance().clearRecycle(id);
+                    progressBarGarbageTruck.setValue(progress);
+                    comboBoxIDs.setSelectedIndex(-1);
+                    comboBoxIDsPopupMenuWillBecomeInvisible(null);
+                } catch (final IOException ex) {
+                    JOptionPane.showConfirmDialog(
+                            this,
+                            "Conexão perdida! Razão de erro: ".concat(ex.getMessage().concat(".")),
+                            "Mensagem de Erro",
+                            JOptionPane.CLOSED_OPTION,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    comboBoxIDs.removeAllItems();
+                    comboBoxIDsPopupMenuWillBecomeInvisible(null);
+                }
+            } else {
                 JOptionPane.showConfirmDialog(
                         this,
-                        "Conexão perdida! Razão de erro: ".concat(ex.getMessage().concat(".")),
+                        "Caminhão Cheio! Não é possível esvaziar esta lixeira.",
                         "Mensagem de Erro",
                         JOptionPane.CLOSED_OPTION,
                         JOptionPane.ERROR_MESSAGE
                 );
-                comboBoxIDs.removeAllItems();
-                comboBoxIDsPopupMenuWillBecomeInvisible(null);
             }
         } else {
             JOptionPane.showConfirmDialog(
