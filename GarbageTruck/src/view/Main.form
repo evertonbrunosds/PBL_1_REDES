@@ -26,17 +26,25 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="comboBoxIDs" alignment="2" min="-2" pref="123" max="-2" attributes="0"/>
-                  <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnShow" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="labelLocation" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnClearTrash" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="labelPriority" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelRecycleBin" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelUsageGarbageTruck" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSeparator2" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="comboBoxIDs" alignment="2" min="-2" pref="123" max="-2" attributes="0"/>
+                          <Component id="btnConnectToServer" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnShow" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="labelLocation" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnClearTrash" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="labelPriority" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="panelRecycleBin" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="panelUsageGarbageTruck" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="jSeparator2" alignment="2" min="-2" pref="458" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="207" max="-2" attributes="0"/>
+                      <Component id="btnClearTruck" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
           </Group>
@@ -63,7 +71,9 @@
               <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
               <Component id="panelUsageGarbageTruck" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="btnClearTruck" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -262,6 +272,15 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
+    </Component>
+    <Component class="javax.swing.JButton" name="btnClearTruck">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Descarregar Caminh&#xe3;o"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearTruckActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

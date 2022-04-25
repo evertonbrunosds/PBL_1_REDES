@@ -140,7 +140,6 @@ public class ConnectWindow extends javax.swing.JDialog {
         setAlwaysOnTop(true);
         setResizable(false);
 
-        textIP.setText("127.0.0.1");
         textIP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 textIPKeyReleased(evt);

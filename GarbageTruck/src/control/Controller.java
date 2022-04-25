@@ -53,8 +53,6 @@ public class Controller {
         actionListChangeConnection = new LinkedList<>();
         actionListChangeRecycle = new LinkedList<>();
     }
-    
-    
 
     /**
      * Método responsável por retornar instância singular do controlador de
@@ -170,6 +168,14 @@ public class Controller {
         }
     }
 
+    /**
+     * Método responsável por indicar se a lixeira está bloqueada.
+     *
+     * @param id Refere-se ao ID da lixeira.
+     * @return Retorna indicativo de que a lixeira está bloqueada.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     private boolean isBlocked(final String id) throws IOException {
         recycleBinAdministrator.setRecycleBinId(id);
         final JSONObject response = request.get(currentConnection);
@@ -177,8 +183,16 @@ public class Controller {
                 ? response.getString(IS_BLOCKED).equals("TRUE")
                 : false;
     }
-    
-    
+
+    /**
+     * Método responsável por retornar indicativo de que uma lixeira não possui
+     * uso.
+     *
+     * @param id Refere-se ao ID da lixeira.
+     * @return Retorna indicativo de que de que uma lixeira não possui uso.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     private boolean isNotUsed(final String id) throws IOException {
         recycleBinAdministrator.setRecycleBinId(id);
         final JSONObject response = request.get(currentConnection);
@@ -187,6 +201,13 @@ public class Controller {
                 : false;
     }
 
+    /**
+     * Método responsável por efetuar o esvaziamento de uma lixeira.
+     *
+     * @param id Refere-se ao ID da lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     public void clearRecycle(final String id) throws IOException {
         if (isBlocked(id)) {
             throw new IOException("Lixeira Bloqueada!");
@@ -203,16 +224,19 @@ public class Controller {
             throw new IOException(response.getString(STATUS));
         }
     }
-    
+
+    /**
+     * Método responsável por atualizar as percentagens de uso do caminhão no
+     * servidor.
+     *
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     public void updateUsage() throws IOException {
         final JSONObject response = request.put(currentConnection);
         if (!response.getString(STATUS).equals(FOUND)) {
             throw new IOException(response.getString(STATUS));
         }
     }
-    
-    
-    
-    
 
 }

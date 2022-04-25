@@ -6,8 +6,19 @@ import org.json.JSONObject;
 import static util.Constants.IS_PRIORITY;
 import static util.Constants.*;
 
+/**
+ * Classe responsável por comportar-se como comparador de lixeira.
+ * @author Everton Bruno Silva dos Santos.
+ * @version 1.0
+ */
 public class RecycleBinComparator implements Comparator<Entry<String, JSONObject>> {
 
+    /**
+     * Método responsável por efetuar comparações objetivando se uma lixeira é maior que outra.
+     * @param entryOne Refere-se a entrada de dados da lixeira 1.
+     * @param entryTwo Refere-se a entrada de dados da lixeira 2.
+     * @return Retorna o resultado da comparação.
+     */
     @Override
     public int compare(final Entry<String, JSONObject> entryOne, final Entry<String, JSONObject> entryTwo) {
         final JSONObject recycleBinOne;
@@ -27,6 +38,12 @@ public class RecycleBinComparator implements Comparator<Entry<String, JSONObject
                                 : compareConsideringEverything(entryOne, entryTwo);
     }
 
+    /**
+     * Método responsável por efetuar comparações objetivando se uma lixeira é maior que outra considerando prioridade e uso.
+     * @param entryOne Refere-se a entrada de dados da lixeira 1.
+     * @param entryTwo Refere-se a entrada de dados da lixeira 2.
+     * @return Retorna o resultado da comparação.
+     */
     private int compareConsideringEverything(final Entry<String, JSONObject> entryOne, final Entry<String, JSONObject> entryTwo) {
         final JSONObject recycleBinOne;
         final JSONObject recycleBinTwo;

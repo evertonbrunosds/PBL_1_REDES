@@ -14,14 +14,43 @@ import static uefs.ComumBase.interfaces.Status.BAD_REQUEST;
 import static uefs.ComumBase.interfaces.Status.FOUND;
 import static util.Constants.*;
 
+/**
+ * Classe responsável por comportar-se como caminhão de lixo.
+ *
+ * @author Everton Bruno Silva dos Santos.
+ * @version 1.0
+ */
 public class GarbageTruck implements ClientConsumer {
 
+    /**
+     * Refere-se a requisição feita.
+     */
     private final JSONObject request;
+    /**
+     * Refere-se ao meio de resposta utilizado.
+     */
     private final DataOutputStream response;
+    /**
+     * Refere-se aos dados das lixeiras.
+     */
     private final Map<String, JSONObject> recycleBinDataMap;
+    /**
+     * Refere-se aos dados do caminhão.
+     */
     private final JSONObject garbageTruckDataJSON;
+    /**
+     * Refere-se ao id da lixeira.
+     */
     private final String recycleBinId;
 
+    /**
+     * Construtor responsável por instanciar um caminhão de lixo.
+     *
+     * @param request Refere-se a requisição feita.
+     * @param response Refere-se ao meio de resposta utilizado.
+     * @param recycleBinDataMap Refere-se aos dados das lixeiras.
+     * @param garbageTruckDataJSON Refere-se aos dados do caminhão.
+     */
     public GarbageTruck(
             final JSONObject request,
             final DataOutputStream response,
@@ -42,22 +71,53 @@ public class GarbageTruck implements ClientConsumer {
         this.recycleBinDataMap = recycleBinDataMap;
     }
 
+    /**
+     * Método responsável por indicar se numa requisição não há campo de
+     * dispositivo.
+     *
+     * @return Retorna indicativo de que numa requisição não há campo de
+     * dispositivo.
+     */
     private boolean notContainsDevice() {
         return !request.toMap().containsKey(DEVICE);
     }
 
+    /**
+     * Método responsável por indicar se numa requisição não há campo de ID.
+     *
+     * @return Retorna indicativo de que numa requisição não há campo de ID.
+     */
     private boolean notContainsID() {
         return !request.toMap().containsKey(ID);
     }
 
+    /**
+     * Método responsável por indicar se numa requisição não há campo de uso.
+     *
+     * @return Retorna indicativo de que numa requisição não há campo de uso.
+     */
     private boolean notContainsUsage() {
         return !request.toMap().containsKey(USAGE);
     }
 
+    /**
+     * Método responsável por indicar se numa requisição não há campo de
+     * localização.
+     *
+     * @return Retorna indicativo de que numa requisição não há campo de
+     * localização.
+     */
     private boolean notContainsLocation() {
         return !request.toMap().containsKey(LOCATION);
     }
 
+    /**
+     * Método responsável por indicar se numa requisição não há campo de
+     * localização correspondente.
+     *
+     * @return Retorna indicativo de que numa requisição não há campo de
+     * localização correspondente.
+     */
     private boolean notContainsCorrespondingLocation() {
         if (userNotFound()) {
             return true;
@@ -67,14 +127,37 @@ public class GarbageTruck implements ClientConsumer {
         return !requestLocation.equals(recycleBinLocation);
     }
 
+    /**
+     * Método responsável por indicar o id de usuário contido numa requisição
+     * foi encontrado.
+     *
+     * @return Retorna indicativo de que o id de usuário contido numa requisição
+     * foi encontrado.
+     */
     private boolean userFound() {
         return recycleBinDataMap.containsKey(recycleBinId);
     }
 
+    /**
+     * Método responsável por indicar o id de usuário contido numa requisição
+     * não foi encontrado.
+     *
+     * @return Retorna indicativo de que o id de usuário contido numa requisição
+     * não foi encontrado.
+     */
     private boolean userNotFound() {
         return !userFound();
     }
 
+    /**
+     * Método responsável por tratar de requisições mal succedidas.
+     *
+     * @param status Refere-se ao status que representa a falta de sucesso na
+     * requisição.
+     * @return Retorna resposta em JSON indicando o ocorrido.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     private String unsuccessfulRequest(final String status) throws IOException {
         final JSONObject msg = new JSONObject();
         msg.put(STATUS, status);
@@ -83,6 +166,14 @@ public class GarbageTruck implements ClientConsumer {
         return msg.toString();
     }
 
+    /**
+     * Método responsável por tratar de requisições que visam buscar dados de
+     * uma lixeira.
+     *
+     * @return Retorna resposta em JSON com os dados de uma lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     private String getRequest() {
         final Map<String, Object> dataUser = recycleBinDataMap.get(recycleBinId).toMap();
         final JSONObject msg = new JSONObject();
@@ -95,6 +186,15 @@ public class GarbageTruck implements ClientConsumer {
         return msg.toString();
     }
 
+    /**
+     * Método responsável por tratar de requisições que visam alterar os dados
+     * de uma lixeira ou caminhão de lixo.
+     *
+     * @return Retorna resposta em JSON com os dados de uma recém criada
+     * lixeira.
+     * @throws IOException Exceção lançada no caso de haver falha de
+     * entrada/saída.
+     */
     private String putRequest() throws IOException {
         System.out.println("GARBAGE_TRUCK: ".concat(request.toString()));
         switch (request.getString(DEVICE)) {
@@ -113,6 +213,12 @@ public class GarbageTruck implements ClientConsumer {
         }
     }
 
+    /**
+     * Método responsável por de forma ordenada retornar todos os IDs de lixeira
+     * contidos no sistema.
+     *
+     * @return Retorna todos os IDs de lixeira contidos no sistema.
+     */
     private String getAllIds() {
         final MyPriorityQueue<Entry<String, JSONObject>> entryQueue;
         entryQueue = new MyPriorityQueue<>(new RecycleBinComparator());
@@ -132,6 +238,11 @@ public class GarbageTruck implements ClientConsumer {
         return allRecycleBinsId.replaceFirst(".$", "");
     }
 
+    /**
+     * Método responsável por criar dados do consumidor.
+     *
+     * @throws IOException Refere-se a algum possível erro de entrada/saída.
+     */
     @Override
     public void post() throws IOException {
         response.writeUTF(
@@ -143,6 +254,11 @@ public class GarbageTruck implements ClientConsumer {
         );
     }
 
+    /**
+     * Método responsável por buscar dados do consumidor.
+     *
+     * @throws IOException Refere-se a algum possível erro de entrada/saída.
+     */
     @Override
     public void get() throws IOException {
         response.writeUTF(notContainsID() || notContainsLocation()
@@ -153,6 +269,11 @@ public class GarbageTruck implements ClientConsumer {
         );
     }
 
+    /**
+     * Método responsável por atualizar dados do consumidor.
+     *
+     * @throws IOException Refere-se a algum possível erro de entrada/saída.
+     */
     @Override
     public void put() throws IOException {
         response.writeUTF(
@@ -162,6 +283,11 @@ public class GarbageTruck implements ClientConsumer {
         );
     }
 
+    /**
+     * Método responsável por apagar dados do consumidor.
+     *
+     * @throws IOException Refere-se a algum possível erro de entrada/saída.
+     */
     @Override
     public void delete() throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -105,9 +105,11 @@ public class RecycleBin implements ClientConsumer {
         final Map<String, Object> mapRequest = request.toMap();
         return !mapRequest.containsKey(USAGE);
     }
-    
-     /**
-     * Método responsável por indicar se uma lixeira pode ser encontrada na base de dados.
+
+    /**
+     * Método responsável por indicar se uma lixeira pode ser encontrada na base
+     * de dados.
+     *
      * @return Retorna indicativo de que uma lixeira pode se encontrada.
      */
     private boolean userFound() {

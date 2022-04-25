@@ -142,6 +142,7 @@ public class Main extends javax.swing.JFrame {
         lebelGarbageTruckUsage = new javax.swing.JLabel();
         progressBarGarbageTruck = new javax.swing.JProgressBar();
         jSeparator2 = new javax.swing.JSeparator();
+        btnClearTruck = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administrador");
@@ -281,22 +282,35 @@ public class Main extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
+        btnClearTruck.setText("Descarregar Caminhão");
+        btnClearTruck.setEnabled(false);
+        btnClearTruck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearTruckActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnConnectToServer)
-                    .addComponent(btnShow)
-                    .addComponent(labelLocation)
-                    .addComponent(btnClearTrash)
-                    .addComponent(labelPriority)
-                    .addComponent(panelRecycleBin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelUsageGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(comboBoxIDs, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnConnectToServer)
+                            .addComponent(btnShow)
+                            .addComponent(labelLocation)
+                            .addComponent(btnClearTrash)
+                            .addComponent(labelPriority)
+                            .addComponent(panelRecycleBin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelUsageGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(207, 207, 207)
+                        .addComponent(btnClearTruck)))
                 .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
@@ -320,7 +334,9 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(panelUsageGarbageTruck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnClearTruck)
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -490,6 +506,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearTrashActionPerformed
 
     private void progressBarGarbageTruckStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarGarbageTruckStateChanged
+        btnClearTruck.setEnabled(progressBarGarbageTruck.getValue() > 0);
         final String usage = garbageTruckUsageTree.find(
                 progressBarGarbageTruck.getValue()
         ).getValue();
@@ -514,6 +531,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_progressBarGarbageTruckStateChanged
 
+    private void btnClearTruckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTruckActionPerformed
+        progressBarGarbageTruck.setValue(0);
+    }//GEN-LAST:event_btnClearTruckActionPerformed
+
     private static Color getRGBColor(final int r, final int g, final int b) {
         final float[] rGBColor = Color.RGBtoHSB(r, g, b, null);
         return Color.getHSBColor(rGBColor[0], rGBColor[1], rGBColor[2]);
@@ -537,6 +558,7 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClearTrash;
+    private javax.swing.JButton btnClearTruck;
     private javax.swing.JButton btnConnectToServer;
     private javax.swing.JButton btnShow;
     private javax.swing.JComboBox<String> comboBoxIDs;
