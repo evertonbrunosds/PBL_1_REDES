@@ -17,7 +17,7 @@ import static uefs.ComumBase.interfaces.Status.*;
  * @author Everton Bruno Silva dos Santos.
  * @version 1.0
  */
-public class Controller extends RecycleBinAdministrator {
+public class Controller {
 
     /**
      * Refere-se a instância singular do controlador de lixeira.
@@ -39,12 +39,14 @@ public class Controller extends RecycleBinAdministrator {
      * Refere-se a lista de ações a serem tomadas quando uma lixeira é alterada.
      */
     private final List<Receiver<JSONObject>> actionListChangeRecycle;
+    private final RecycleBinAdministrator recycleBinAdministrator;
 
     /**
      * Construtor responsável por instanciar um controlador de lixeira.
      */
     private Controller() {
-        request = new ServerConsumer(this);
+        recycleBinAdministrator = new RecycleBinAdministrator();
+        request = new ServerConsumer(recycleBinAdministrator);
         actionListChangeConnection = new LinkedList<>();
         actionListChangeRecycle = new LinkedList<>();
     }
@@ -89,9 +91,8 @@ public class Controller extends RecycleBinAdministrator {
      *
      * @param data Refere-se aos dados da lixeira.
      */
-    @Override
     public void setRecycleBinData(final JSONObject data) {
-        super.setRecycleBinData(data);
+        recycleBinAdministrator.setRecycleBinData(data);
         actionListChangeRecycle.forEach(action -> action.receive(data));
     }
 
@@ -155,9 +156,8 @@ public class Controller extends RecycleBinAdministrator {
      * entrada/saída.
      */
     public void showRecycleDetails(final String id) throws IOException {
-        setRecycleBinId(id);
+        recycleBinAdministrator.setRecycleBinId(id);
         final JSONObject response = request.get(currentConnection);
-        System.out.println(response.toString());
         if (response.getString(STATUS).equals(FOUND)) {
             setRecycleBinData(response);
         } else {
@@ -166,7 +166,7 @@ public class Controller extends RecycleBinAdministrator {
     }
 
     private boolean isBlocked(final String id) throws IOException {
-        setRecycleBinId(id);
+        recycleBinAdministrator.setRecycleBinId(id);
         final JSONObject response = request.get(currentConnection);
         return response.getString(STATUS).equals(FOUND)
                 ? response.getString(IS_BLOCKED).equals("TRUE")
@@ -175,7 +175,7 @@ public class Controller extends RecycleBinAdministrator {
     
     
     private boolean isNotUsed(final String id) throws IOException {
-        setRecycleBinId(id);
+        recycleBinAdministrator.setRecycleBinId(id);
         final JSONObject response = request.get(currentConnection);
         return response.getString(STATUS).equals(FOUND)
                 ? Double.parseDouble(response.getString(USAGE)) == 0.00
@@ -189,42 +189,12 @@ public class Controller extends RecycleBinAdministrator {
         if (isNotUsed(id)) {
             throw new IOException("Lixeira Esvaziada Antes da Coleta!");
         }
-        this.getRecycleBinData().put(CLEAR, "TRUE");
+        recycleBinAdministrator.getRecycleBinData().put(CLEAR, "TRUE");
         final JSONObject response = request.post(currentConnection);
         if (response.getString(STATUS).equals(FOUND)) {
             response.put(USAGE, "0.00");
             setRecycleBinData(response);
         } else {
-            throw new IOException(response.getString(STATUS));
-        }
-    }
-
-    /**
-     * Método responsável por alterar o estado de prioridade de uma lixeira.
-     *
-     * @param isPriority Refere-se ao novo estado de prioridade da lixeira.
-     * @throws IOException exceção lançada no caso de haver um problema de
-     * entrada/saída.
-     */
-    public void setIsPriority(final String isPriority) throws IOException {
-        getRecycleBinData().put(IS_PRIORITY, isPriority);
-        final JSONObject response = request.put(currentConnection);
-        if (!response.getString(STATUS).equals(FOUND)) {
-            throw new IOException(response.getString(STATUS));
-        }
-    }
-
-    /**
-     * Método responsável por alterar o estado de bloqueio de uma lixeira.
-     *
-     * @param isBlocked Refere-se ao novo estado de bloqueado.
-     * @throws IOException exceção lançada no caso de haver um problema de
-     * entrada/saída.
-     */
-    public void setIsBlocked(final String isBlocked) throws IOException {
-        getRecycleBinData().put(IS_BLOCKED, isBlocked);
-        final JSONObject response = request.put(currentConnection);
-        if (!response.getString(STATUS).equals(FOUND)) {
             throw new IOException(response.getString(STATUS));
         }
     }

@@ -326,7 +326,6 @@ public class Main extends javax.swing.JFrame {
     private void comboBoxIDsPopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxIDsPopupMenuWillBecomeVisible
         try {
             Controller.getInstance().listRecycleBins(allIds -> {
-                System.out.println(Arrays.toString(allIds));
                 comboBoxIDs.removeAllItems();
                 for (final String id : allIds) {
                     comboBoxIDs.addItem(id);
@@ -490,7 +489,6 @@ public class Main extends javax.swing.JFrame {
         final String usage = garbageTruckUsageTree.find(
                 progressBarGarbageTruck.getValue()
         ).getValue();
-        System.out.println(usage);
         lebelGarbageTruckUsage.setForeground(progressBarGarbageTruck.getValue() > 0
                 ? getRGBColor(194, 104, 2)
                 : getRGBColor(0, 0, 0)
